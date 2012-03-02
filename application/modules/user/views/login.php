@@ -2,6 +2,11 @@
 	
 	<section class="left col3">
 		<h2>User Login</h2>
+		
+		<?php if($this->auth != NULL && $this->auth->logged_in()): ?>
+			<p class="info border"><span class="icon color icon112"></span>Already logged in as <?php echo $this->auth->get_name(); ?>!</p>
+		<?php endif; ?>
+		
 		<?php 
 			echo (isset($success) && $success)? 
 				'<p class="success color border">
@@ -12,7 +17,7 @@
 				 validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'
 			);
 		?>
-		
+
 		<?php echo form_open('user/login'); ?>
 			<p>
 				<label for="username">Username:</label><br />
