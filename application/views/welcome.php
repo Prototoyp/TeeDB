@@ -128,7 +128,7 @@
 	    <?php if(isset($top1on1) and $top1on1): ?>
 			<img src="upload/skins/previews/warpaint.png" alt="Avatar" style="float:left">
 			<p style="padding-top:20px">
-				<b>1on1:</b> <?php echo anchor('/profile/name/'.$top1on1->username, $top1on1->username); ?><br>
+				<b>1on1:</b> <?php echo anchor('#/profile/name/'.$top1on1->username, $top1on1->username); ?><br>
 				<?php echo $top1on1->score; ?> Points, <?php echo $top1on1->count_machtes; ?> Matches
 		    </p>
 		    <br style="clear:both" />
@@ -136,7 +136,7 @@
 	    <?php if(isset($topSkin) and $topSkin): ?>
 			<img src="upload/skins/previews/<?php echo $topSkin->name; ?>.png" alt="TopSkin" style="float:left">
 			<p style="padding-top:20px">
-				<b>Skin:</b> <?php echo anchor('/teedb/skin/'.$topSkin->name,$topSkin->name); ?> by <?php echo anchor('/profile/name/'.$topSkin->username, $topSkin->username); ?><br>
+				<b>Skin:</b> <?php echo anchor('#/teedb/skin/'.$topSkin->name,$topSkin->name); ?> by <?php echo anchor('/profile/name/'.$topSkin->username, $topSkin->username); ?><br>
 				&#216;<?php echo $this->Skin->getRate($topSkin->rate_sum, $topSkin->rate_count)*10; ?> from <?php echo $topSkin->rate_count; ?> votes
 			</p>
 	    <?php endif; ?>
@@ -154,7 +154,7 @@
 			<br>
 			<b>TeeDB:</b> 
 	    	<?php if(isset($last) and $last): ?>
-	    	<?php $init = FALSE; foreach($last as $entry): if($init) echo ', '; else $init = TRUE; echo anchor('/teedb/'.$entry->type.'/'.$entry->name, $entry->name, 'class="none solid"').' ('.$entry->type.')'; endforeach; ?><br>
+	    	<?php $init = FALSE; foreach($last as $entry): if($init) echo ', '; else $init = TRUE; echo anchor('#/teedb/'.$entry->type.'/'.$entry->name, $entry->name, 'class="none solid"').' ('.$entry->type.')'; endforeach; ?><br>
 			<?php else: ?>
 			No uploads, yet.<br />
 			<br>
