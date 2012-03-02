@@ -1321,20 +1321,6 @@ span.icon204 {background-position: -54px -180px;}
 .flag.flag-zm {background-position: -16px -165px}
 .flag.flag-zw {background-position: -32px -165px}
 
-/* -------------------------------------------------------------------- */
-
-/**
- * 	Jquery
- */
-
-a.ui-corner-all{
-	background: none;
-}
-
-.ui-corner-all > p{
-	margin: 0;
-}
-
 /* =============================================================================
    Media Queries
    ========================================================================== */
