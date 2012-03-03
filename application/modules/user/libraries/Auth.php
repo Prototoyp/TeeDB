@@ -31,9 +31,9 @@ class Auth {
 		$this->CI->load->helper('url');
 		$this->CI->load->model('user/user');
 		
-		if($this->CI->config->load('user/user'))
+		if($this->CI->config->item('encryption_key'))
 		{
-			self::$salt = $this->CI->config->item('salt');
+			self::$salt = $this->CI->config->item('encryption_key');
 		}
 
 		if (count($props) > 0)
