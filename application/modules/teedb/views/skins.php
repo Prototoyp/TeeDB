@@ -1,15 +1,15 @@
 <aside>	
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('teedb/skins/index/new/asc', 'Newest') : anchor('teedb/skins/index/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('teedb/skins/index/rate/asc', 'Rating') : anchor('teedb/skins/index/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('teedb/skins/index/dw/asc', 'Downloads') : anchor('teedb/skins/index/dw/desc', 'Downloads'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('teedb/skins/index/name/desc', 'Name') : anchor('teedb/skins/index/name/asc', 'Name'); ?></li>
-		<li><?php echo ($order=='author' and $direction=='asc')? anchor('teedb/skins/index/author/desc', 'Author') : anchor('teedb/skins/index/author/asc', 'Author'); ?></li>
+		<li><?php echo ($order=='new' and $direction=='desc')? anchor('skins/new/asc', 'Newest') : anchor('skins/new/desc', 'Newest'); ?></li>
+		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('skins/rate/asc', 'Rating') : anchor('skins/rate/desc', 'Rating'); ?></li>
+		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('skins/dw/asc', 'Downloads') : anchor('skins/dw/desc', 'Downloads'); ?></li>
+		<li><?php echo ($order=='name' and $direction=='asc')? anchor('skins/name/desc', 'Name') : anchor('skins/name/asc', 'Name'); ?></li>
+		<li><?php echo ($order=='author' and $direction=='asc')? anchor('skins/author/desc', 'Author') : anchor('skins/author/asc', 'Author'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
-		<?php echo anchor('teedb/upload/skins', 'Upload your own skins!', 'class="button solid"'); ?>
+		<?php echo anchor('upload/skins', 'Upload your own skins!', 'class="button solid"'); ?>
 	</div>
 </aside>
 

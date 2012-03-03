@@ -1,16 +1,16 @@
 <aside>	
 	<h2>Wrong upload form?</h2>
 	<ul>
-		<?php if($type != 'demos'): ?><li><?php echo anchor('teedb/upload/demos', 'Demo form'); ?></li><?php endif; ?>
-		<?php if($type != 'gameskins'): ?><li><?php echo anchor('teedb/upload/gameskins', 'Gameskin form'); ?></li><?php endif; ?>
-		<?php if($type != 'mapres'): ?><li><?php echo anchor('teedb/upload/mapres', 'Mapres form'); ?></li><?php endif; ?>
-		<?php if($type != 'maps'): ?><li><?php echo anchor('teedb/upload/maps', 'Map form'); ?></li><?php endif; ?>
-		<?php if($type != 'mods'): ?><li><?php echo anchor('teedb/upload/mods', 'Mod form'); ?></li><?php endif; ?>
-		<?php if($type != 'skins'): ?><li><?php echo anchor('teedb/upload/skins', 'Skin form'); ?></li><?php endif; ?>
+		<?php if($type != 'demos'): ?><li><?php echo anchor('upload/demos', 'Demo form'); ?></li><?php endif; ?>
+		<?php if($type != 'gameskins'): ?><li><?php echo anchor('upload/gameskins', 'Gameskin form'); ?></li><?php endif; ?>
+		<?php if($type != 'mapres'): ?><li><?php echo anchor('upload/mapres', 'Mapres form'); ?></li><?php endif; ?>
+		<?php if($type != 'maps'): ?><li><?php echo anchor('upload/maps', 'Map form'); ?></li><?php endif; ?>
+		<?php if($type != 'mods'): ?><li><?php echo anchor('upload/mods', 'Mod form'); ?></li><?php endif; ?>
+		<?php if($type != 'skins'): ?><li><?php echo anchor('upload/skins', 'Skin form'); ?></li><?php endif; ?>
 	</ul>
 	<h2>Change uploads?</h2>
 	<ul>
-		<li><?php echo anchor('teedb/myteedb', 'My TeeDB'); ?></li>
+		<li><?php echo anchor('myteedb', 'My TeeDB'); ?></li>
 	</ul>
 </aside>
 

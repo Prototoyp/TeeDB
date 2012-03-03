@@ -67,6 +67,30 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
+$route['demos'] = "teedb/demos";
+$route['demos/(:any)'] = "teedb/demos/index/$1";
+
+$route['gameskins'] = "teedb/gameskins";
+$route['gameskins/(:any)'] = "teedb/gameskins/index/$1";
+
+$route['mapres'] = "teedb/mapres";
+$route['mapres/(:any)'] = "teedb/mapres/index/$1";
+
+$route['maps'] = "teedb/maps";
+$route['maps/(:any)'] = "teedb/maps/index/$1";
+
+$route['mods'] = "teedb/mods";
+$route['mods/(:any)'] = "teedb/mods/index/$1";
+
+$route['skins'] = "teedb/skins";
+$route['skins/(:any)'] = "teedb/skins/index/$1";
+
+$route['upload'] = "teedb/upload";
+$route['upload/(:any)'] = "teedb/upload/$1";
+
+$route['myteedb'] = "teedb/myteedb";
+$route['myteedb/(:any)'] = "teedb/myteedb/$1";
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

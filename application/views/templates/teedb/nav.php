@@ -9,14 +9,14 @@
 		
 		<ul class="light border float right">
 			<li><?php echo anchor('','main'); ?></li>
-			<li><?php echo anchor('blog/news','news'); ?></li>
+			<li><?php echo anchor('blog','news'); ?></li>
 			<li><?php echo anchor('faq','faq'); ?></li>
 			<li><?php echo anchor('about','about'); ?></li>
 		</ul>
 		
 		<div id="randomtee">
 			<?php if(isset($randomtee) && $randomtee): ?>
-				<?php echo anchor('teedb/skin/'.$randomtee->name, $randomtee->name, 'class="none solid"'); ?><br />
+				<?php echo anchor('#teedb/skin/'.$randomtee->name, $randomtee->name, 'class="none solid"'); ?><br />
 				<img src="uploads/skins/previews/<?php echo $randomtee->name.'.png'; ?>" alt="RandomTee">
 			<?php endif; ?>
 		</div>
@@ -28,24 +28,24 @@
 
 <nav class="wrapper light">
 	<ul class="center float">
-		<li><?php echo anchor('teedb/demos','Demos'); ?></li>
-		<li><?php echo anchor('teedb/gameskins','Gameskins'); ?></li>
-		<li><?php echo anchor('teedb/mapres','Mapres'); ?></li>
-		<li><?php echo anchor('teedb/maps','Maps'); ?></li>
-		<li><?php echo anchor('teedb/mods','Mods'); ?></li>
-		<li><?php echo anchor('teedb/skins','Skins'); ?></li>
+		<li><?php echo anchor('demos','Demos'); ?></li>
+		<li><?php echo anchor('gameskins','Gameskins'); ?></li>
+		<li><?php echo anchor('mapres','Mapres'); ?></li>
+		<li><?php echo anchor('maps','Maps'); ?></li>
+		<li><?php echo anchor('mods','Mods'); ?></li>
+		<li><?php echo anchor('skins','Skins'); ?></li>
 		
 		<li class="right" style="width: 306px">
 			<?php if($this->auth != NULL && $this->auth->logged_in()): ?>
-				<div class="dropdown right"><?php echo anchor('user/login',$this->auth->get_name(), 'class="select"'); ?></div>
+				<div class="dropdown right"><?php echo anchor('login',$this->auth->get_name(), 'class="select"'); ?></div>
 				<ul style="width: 0px">
 					<li>
 						<p>What would you like to do?</p>
 						<p>
 							<br />
-							<?php echo anchor('teedb/upload/','Upload'); ?>
+							<?php echo anchor('upload/','Upload'); ?>
 							<br /><br />
-							<?php echo anchor('teedb/myteedb','My TeeDB'); ?>
+							<?php echo anchor('myteedb','My TeeDB'); ?>
 							<br /><br />
 							<?php echo anchor('user/edit','Edit profile'); ?>
 							<br /><br />

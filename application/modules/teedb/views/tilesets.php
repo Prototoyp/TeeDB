@@ -1,15 +1,15 @@
 <aside>	
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('teedb/mapres/index/new/asc', 'Newest') : anchor('teedb/mapres/index/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('teedb/mapres/index/rate/asc', 'Rating') : anchor('teedb/mapres/index/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('teedb/mapres/index/dw/asc', 'Downloads') : anchor('teedb/mapres/index/dw/desc', 'Downloads'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('teedb/mapres/index/name/desc', 'Name') : anchor('teedb/mapres/index/name/asc', 'Name'); ?></li>
-		<li><?php echo ($order=='author' and $direction=='asc')? anchor('teedb/mapres/index/author/desc', 'Author') : anchor('teedb/mapres/index/author/asc', 'Author'); ?></li>
+		<li><?php echo ($order=='new' and $direction=='desc')? anchor('mapres/new/asc', 'Newest') : anchor('mapres/new/desc', 'Newest'); ?></li>
+		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('mapres/rate/asc', 'Rating') : anchor('mapres/rate/desc', 'Rating'); ?></li>
+		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('mapres/dw/asc', 'Downloads') : anchor('mapres/dw/desc', 'Downloads'); ?></li>
+		<li><?php echo ($order=='name' and $direction=='asc')? anchor('mapres/name/desc', 'Name') : anchor('mapres/name/asc', 'Name'); ?></li>
+		<li><?php echo ($order=='author' and $direction=='asc')? anchor('mapres/author/desc', 'Author') : anchor('mapres/author/asc', 'Author'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
-		<?php echo anchor('teedb/upload/mapres', 'Upload your own mapres!', 'class="button solid"'); ?>
+		<?php echo anchor('upload/mapres', 'Upload your own mapres!', 'class="button solid"'); ?>
 	</div>
 </aside>
 

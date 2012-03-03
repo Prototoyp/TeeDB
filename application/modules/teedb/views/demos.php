@@ -1,15 +1,15 @@
 <aside>	
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('teedb/demos/index/new/asc', 'Newest') : anchor('teedb/demos/index/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('teedb/demos/index/rate/asc', 'Rating') : anchor('teedb/demos/index/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('teedb/demos/index/dw/asc', 'Downloads') : anchor('teedb/demos/index/dw/desc', 'Downloads'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('teedb/demos/index/name/desc', 'Name') : anchor('teedb/demos/index/name/asc', 'Name'); ?></li>
-		<li><?php echo ($order=='author' and $direction=='asc')? anchor('teedb/demos/index/author/desc', 'Author') : anchor('teedb/demos/index/author/asc', 'Author'); ?></li>
+		<li><?php echo ($order=='new' and $direction=='desc')? anchor('demos/new/asc', 'Newest') : anchor('demos/new/desc', 'Newest'); ?></li>
+		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('demos/rate/asc', 'Rating') : anchor('demos/rate/desc', 'Rating'); ?></li>
+		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('demos/dw/asc', 'Downloads') : anchor('demos/dw/desc', 'Downloads'); ?></li>
+		<li><?php echo ($order=='name' and $direction=='asc')? anchor('demos/name/desc', 'Name') : anchor('demos/name/asc', 'Name'); ?></li>
+		<li><?php echo ($order=='author' and $direction=='asc')? anchor('demos/author/desc', 'Author') : anchor('demos/author/asc', 'Author'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
-		<?php echo anchor('teedb/upload/demos', 'Upload your own demos!', 'class="button solid"'); ?>
+		<?php echo anchor('upload/demos', 'Upload your own demos!', 'class="button solid"'); ?>
 	</div>
 </aside>
 

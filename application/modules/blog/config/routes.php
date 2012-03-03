@@ -38,7 +38,7 @@
 |
 */
 
-$route['skins/(.+)'] = "skins/index/$1";
+$route['blog'] = "news";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

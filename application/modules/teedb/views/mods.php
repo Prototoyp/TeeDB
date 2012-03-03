@@ -1,15 +1,15 @@
 <aside>	
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('teedb/mods/index/new/asc', 'Newest') : anchor('teedb/mods/index/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('teedb/mods/index/rate/asc', 'Rating') : anchor('teedb/mods/index/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('teedb/mods/index/dw/asc', 'Downloads') : anchor('teedb/mods/index/dw/desc', 'Downloads'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('teedb/mods/index/name/desc', 'Name') : anchor('teedb/mods/index/name/asc', 'Name'); ?></li>
-		<li><?php echo ($order=='author' and $direction=='asc')? anchor('teedb/mods/index/author/desc', 'Author') : anchor('teedb/mods/index/author/asc', 'Author'); ?></li>
+		<li><?php echo ($order=='new' and $direction=='desc')? anchor('mods/new/asc', 'Newest') : anchor('mods/new/desc', 'Newest'); ?></li>
+		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('mods/rate/asc', 'Rating') : anchor('mods/rate/desc', 'Rating'); ?></li>
+		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('mods/dw/asc', 'Downloads') : anchor('mods/dw/desc', 'Downloads'); ?></li>
+		<li><?php echo ($order=='name' and $direction=='asc')? anchor('mods/name/desc', 'Name') : anchor('mods/name/asc', 'Name'); ?></li>
+		<li><?php echo ($order=='author' and $direction=='asc')? anchor('mods/author/desc', 'Author') : anchor('mods/author/asc', 'Author'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
-		<?php echo anchor('teedb/upload/mods', 'Upload your own mod!', 'class="button solid"'); ?>
+		<?php echo anchor('upload/mods', 'Upload your own mod!', 'class="button solid"'); ?>
 	</div>
 </aside>
 
