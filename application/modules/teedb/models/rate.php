@@ -20,6 +20,21 @@ class Rate extends CI_Model {
 		
 		$this->load->database();
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Tablename
+	 * 
+	 * @access public
+	 * @return integer
+	 */	
+	public function get_table()
+	{
+		return self::TABLE;
+	}
+
+	// --------------------------------------------------------------------
 	
 	function setRate($type, $id, $value)
 	{

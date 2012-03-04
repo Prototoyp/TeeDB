@@ -26,6 +26,20 @@ class Confirm extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Tablename
+	 * 
+	 * @access public
+	 * @return integer
+	 */	
+	public function get_table()
+	{
+		return self::TABLE;
+	}
+	
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Get a random hash link
 	 * 
 	 * @access private

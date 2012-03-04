@@ -24,6 +24,19 @@ class Download extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Tablename
+	 * 
+	 * @access public
+	 * @return integer
+	 */	
+	public function get_table()
+	{
+		return self::TABLE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Increment download count for teedb entries
 	 * 
 	 * @access public

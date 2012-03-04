@@ -35,7 +35,7 @@
 | and disable it back when you're done.
 |
 */
-$config['migration_enabled'] = TRUE;
+$config['migration_enabled'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +75,7 @@ $config['migration_auto_latest'] = FALSE;
 | be upgraded / downgraded to.
 |
 */
-$config['migration_version'] = 12;
+$config['migration_version'] = 13;
 
 /*
 |--------------------------------------------------------------------------

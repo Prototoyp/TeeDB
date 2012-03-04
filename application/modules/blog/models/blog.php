@@ -24,6 +24,19 @@ class Blog extends CI_Model{
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Tablename
+	 * 
+	 * @access public
+	 * @return integer
+	 */	
+	public function get_table()
+	{
+		return self::TABLE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Count news
 	 * 
 	 * @access public

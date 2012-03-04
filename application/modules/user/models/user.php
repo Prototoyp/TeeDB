@@ -30,6 +30,19 @@ class User extends CI_Model {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Tablename
+	 * 
+	 * @access public
+	 * @return integer
+	 */	
+	public function get_table()
+	{
+		return self::TABLE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Count users in table
 	 */
 	public function count_users()

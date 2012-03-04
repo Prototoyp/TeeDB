@@ -10,33 +10,54 @@
 class Migration_TeeDB_Mapres extends CI_Migration {
 	
 	/**
-	 * Name of the table
-	 */	
-	const TABLE = 'teedb_mapres';
+	 * Constructor
+	 */
+	function __construct()
+	{
+        parent::__construct();
+		
+		$this->load->model(array('user/user', 'teedb/tileset'));
+	}
 	
 	/**
 	 * Build table up
 	 */	
 	function up() 
 	{	
-		if ( ! $this->db->table_exists(self::TABLE))
+		if ( ! $this->db->table_exists($this->tileset->get_table()))
 		{
 			// Setup Keys
-			$this->dbforge->add_key('id', TRUE);
-			$this->dbforge->add_key('user_id');
-			$this->dbforge->add_field("UNIQUE KEY `name` (`name`)");
+			// $this->dbforge->add_key('id', TRUE);
+			// $this->dbforge->add_key('user_id');
+			// $this->dbforge->add_field("UNIQUE KEY `name` (`name`)");
+// 			
+			// $this->dbforge->add_field(array(
+				// 'id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				// 'name' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
+				// 'user_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
+				// 'discription' => array('type' => 'TEXT', 'null' => FALSE),
+				// 'downloads' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE, 'default' => 0),
+				// 'update' => array('type' => 'DATETIME', 'null' => FALSE),
+				// 'create' => array('type' => 'DATETIME', 'null' => FALSE)
+			// ));
+// 
+			// $this->dbforge->create_table(self::TABLE, TRUE);
 			
-			$this->dbforge->add_field(array(
-				'id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-				'name' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
-				'user_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
-				'discription' => array('type' => 'TEXT', 'null' => FALSE),
-				'downloads' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE, 'default' => 0),
-				'update' => array('type' => 'DATETIME', 'null' => FALSE),
-				'create' => array('type' => 'DATETIME', 'null' => FALSE)
-			));
-
-			$this->dbforge->create_table(self::TABLE, TRUE);
+            $this->db->query("
+				CREATE TABLE IF NOT EXISTS ".$this->db->dbprefix($this->tileset->get_table())." (
+				  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+				  `name` varchar(255) NOT NULL,
+				  `user_id` int(10) unsigned NOT NULL,
+				  `discription` text NOT NULL,
+				  `downloads` int(10) unsigned NOT NULL DEFAULT '0',
+				  `update` datetime NOT NULL,
+				  `create` datetime NOT NULL,
+				  PRIMARY KEY (`id`),
+				  UNIQUE KEY `name` (`name`),
+				  KEY `user_id` (`user_id`),
+				  FOREIGN KEY (`user_id`) REFERENCES ".$this->db->dbprefix($this->user->get_table())." (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+         	");
 		}
 	}
 
@@ -45,7 +66,7 @@ class Migration_TeeDB_Mapres extends CI_Migration {
 	 */
 	function down() 
 	{
-		$this->dbforge->drop_table(self::TABLE);
+		$this->dbforge->drop_table($this->tileset->get_table());
 	}
 }
 
