@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class LostPw extends CI_Controller {
+class LostPw extends Public_Controller {
 
 	/**
 	 * Constructor

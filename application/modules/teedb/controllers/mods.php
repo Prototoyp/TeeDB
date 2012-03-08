@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mods extends CI_Controller {
+class Mods extends Public_Controller {
 
 	function __construct()
 	{

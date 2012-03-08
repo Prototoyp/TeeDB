@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class MyTeeDB extends CI_Controller {
+class MyTeeDB extends User_Controller {
 
 	function __construct()
 	{

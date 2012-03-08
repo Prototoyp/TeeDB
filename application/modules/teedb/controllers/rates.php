@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Rates extends CI_Controller {
+class Rates extends Ajax_Controller {
 
 	function __construct()
 	{

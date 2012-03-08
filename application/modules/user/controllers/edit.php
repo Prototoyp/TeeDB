@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Edit extends CI_Controller {
+class Edit extends User_Controller {
 
 	/**
 	 * Constructor
@@ -9,11 +9,7 @@ class Edit extends CI_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->library(array('form_validation', 'user/auth'));
-		if($this->auth == NULL || !$this->auth->logged_in()) {
-			redirect('user/login');
-		}
-		
+		$this->load->library(array('form_validation', 'user/auth'));		
 		$this->load->model(array('user/user', 'teedb/common'));
 	}
 

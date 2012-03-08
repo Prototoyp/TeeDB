@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mapres extends CI_Controller {
+class Mapres extends Public_Controller {
 
 	function __construct()
 	{

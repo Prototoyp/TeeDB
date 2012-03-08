@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Skins extends CI_Controller {
+class Skins extends Public_Controller {
 
 	function __construct()
 	{

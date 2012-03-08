@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Demos extends CI_Controller {
+class Demos extends Public_Controller {
 
 	function __construct()
 	{
