@@ -25,7 +25,7 @@
  * @filesource
  */
 
-class UpComing extends CI_Controller {
+class UpComing extends MY_Controller {
 	
 	/**
 	 * Constructor
@@ -37,7 +37,17 @@ class UpComing extends CI_Controller {
 	
 	public function index()
 	{
-		$this->load->view('upcoming');
+		//One week
+		$this->output->cache(10080);
+		
+		$data = array();
+		$data['transfers'][] = array('name' => 'Picachu', 'type' => 'skin', 'reason' => 'Dismatched minimum or maximum size of 256x125.');
+		$data['transfers'][] = array('name' => 'Blubb(&%)', 'type' => 'user', 'reason' => 'No Symbols allowed in name.');
+		
+		$this->template->clear_layout();
+		$this->template->set_theme('default');
+		$this->template->set_subtitle('Update');
+		$this->template->view('upcoming', $data);
 	}
 }
 

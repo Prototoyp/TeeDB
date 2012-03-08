@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Faq extends CI_Controller {
+class Faq extends Public_Controller {
 	
 	public function index()
 	{
