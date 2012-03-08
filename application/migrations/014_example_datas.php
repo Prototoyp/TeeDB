@@ -26,7 +26,7 @@ class Migration_Example_Datas extends CI_Migration {
 	 */	
 	function up() 
 	{	
-		if ($this->db->table_exists($this->user->get_table()))
+		if ($this->db->table_exists($this->user->get_table()) && ENVIRONMENT == 'development')
 		{
 			// Create sample user:
 			// username: foobar
@@ -167,16 +167,19 @@ class Migration_Example_Datas extends CI_Migration {
 	 */
 	function down() 
 	{
-		//Cascading should do the rest for us
-		$this->db->empty_table($this->user->get_table());
-		
-		//Remove upload files
-		unlink($this->config->item('upload_path_skins').'/default.png');
-		unlink($this->config->item('upload_path_skins').'/previews/default.png');
-		unlink($this->config->item('upload_path_mapres').'/grass_doodads.png');
-		unlink($this->config->item('upload_path_mapres').'/previews/grass_doodads.png');
-		unlink($this->config->item('upload_path_gameskins').'/game.png');
-		unlink($this->config->item('upload_path_gameskins').'/previews/game.png');
+		if(ENVIRONMENT == 'development')
+		{
+			//Cascading should do the rest for us
+			$this->db->empty_table($this->user->get_table());
+			
+			//Remove upload files
+			unlink($this->config->item('upload_path_skins').'/default.png');
+			unlink($this->config->item('upload_path_skins').'/previews/default.png');
+			unlink($this->config->item('upload_path_mapres').'/grass_doodads.png');
+			unlink($this->config->item('upload_path_mapres').'/previews/grass_doodads.png');
+			unlink($this->config->item('upload_path_gameskins').'/game.png');
+			unlink($this->config->item('upload_path_gameskins').'/previews/game.png');
+		}
 	}
 }
 
