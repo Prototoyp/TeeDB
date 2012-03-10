@@ -19,27 +19,12 @@ class API extends CI_Controller{
 		
 	}
 	
-	function rss()
-	{
-		
-	}
-	
 	function plain()
 	{
 		
 	}
 	
 	function yaml()
-	{
-		
-	}
-	
-	function wsdl()
-	{
-		
-	}
-	
-	function soap()
 	{
 		
 	}
