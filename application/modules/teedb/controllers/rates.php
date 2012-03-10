@@ -7,11 +7,10 @@ class Rates extends Ajax_Controller {
 		parent::__construct();
 		
 		$this->load->helper('download');
-		
 		$this->load->model('teedb/rate');
 	}
 	
-	function index()
+	function _set_rate()
 	{		
 		//Check values
 		$id = (int) $this->input->post('id');
@@ -33,21 +32,21 @@ class Rates extends Ajax_Controller {
 		if(!is_numeric($rate) or $rate!= 1 and $rate != 0)
 			return FALSE;
 		
-		$data = $this->rate->setRate($type, $id, $rate);
-		$this->_return_json($data);
+		return $this->rate->setRate($type, $id, $rate);
 	}
-
-	function _return_json($json) 
+	
+	function ajax_index()
 	{
-	    $this->output->set_header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header('Expires: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-	    $this->output->set_header("Pragma: no-cache");
-		form_open(); //To generate a new csrf hash
-		$json['csrf_token_name'] = $this->security->get_csrf_token_name();
-		$json['csrf_hash'] = $this->security->get_csrf_hash();
-		$this->security->csrf_set_cookie();
-		$this->output->append_output(json_encode($json));
+		$this->_output_json(
+			$this->_set_rate(), 
+			TRUE
+		);
+	}
+	
+	function post_index()
+	{
+		//$this->load->view($this->_set_rate());
+		show_error('Enable javascript to use this feature!');
 	}
 }
 
