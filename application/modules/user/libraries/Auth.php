@@ -15,6 +15,7 @@ class Auth {
 	
 	private static $salt		= 'm}WGbb_VyQ"|f#]LqNxk1(`VfFENY)1z';
 	private static $user_id 	= 0;
+	private static $is_admin 	= NULL;
 	private static $user_name 	= ''; 
 	private static $rights		= array();
 
@@ -119,6 +120,8 @@ class Auth {
 		if(self::$user_id > 0)
 		{
 			$this->CI->session->set_userdata('user_id', self::$user_id);
+			self::$is_admin = $this->CI->user->is_admin(self::$user_id);
+			$this->CI->session->set_userdata('is_admin', self::$is_admin);
 			self::$user_name = $this->CI->input->post('username');
 			$this->restrict();
 			return TRUE;
@@ -139,6 +142,23 @@ class Auth {
 	public function logged_in()
 	{
 		return (self::$user_id > 0 OR self::$user_id = $this->CI->session->userdata('user_id'));
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * User is admin
+	 * 
+	 * @access public
+	 * @return boolean
+	 */
+	public function is_admin()
+	{
+		if(self::$is_admin != NULL)
+		{
+			return self::$is_admin;
+		}
+		return self::$is_admin = $this->CI->session->userdata('is_admin');
 	}
 
 	// --------------------------------------------------------------------
@@ -217,6 +237,7 @@ class Auth {
 	public function logout()
 	{
 		$this->CI->session->set_userdata('user_id', '');
+		$this->CI->session->set_userdata('is_admin', '');
 		$this->CI->session->set_userdata('redirected_from', '');
 		$this->CI->session->sess_destroy();
 		$this->restrict();

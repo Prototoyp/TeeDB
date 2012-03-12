@@ -8,15 +8,17 @@ class User_Controller extends MY_Controller {
 		
 		$this->load->library('user/auth');
 		
-		if($this->auth == NULL || !$this->auth->logged_in())
+		if(!$this->auth->logged_in())
 		{
 			redirect('user/login');
 		}
 		
-		// if(!$this->auth->is_admin())
-		// {
-			// show_error('Sorry, but you have no permission for this!');
-		// }
+		if(!$this->auth->is_admin())
+		{
+			show_error('Sorry, but you have no permission for this!');
+		}
+		
+		$this->template->set_theme('admin');
 	}
 	
 }
