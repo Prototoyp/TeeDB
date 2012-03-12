@@ -163,6 +163,7 @@ class Template {
 	 */
 	public function set_theme($theme)
 	{
+		$this->clear_layout();
 		$this->theme = $theme;
 	}
 

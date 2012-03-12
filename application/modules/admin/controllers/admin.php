@@ -8,14 +8,6 @@ class Admin extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		
-		$this->load->library('user/auth');
-		if($this->auth == NULL || !$this->auth->logged_in()) {
-			redirect('user/login');
-		}
-		
-		$this->template->clear_layout();
-		$this->template->set_theme('admin');
 	}
 
 	// --------------------------------------------------------------------
@@ -31,5 +23,5 @@ class Admin extends CI_Controller {
 	}
 }
 
-/* End of file login.php */
-/* Location: ./application/modules/user/controllers/login.php */
+/* End of file admin.php */
+/* Location: ./application/modules/admin/controllers/admin.php */
