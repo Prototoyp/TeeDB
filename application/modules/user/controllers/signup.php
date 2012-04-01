@@ -1,38 +1,63 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Signup extends Public_Controller {
-
-	public function __construct() {
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
 		parent::__construct();
 		
-		$this->load->library(array('form_validation', 'auth', 'email'));
+		$this->load->library(array('form_validation', 'user/auth', 'email'));
 		$this->load->model(array('user','confirm'));
 		
 		$this->config->load('user');
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Signup page
+	 * 
+	 * Also handle signup form inputs
+	 * Form:
+	 * 	- username
+	 * 	- password
+	 * 	- passconf
+	 * 	- email
+	 */
 	public function index()
 	{
 		$success = FALSE;
 		
-		if ($this->_submit_validate() === TRUE)
+		if ($this->form_validation->run('signup') === TRUE)
 		{
-			
+			//Add user
 			$user_id = $this->user->add_user(
 				$this->input->post('username'), 
 				$this->auth->get_hash($this->input->post('password')),
 				$this->input->post('email')
 			);
 			
+			//Activated accounts via confirm link?
 			if(($this->config->item('confirm_signup')))
 			{
-				$this->_send_mail(
-					$this->input->post('username'), 
-					$this->input->post('email'),
-					$this->confirm->add_signup_link($user_id), 
-					$this->input->post('password')
-				);
-				$success = TRUE;
+				//generate confirm link
+				$link = $this->confirm->add_signup_link($user_id);
+				
+				if($this->_send_mail($this->input->post('username'), $this->input->post('email'), $link) === FALSE)
+				{
+					$this->form_validation->add_message('Failed to send an confirm email. Please use following link to try again: ...');
+				}
+				else
+				{
+					$success = 'Confirm link has been sent to your email address.';
+				}
+			}
+			else
+			{
+				$success = 'You can now login.';
 			}
 		}
 		
@@ -40,21 +65,74 @@ class Signup extends Public_Controller {
 		$this->template->view('signup', array('success' => $success));
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Resent an confirm link
+	 * 
+	 * @access	public
+	 * @param	string	email
+	 * @return	bool
+	 */
 	public function resend($email)
 	{
+		//Get link and username form email
 		if($link = $this->confirm->get_signup_link($email) && $username = $this->user->get_name_by_mail($email))
 		{
-			$this->_send_mail($username, $email, $link);
-			show_error('Confirm link resend to '.url_title($email).'.');
+			if($this->_send_mail($username, $email, $link))
+			{
+				$this->output->set_output('Confirm link resend to '.url_title($email).'.');
+			}
+			else
+			{
+				show_error('Failed to send an email. Please try again later. :(');
+			}
 		}
 		else
 		{
 			show_error('Invalid email or account already activated.');
 		}
 	}
-	
-	private function _send_mail($username, $email, $link, $password = NULL)
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Confirm links
+	 * 
+	 * If link is invalid or user already activated an error is shown.
+	 * If link is valid the user is activated and redirect to main page
+	 * 
+	 * @access	public
+	 * @param	string	link
+	 */
+	public function confirm($link)
 	{
+		//Try to activate
+		if(!$this->confirm->confirm($link))
+		{
+			show_error('Invalid link or account already activated.');
+		}
+		else
+		{
+			$this->output->set_header('refresh:10; url='.base_url());
+			$this->output->set_output('Activation successful. You can now log in.');
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Send confirm email with given link
+	 * 
+	 * @access	public
+	 * @param	string	username
+	 * @param	string	email
+	 * @param	string	link
+	 * @return	bool
+	 */
+	private function _send_mail($username, $email, $link)
+	{		
+		//create mail
 		$this->email->from($this->config->item('email'), 'TeeDB - Teeworlds database');
 		$this->email->to($email);
 		
@@ -71,47 +149,26 @@ class Signup extends Public_Controller {
 			Confirm link: {unwrap}'.base_url('user/signup/confirm/'.$link).'{/unwrap}
 			
 			Username: '.$username.'
-			Password: '.( ($password != NULL)? $password : 'Password can not be displayed.').'
+			
+			Your password is stored encrypted, so remember your password 
+			or use the forgotten password function to create a new one.
+			(Function avaible after account activation.)
 			
 			So long...
-			Your big teeworlds database
+			Your teeworlds database
 			TeeDB
 		');
 		
+		//Try to send email
 		if(!$this->email->send()){
-			$this->email->print_debugger();
-			exit();
+			if(ENVIRONMENT == 'development'){
+				$this->email->print_debugger();
+				exit();
+			}
+			return FALSE;
 		}
-	}
-
-	public function confirm($link)
-	{
-		if(!$this->confirm->confirm($link))
-		{
-			show_error('Invalid link or account already activated.');
-		}
-		else
-		{
-			$this->output->set_output('Activation successful. You can now log in.');
-			redirect('user/login');
-		}
-	}
-
-	private function _submit_validate()
-	{
-		// validation rules
-		$this->form_validation->set_rules('username', 'username', 'callback__not_logged_in|trim|required|alpha_numeric|min_length[3]|max_length[12]|unique[users.name]');
-		$this->form_validation->set_rules('password', 'password', 'required|min_length[6]|max_length[12]');
-		$this->form_validation->set_rules('passconf', 'confirm password', 'required|matches[password]');
-		$this->form_validation->set_rules('email', 'email', 'required|valid_email|unique[users.email]');
-
-		return $this->form_validation->run();
-	}
-	
-	function _not_logged_in()
-	{
-		$this->form_validation->set_message('_not_logged_in', 'You are logged in. No multi accounts allowed.');
-		return !$this->auth->logged_in();
+		
+		return TRUE;
 	}
 }
 

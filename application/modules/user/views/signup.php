@@ -14,7 +14,7 @@
 			echo (isset($success) && $success)? 
 				'<p class="success color border">
 					<span class="icon color icon101"></span>
-					Signup successful. Confirm link has been sent to your email address.
+					Signup successful. '.$success.'
 				</p>'
 				 : 
 				 validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'

@@ -23,9 +23,39 @@ class MY_Form_validation extends CI_Form_validation {
                 return FALSE;
         }
         else
-            return $this->_error_array;
- 
+		{
+        	return $this->_error_array;
+		}
     }
+    
+    // --------------------------------------------------------------------
+ 
+    /**
+     * Add an error message
+	 * 
+	 * @access	public
+	 * @param	string	error message
+     */
+	function add_message($message)
+	{
+		$this->_error_array[] = $message;
+	}
+    
+    // --------------------------------------------------------------------
+ 
+    /**
+     * Reset validation
+     *
+	 * @access	public
+     */	
+	public function reset_validation()
+	{
+		// Store current rules
+		$rules = $this->_config_rules;
+		
+		// Create new validation object
+		$this->CI->form_validation = new MY_Form_validation($rules);
+	}
     
     // --------------------------------------------------------------------
 
@@ -149,6 +179,24 @@ class MY_Form_validation extends CI_Form_validation {
 		}
 			
 		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Logged in
+	 * 
+	 * Checks if a user is already loged in
+	 * 
+	 * @access	public
+	 * @return	bool
+	 */	
+	public function not_logged_in()
+	{
+		$this->CI->load->library('user/auth');
+		
+		$this->CI->form_validation->set_message('not_logged_in', 'You are logged in. No multi accounts allowed.');
+		return !$this->CI->auth->logged_in();
 	}
 
 }
