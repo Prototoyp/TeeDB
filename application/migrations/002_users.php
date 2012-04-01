@@ -43,12 +43,13 @@ class Migration_Users extends CI_Migration {
 // 
 			// $this->dbforge->create_table(self::TABLE, TRUE);
 			
+			//XXX: Password NULL for transfer
 			
             $this->db->query("
 				CREATE TABLE IF NOT EXISTS ".$this->db->dbprefix($this->user->get_table())." (
 				  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				  `name` varchar(255) NOT NULL,
-				  `password` varchar(40) NOT NULL,
+				  `password` varchar(40) DEFAULT NULL,
 				  `email` varchar(255) NOT NULL,
 				  `status` int(4) NOT NULL DEFAULT '0',
 				  `update` datetime NOT NULL,

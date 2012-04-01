@@ -173,12 +173,12 @@ class Migration_Example_Datas extends CI_Migration {
 			$this->db->empty_table($this->user->get_table());
 			
 			//Remove upload files
-			unlink($this->config->item('upload_path_skins').'/default.png');
-			unlink($this->config->item('upload_path_skins').'/previews/default.png');
-			unlink($this->config->item('upload_path_mapres').'/grass_doodads.png');
-			unlink($this->config->item('upload_path_mapres').'/previews/grass_doodads.png');
-			unlink($this->config->item('upload_path_gameskins').'/game.png');
-			unlink($this->config->item('upload_path_gameskins').'/previews/game.png');
+			@unlink($this->config->item('upload_path_skins').'/default.png');
+			@unlink($this->config->item('upload_path_skins').'/previews/default.png');
+			@unlink($this->config->item('upload_path_mapres').'/grass_doodads.png');
+			@unlink($this->config->item('upload_path_mapres').'/previews/grass_doodads.png');
+			@unlink($this->config->item('upload_path_gameskins').'/game.png');
+			@unlink($this->config->item('upload_path_gameskins').'/previews/game.png');
 		}
 	}
 }
