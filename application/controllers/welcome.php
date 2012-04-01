@@ -38,8 +38,18 @@ class Welcome extends Public_Controller {
 		$this->load->model(array('blog/blog', 'user/user', 'teedb/skin', 'teedb/common'));
 	}
 	
+	/**
+	 * Welcome default page
+	 * 
+	 * Shows ...
+	 * - the latest news and latest news titles
+	 * - stats of teedb and users
+	 * - random skin in front of the header
+	 * 
+	 */
 	public function index()
 	{
+		//Newstitles & latest news
 		$data['news_titles'] = $this->blog->get_latest_titles();
 		$data['news'] = $this->blog->get_latest(1);
 		
