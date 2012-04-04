@@ -188,7 +188,8 @@ class Upload extends Public_Controller{
 					$this->gameskin->setGameskin($data['raw_name']);
 				}elseif($type == 'maps'){
 					//$this->map_preview->create($data['file_name']);
-					$data['preview'] = base_url().($this->config->item('upload_path_maps')).'/previews/'.$data['raw_name'].'.png';
+					//$data['preview'] = base_url().($this->config->item('upload_path_maps')).'/previews/'.$data['raw_name'].'.png';
+					$data['preview'] = base_url('assets/images/nopic_map.png');
 					$this->map->setMap($data['raw_name']);
 				}elseif($type == 'demos'){
 					//$this->demo_reader->getMap($data['file_name']);
