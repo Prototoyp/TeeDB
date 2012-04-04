@@ -7,9 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Transfer extends CI_Migration {
-	
-	private $old_db = NULL;
+class Migration_Transfer_Users extends CI_Migration {
 	
 	/**
 	 * Constructor
@@ -19,22 +17,7 @@ class Migration_Transfer extends CI_Migration {
         parent::__construct();
 		
 		$this->load->library(array('form_validation', 'user/auth'));
-		$this->load->model(array('user/user','teedb/skin'));
-		
-		$config['hostname'] = "localhost";
-		$config['username'] = "root";
-		$config['password'] = "";
-		$config['database'] = "twdoodads";
-		$config['dbdriver'] = "mysql";
-		$config['dbprefix'] = "tw_";
-		$config['pconnect'] = FALSE;
-		$config['db_debug'] = TRUE;
-		$config['cache_on'] = FALSE;
-		$config['cachedir'] = "";
-		$config['char_set'] = "utf8";
-		$config['dbcollat'] = "utf8_general_ci";
-		
-		$this->old_db = $this->load->database($config, TRUE);
+		$this->load->model('user/user');
 	}
 	
 	/**
@@ -43,7 +26,7 @@ class Migration_Transfer extends CI_Migration {
 	function up() 
 	{	
 		
-		if ($this->old_db)
+		if ($this->old_db = $this->load->database('transfer', TRUE))
 		{
 			//Flush example data
 			$this->db->empty_table(User::TABLE);
@@ -63,9 +46,11 @@ class Migration_Transfer extends CI_Migration {
 			
 			//Build user password transfer table
 			$this->dbforge->add_key('user_id', TRUE);
+			$this->dbforge->add_key('old_id', TRUE);
 			
 			$this->dbforge->add_field(array(
 				'user_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
+				'old_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
 				'password' => array('type' => 'VARCHAR', 'constraint' => 32, 'null' => FALSE)
 			));
 			$this->dbforge->create_table('transfer_user', TRUE);
@@ -77,7 +62,7 @@ class Migration_Transfer extends CI_Migration {
 			
 			//Userdata
 			$old_activ_users = $this->old_db
-			->select('username, passwort, email, RegDatum')
+			->select('id, username, passwort, email, RegDatum')
 			->where('activated', 1)
 			->get('user')
 			->result();
@@ -94,15 +79,19 @@ class Migration_Transfer extends CI_Migration {
 				if($this->form_validation->run('signup') === TRUE)
 				{
 					//Add user
-					$user_id = $this->user->add_user(
-						$user->username, 
-						NULL,
-						$user->email
-					);
+					$this->db
+					->set('name', $user->username)
+					->set('password', NULL)
+					->set('email', $user->email)
+					->set('status', 1)
+					->set('update', 'NOW()', FALSE)
+					->set('create', $user->RegDatum)
+					->insert(USER::TABLE);
 					
 					//Transfer password
 					$this->db
-					->set('user_id', $user_id)
+					->set('user_id', $this->db->insert_id())
+					->set('old_id', $user->id)
 					->set('password', $user->passwort)
 					->insert('transfer_user');
 				}
@@ -129,8 +118,10 @@ class Migration_Transfer extends CI_Migration {
 			->row()->count;
 			$count = $this->old_db->count_all_results('user');
 			$this->_output_info('Users', $count, $error, $count_deleted);
-			
-			//TODO: Uploads
+		}
+		else
+		{
+			echo 'Cant connect to transfer DB';
 		}
 	}
 
@@ -143,7 +134,6 @@ class Migration_Transfer extends CI_Migration {
 		$this->dbforge->drop_table('transfer_invalid');
 		
 		$this->db->empty_table(User::TABLE);
-		//$this->db->empty_table(Skin::TABLE);
 	}
 
 	private function _output_info($type, $count, $invalid, $ignored = 0)
