@@ -12,12 +12,6 @@ class Public_Controller extends MY_Controller{
         {
             redirect('maintenance');
         }
-		
-		//upcoming info... set to true if upload
-		if(!TRUE)
-        {
-            redirect('upcoming');
-        }
 	}
 	
 }
