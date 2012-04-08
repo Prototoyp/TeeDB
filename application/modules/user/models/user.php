@@ -342,6 +342,8 @@ class User extends CI_Model {
 		
 		return $query->row();
 	}
+	
+	public function is_admin($userid){return FALSE;}
 
 	// --------------------------------------------------------------------
 	// TODO: Continue model reworking ...
