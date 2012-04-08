@@ -38,11 +38,14 @@ class UpComing extends MY_Controller {
 	public function index()
 	{
 		//One week
-		$this->output->cache(10080);
+		//$this->output->cache(10080);
 		
 		$data = array();
-		$data['transfers'][] = array('name' => 'Picachu', 'type' => 'skin', 'reason' => 'Dismatched minimum or maximum size of 256x125.');
-		$data['transfers'][] = array('name' => 'Blubb(&%)', 'type' => 'user', 'reason' => 'No Symbols allowed in name.');
+		$data['transfers'] = $this->db
+		->select('username, error')
+		->where('type', 'user')
+		->get('transfer_invalid')
+		->result();
 		
 		$this->template->clear_layout();
 		$this->template->set_theme('default');
