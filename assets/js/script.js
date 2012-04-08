@@ -1,5 +1,8 @@
 /* Author: Andreas Gehle */
 
+$(document).ready(function() {
+
+
 //Build Ad-Slider
 adslider(4);
 
@@ -44,7 +47,7 @@ function sendRate(obj, value){
 				$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
 				
 				//Need login
-				if(!json.like || !json.dislike){
+				if(!json.data.like || !json.data.dislike){
 					
 					$('#info').append(
 						'<p class="error color border"><span class="icon color icon100"></span>'+
@@ -55,23 +58,23 @@ function sendRate(obj, value){
 				}
 				
 				//Update chartbar
-				like.css('width', json.like);
-				dislike.css('width', json.dislike);
+				like.css('width', json.data.like);
+				dislike.css('width', json.data.dislike);
 				
 				var num;
 				
-				if(value != json.has_rated){
+				if(value != json.data.has_rated){
 					if(value){
 						num = parseInt(like.text());
 						like.text(num +1);
-						if(json.has_rated >= 0){
+						if(json.data.has_rated >= 0){
 							num = parseInt(dislike.text());
 							dislike.text(num -1);
 						}
 					}else{
 						num = parseInt(dislike.text());
 						dislike.text(num +1);
-						if(json.has_rated >= 0){
+						if(json.data.has_rated >= 0){
 							num = parseInt(like.text());
 							like.text(num -1);
 						}
@@ -85,108 +88,112 @@ function sendRate(obj, value){
 }
 
 //Ajax Uploader
-$('form#upload button').click(function(){
-	$('form#upload').ajaxSubmit({
-		type: 'POST',
-		url: 'teedb/upload/submit',
-    	dataType: 'json',
-		success: function(json){
-			//Clean old info
-			$('#info').html('');
-			//Write new info
-			if(json.error) {
-				for(var i in json.html)	{
-					$('#info').append(
-						'<p class="error color border"><span class="icon color icon100"></span>'+
-						json.html[i] +
-						'</p>'
-					);
-				}
-			}else{
-				$('#info').html(
-					'<p class="success color border"><span class="icon color icon101"></span>'+
-					json.html +
-					'</p>'
-				);
-				
-				for(var i in json.uploads) {
-					$('#list > ul').append(
-						'<li>'+
-							'<div style="width:110px; height:64px">'+
-								'<img src="'+json.uploads[i].preview+'" href="'+json.uploads[i].raw_name+' preview" width="64" height="64" />'+
-							'</div>'+
-							'<p>'+
-								json.uploads[i].raw_name +
-							'</p>'+
-						'</li>'
-					);
-				}
-				$('input[name="file[]"]').val('');
-			}
-			//Set new csrf
-			$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
-		},
-		error: function(e){
-			$('#info').html(
+$('form#upload').ajaxForm({
+	type: 'POST',
+	dataType: 'json',
+	beforeSubmit: function() {
+		//Clean old info
+		$('#info').html('');
+	},
+	success: function(json){
+		//Display errors
+		for(var i in json.errors) {
+			$('#info').append(
 				'<p class="error color border"><span class="icon color icon100"></span>'+
-				e.responseText +
+				json.errors[i] +
 				'</p>'
 			);
 		}
-	});
+		
+		//Display new uploads
+		if(json.data.length > 0) {
+			for(var i in json.data) {
+				$('#info').append(
+					'<p class="success color border"><span class="icon color icon101"></span>'+
+					'Uploaded '+json.data[i].file_name +' successful.'+
+					'</p>'
+				);
+			
+				$('#list > ul').append(
+					'<li>'+
+						'<div style="width:110px; height:64px">'+
+							'<img src="'+json.data[i].preview+'" href="'+json.data[i].raw_name+' preview" width="64" height="64" />'+
+						'</div>'+
+						'<p>'+
+							json.data[i].raw_name +
+						'</p>'+
+					'</li>'
+				);
+			}
+			//$('input[name="file[]"]').val('');
+			$(this).clearForm();
+		}
+		//Set new csrf
+		$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
+	},
+	error: function(e){
+		$('#info').html(
+			'<p class="error color border"><span class="icon color icon100"></span>'+
+			e.responseText +
+			'</p>'
+		);
+	}
 });
 
 //Ajax comment
-$('form#comment button').click(function(){
-	$('form#comment').ajaxSubmit({
-		type: 'POST',
-		url: 'blog/news/submit',
-    	dataType: 'json',
-		success: function(json){
-			//Clean old info
-			$('#info').html('');
-			//Write new info
-			if(json.error) {
-				for(var i in json.html)	{
-					$('#info').append(
-						'<p class="error color border"><span class="icon color icon100"></span>'+
-						json.html[i] +
-						'</p>'
-					);
-				}
-			}else{
-				$('#info').html(
-					'<p class="success color border"><span class="icon color icon101"></span>'+
-					json.html +
-					'</p>'
-				);
-				
-				$('#lister ul > br').first().after(
-					'<li style="height: 90px">'+
-						'<time style="padding:0;" datetime="'+ISODateString(new Date())+'">'+
-							'Today'+
-						'</time><br/>'+
-						'<span class="none solid">You</span>'+
-					'</li>'+
-					'<li style="width: 496px; margin-left:15px; text-align: left;">'+
-						json.comment+
-					'</li>'+
-					'<br class="clear" />'
-				);
-				
-				$('textarea[name="comment"]').val('');
-			}
-			//Set new csrf
-			$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
-		},
-		error: function(e){
-			$('#info').html(
+$('form#comment').ajaxForm({
+	type: 'POST',
+	dataType: 'json',
+	beforeSubmit: function() {
+		//Clean old info
+		$('#info').html('');
+	},
+	success: function(json){
+		//Display errors
+		for(var i in json.errors) {
+			$('#info').append(
 				'<p class="error color border"><span class="icon color icon100"></span>'+
-				e.responseText +
+				json.errors[i] +
 				'</p>'
 			);
 		}
-	});
+		
+		//Display new comment
+		if(json.data.length > 0) {
+			$('#info').append(
+				'<p class="success color border"><span class="icon color icon101"></span>'+
+				'Comment added.' +
+				'</p>'
+			);
+			
+			$('#lister ul > br').first().after(
+				'<li style="height: 90px">'+
+					'<time style="padding:0;" datetime="'+ISODateString(new Date())+'">'+
+						'Today'+
+					'</time><br/>'+
+					'<span class="none solid">You</span>'+
+				'</li>'+
+				'<li style="width: 496px; margin-left:15px; text-align: left;">'+
+					json.data+
+				'</li>'+
+				'<br class="clear" />'
+			);
+			
+			$('textarea[name="comment"]').val('');
+		}
+		//Set new csrf
+		$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
+	},
+	error: function(e){
+		$('#info').html(
+			'<p class="error color border"><span class="icon color icon100"></span>'+
+			e.responseText +
+			'</p>'
+		);
+	}
+});
+
+//Close document ready
 });
 
 function ISODateString(d) {
