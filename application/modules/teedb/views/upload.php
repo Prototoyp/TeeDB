@@ -26,9 +26,10 @@
 		
 		<div id="info">
 			<?php echo validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
+			<?php echo $this->upload->display_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
 		</div>
 		
-		<?php echo form_open_multipart('teedb/upload/submit', array('id' => 'upload'), array('type' => $type)); ?>
+		<?php echo form_open_multipart('upload/'.$type, array('id' => 'upload'), array('type' => $type)); ?>
 		
 			
 			<?php if($type != 'mods'): ?>
@@ -59,7 +60,7 @@
 				</div>
 			<?php endif; ?>
 			
-		<?php echo form_button('upload', 'Upload'); ?>
+		<?php echo form_submit('upload', 'Upload'); ?>
 		
 		<?php echo form_close(); ?>
 		

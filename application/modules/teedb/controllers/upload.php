@@ -1,378 +1,482 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Upload extends Public_Controller{
+class Upload extends Request_Controller {
 
 	function __construct()
 	{
 		parent::__construct();
 		
 		$this->load->helper('inflector');
-		$this->load->config('teedb/teedb');
-		$this->load->library('form_validation');
+		$this->load->config('teedb/upload');
+		$this->load->library(array('form_validation', 'upload'));
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * On default use skin upload form
+	 */
+	public function index()
+	{
+		$this->skins();
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Skin ajax/form upload
+	 */
+	public function _ajax_skins()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_skins());
 	}
 	
-	public function index($type='skins')
+	public function _post_skins()
 	{
-		$this->template->set_subtitle('Upload '.$type);
-		$this->template->view('upload', array('type' => $type));
+		$data = array();
+		$data['type'] = 'skins';
+		$data['uploads'] = $this->_upload_skins();
+		
+		$this->template->set_subtitle('Upload skins');
+		$this->template->view('upload', $data);
 	}
 	
 	public function skins()
 	{
-		$this->index('skins');
+		$this->_upload_form('skins');
+	}
+
+	// --------------------------------------------------------------------
+		
+	/**
+	 * Mapres ajax/form upload
+	 */
+	public function _ajax_mapres()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_mapres());
 	}
 	
-	public function maps()
+	public function _post_mapres()
 	{
-		$this->index('maps');
-	}
-	
-	public function demos()
-	{
-		$this->index('demos');
+		$data = array();
+		$data['type'] = 'mapres';
+		$data['uploads'] = $this->_upload_mapres();
+		
+		$this->template->set_subtitle('Upload mapres');
+		$this->template->view('upload', $data);
 	}
 	
 	public function mapres()
 	{
-		$this->index('mapres');
+		$this->_upload_form('mapres');
+	}
+
+	// --------------------------------------------------------------------
+		
+	/**
+	 * Maps ajax/form upload
+	 */
+	public function _ajax_maps()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_maps());
+	}
+	
+	public function _post_maps()
+	{
+		$data = array();
+		$data['type'] = 'maps';
+		$data['uploads'] = $this->_upload_maps();
+		
+		$this->template->set_subtitle('Upload maps');
+		$this->template->view('upload', $data);
+	}
+	
+	public function maps()
+	{
+		$this->_upload_form('maps');
+	}
+
+	// --------------------------------------------------------------------
+		
+	/**
+	 * Demos ajax/form upload
+	 */
+	public function _ajax_demos()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_demos());
+	}
+	
+	public function _post_demos()
+	{
+		$data = array();
+		$data['type'] = 'demos';
+		$data['uploads'] = $this->_upload_demos();
+		
+		$this->template->set_subtitle('Upload demos');
+		$this->template->view('upload', $data);
+	}
+	
+	public function demos()
+	{
+		$this->_upload_form('demos');
+	}
+
+	// --------------------------------------------------------------------
+		
+	/**
+	 * Gameskins ajax/form upload
+	 */
+	public function _ajax_gameskins()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_gameskins());
+	}
+	
+	public function _post_gameskins()
+	{
+		$data = array();
+		$data['type'] = 'gameskins';
+		$data['uploads'] = $this->_upload_gameskins();
+		
+		$this->template->set_subtitle('Upload gameskins');
+		$this->template->view('upload', $data);
 	}
 	
 	public function gameskins()
 	{
-		$this->index('gameskins');
+		$this->_upload_form('gameskins');
+	}
+
+	// --------------------------------------------------------------------
+		
+	/**
+	 * Mods ajax/form upload
+	 */
+	public function _ajax_mods()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_upload_mods());
+	}
+	
+	public function _post_mods()
+	{
+		$data = array();
+		$data['type'] = 'mods';
+		$data['uploads'] = $this->_upload_mods();
+		
+		$this->template->set_subtitle('Upload mods');
+		$this->template->view('upload', $data);
 	}
 	
 	public function mods()
 	{
-		$this->index('mods');
+		$this->_upload_form('mods');
 	}
 	
-	function submit()
-	{		
-		if(!$this->input->post('type')) {
-			return $this->_error('No type given.');
-		} else {
-			$type = $this->input->post('type');
-		}
-		
-		switch($type){
-			case 'skins': 
-				$this->load->model('teedb/skin');
-				$this->load->library('teedb/Skin_preview');
-				$config['upload_path'] = './'.$this->config->item('upload_path_skins');
-				$config['allowed_types'] = 'png';
-				$config['max_size']	= '100'; //100kB
-				$config['max_width']  = '256';
-				$config['max_height']  = '128';
-				$config['min_width']  = '256';
-				$config['min_height']  = '128';
-			break;
-			case 'mapres':
-				$this->load->model('teedb/tileset');
-				$this->load->library('image_lib');
-				$config['upload_path'] = './'.$this->config->item('upload_path_mapres');
-				$config['allowed_types'] = 'png';
-				$config['max_size']	= '1000'; //1MB
-			break;
-			case 'gameskins':
-				$this->load->model('teedb/gameskin');
-				$this->load->library('image_lib');
-				$config['upload_path'] = './'.$this->config->item('upload_path_gameskins');
-				$config['allowed_types'] = 'png';
-				$config['max_size']	= '1000'; //1MB
-				$config['max_width']  = '1024';
-				$config['max_height']  = '512';
-				$config['min_width']  = '1024';
-				$config['min_height']  = '512';
-			break;
-			case 'maps':
-				$this->load->model('teedb/map');
-				//$this->load->library('teedb/Map_preview');
-				$config['upload_path'] = './'.$this->config->item('upload_path_maps');
-				$config['allowed_types'] = 'map';
-				$config['max_size']	= '10000'; //10MB
-			break;
-			case 'demos':
-				$this->load->model('teedb/demo');
-				//$this->load->library('teedb/Demo_reader');
-				$config['upload_path'] = './'.$this->config->item('upload_path_demos');
-				$config['allowed_types'] = 'demo';
-				$config['max_size']	= '10000'; //10MB
-			break;
-			case 'mods':
-				$this->load->model('teedb/mod');
-				$this->load->library('image_lib');
-				$config['upload_path'] = './'.$this->config->item('upload_path_mods');
-				$config['encrypt_name']  = TRUE;
-				$config['allowed_types'] = 'png';
-				$config['max_size']	= '1000'; //1MB
-				$config['min_width']  = '180';
-				$config['min_height']  = '180';
-				
-				$this->form_validation->set_rules('modname', 'modname', 'required|alpha_numeric|min_length[3]|max_length[12]|unique[teedb_mods.name]');
-				$this->form_validation->set_rules('link', 'link', 'trim|required|prep_url|valid_url');
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Upload form
+	 */
+	private function _upload_form($type = 'skins')
+	{
+		$this->template->set_subtitle('Upload '.$type);
+		$this->template->view('upload', array('type' => $type));
+	}
 
-				$this->form_validation->run();
-				
-			break;
-			default: 
-				return $this->_error('Type incorret.');
-		}
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Upload handler
+	 */
+	
+	/**
+	 * Upload skins and create previews
+	 */
+	private function _upload_skins()
+	{
+		$this->load->model('teedb/skin');
+		$this->load->library('teedb/Skin_preview');
 		
-		if(!$this->auth->logged_in()){
-			return $this->_error('You have to login.');
-		}
-
-		if($form_errors = $this->form_validation->error_array()) {
-			return $this->_error($form_errors);	
-		}
+		$upload_data = $this->_upload('skin');
 		
-		$this->load->library('upload', $config);
-		
-		$files = $_FILES['file'];
-		$switch_array = false;
-		if(is_array($_FILES['file']['name'])){
-			$switch_array = true;
-		}
-		$uploads = array();
-		
-		for($i = 0, $count = count($files['name']); $i < $count; $i++) {
-			if($switch_array){
-				unset($_FILES['file']);
-				$_FILES['file'] = array(
-					'name' => $files['name'][$i], 
-					'type' => $files['type'][$i], 
-					'tmp_name' => $files['tmp_name'][$i], 
-					'error' => $files['error'][$i], 
-					'size' => $files['size'][$i]
-				);
-			}
-		
-			if (!$this->upload->do_upload('file')){
-				return $this->_error($this->upload->display_errors('', ''));
-			}else{			
-				$data = $this->upload->data();
-				
-				//Thumbnails
-				if($type == 'skins'){
-					if(!@$this->skin_preview->create($data['file_name'])){
-						return $this->_error('Coudnt generate preview image.');
-					}
-					$data['preview'] = base_url().($this->config->item('upload_path_skins')).'/previews/'.$data['file_name'];
-					$this->skin->setSkin($data['raw_name']);
-				}elseif($type == 'mapres'){
-					$configResize['source_image'] = $data['full_path'];
-					$configResize['new_image'] = $config['upload_path'].'/previews/';
-					$configResize['width'] = 110;
-					$configResize['height'] = 64;
-					
-					$this->image_lib->initialize($configResize);
-					if(!$this->image_lib->resize()){
-						return $this->_error($this->image_lib->display_errors('', ''));
-					}
-					$this->image_lib->clear();
-					$data['preview'] = base_url().($this->config->item('upload_path_mapres')).'/previews/'.$data['file_name'];
-					$this->tileset->setMapres($data['raw_name']);
-				}elseif($type == 'gameskins'){
-					$configResize['source_image'] = $data['full_path'];
-					$configResize['new_image'] = $config['upload_path'].'/previews/';
-					$configResize['width'] = 110;
-					$configResize['height'] = 64;
-					
-					$this->image_lib->initialize($configResize);
-					if(!$this->image_lib->resize()){
-						return $this->_error($this->image_lib->display_errors('', ''));
-					}
-					$this->image_lib->clear();
-					$data['preview'] = base_url().($this->config->item('upload_path_gameskins')).'/previews/'.$data['file_name'];
-					$this->gameskin->setGameskin($data['raw_name']);
-				}elseif($type == 'maps'){
-					//$this->map_preview->create($data['file_name']);
-					//$data['preview'] = base_url().($this->config->item('upload_path_maps')).'/previews/'.$data['raw_name'].'.png';
-					$data['preview'] = base_url('assets/images/nopic_map.png');
-					$this->map->setMap($data['raw_name']);
-				}elseif($type == 'demos'){
-					//$this->demo_reader->getMap($data['file_name']);
-					$data['preview'] = base_url('assets/images/nopic_demo.png');
-					$this->demo->setDemo($data['raw_name']);
-				}elseif($type == 'mods'){
-					$configResize['source_image'] = $data['full_path'];
-					$configResize['new_image'] = $config['upload_path'].'/'.$this->input->post('modname').'.png';
-					$configResize['width'] = $config['min_width'];
-					$configResize['height'] = $config['min_height'];
-					
-					$this->image_lib->initialize($configResize);
-					if(!$this->image_lib->resize()){
-						return $this->_error($this->image_lib->display_errors('', ''));
-					}
-					$this->image_lib->clear();
-					$data['preview'] = base_url($configResize['new_image']);
-					$data['raw_name'] = $this->input->post('modname');
-					
-					$this->mod->setMod(
-						$this->input->post('modname'),
-						$this->input->post('link'),
-						(bool) $this->input->post('server'),
-						(bool) $this->input->post('client')
-					);
-					unlink($data['full_path']);
+		foreach ($upload_data as $key => $data)
+		{
+			//Create skin previews
+			if(!$this->skin_preview->create($data['file_name']))
+			{
+				//Add errors
+				foreach($this->skin_preview->error_msg as $error)
+				{
+					$this->form_validation->add_message($error.' ('.$data['file_name'].')');
 				}
-				$uploads[] = $data;
+				//Trackback upload
+				@unlink($data['full_path']);
+				//Delete from data array
+				unset($upload_data[$key]);
+			}
+			else
+			{
+				//Extend upload data
+				$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'skin')).'/'.$data['file_name']);
+				$this->skin->setSkin($data['raw_name']);
 			}
 		}
-		return $this->_info('Upload sucessful.', $uploads);
+		return $upload_data;
+	}
+	
+	
+	/**
+	 * Upload mapres and create thumbnails
+	 */
+	private function _upload_mapres()
+	{
+		$this->load->model('teedb/tileset');
+		$this->load->library('image_lib');
+		
+		$upload_data = $this->_upload('mapres');
+		
+		foreach ($upload_data as $key => $data)
+		{
+			//Create thumbnail
+			$configResize['source_image'] = $data['full_path'];
+			$configResize['new_image'] = $this->config->item('preview_path', 'mapres');
+			$configResize['width'] = 110;
+			$configResize['height'] = 64;
+			
+			$this->image_lib->initialize($configResize);
+			if(!$this->image_lib->resize())
+			{
+				//Add errors
+				foreach($this->image_lib->error_msg as $error)
+				{
+					$this->form_validation->add_message($error.' ('.$data['file_name'].')');
+				}
+				//Trackback upload
+				@unlink($data['full_path']);
+				//Delete from data array
+				unset($upload_data[$key]);
+			}
+			else
+			{
+				//Extend upload data
+				$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'mapres')).'/'.$data['file_name']);
+				$this->tileset->setMapres($data['raw_name']);
+			}
+			$this->image_lib->clear();
+		}
+		return $upload_data;
+	}
+	
+	/**
+	 * Upload gameskins and create thumbnails
+	 */
+	private function _upload_gameskins()
+	{
+		$this->load->model('teedb/gameskin');
+		$this->load->library('image_lib');
+		
+		$upload_data = $this->_upload('gameskin');
+		
+		foreach ($upload_data as $key => $data)
+		{
+			//Create thumbnail
+			$configResize['source_image'] = $data['full_path'];
+			$configResize['new_image'] = $this->config->item('preview_path', 'gameskin');
+			$configResize['width'] = 110;
+			$configResize['height'] = 64;
+			
+			$this->image_lib->initialize($configResize);
+			if(!$this->image_lib->resize())
+			{
+				//Add errors
+				foreach($this->image_lib->error_msg as $error)
+				{
+					$this->form_validation->add_message($error.' ('.$data['file_name'].')');
+				}
+				//Trackback upload
+				@unlink($data['full_path']);
+				//Delete from data array
+				unset($upload_data[$key]);
+			}
+			else
+			{
+				//Extend upload data
+				$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'gameskin')).'/'.$data['file_name']);
+				$this->gameskin->setGameskin($data['raw_name']);
+			}
+			$this->image_lib->clear();
+		}
+		return $upload_data;
+	}
+	
+	/**
+	 * Upload maps, create preview and map2image
+	 * 
+	 * FIXME: map_preview create preview instead of static 'not avaible'-image
+	 */
+	private function _upload_maps()
+	{
+		$this->load->model('teedb/map');
+		//$this->load->library('teedb/Map_preview');
+		
+		$upload_data = $this->_upload('map');
+		
+		foreach ($upload_data as $key => $data)
+		{
+			//Create preview
+			if(FALSE && !$this->map_preview->create($data['file_name']))
+			{
+				//Add errors
+				foreach($this->map_preview->error_msg as $error)
+				{
+					$this->form_validation->add_message($error.' ('.$data['file_name'].')');
+				}
+				//Trackback upload
+				@unlink($data['full_path']);
+				//Delete from data array
+				unset($upload_data[$key]);
+			}
+			else
+			{
+				//Extend upload data
+				//$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'map')).'/'.$data['file_name']);
+				$upload_data[$key]['preview'] = base_url('assets/images/nopic_map.png');
+				$this->map->setMap($data['raw_name']);
+			}
+		}
+		return $upload_data;
+	}
+	
+	/**
+	 * Upload demos and create preview of used map
+	 * 
+	 * FIXME: demo_preview create preview instead of static 'not avaible'-image
+	 */
+	private function _upload_demos()
+	{
+		$this->load->model('teedb/demo');
+		//$this->load->library('teedb/Demo_preview');
+		
+		$upload_data = $this->_upload('demo');
+		
+		foreach ($upload_data as $key => $data)
+		{
+			//Create preview
+			if(FALSE && !$this->demo_preview->create($data['file_name']))
+			{
+				//Add errors
+				foreach($this->demo_preview->error_msg as $error)
+				{
+					$this->form_validation->add_message($error.' ('.$data['file_name'].')');
+				}
+				//Trackback upload
+				@unlink($data['full_path']);
+				//Delete from data array
+				unset($upload_data[$key]);
+			}
+			else
+			{
+				//Extend upload data
+				//$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'demo')).'/'.$data['file_name']);
+				$upload_data[$key]['preview'] = base_url('assets/images/nopic_demo.png');
+				$this->demo->setDemo($data['raw_name']);
+			}
+		}
+		return $upload_data;
+	}
+	
+	/**
+	 * Upload mod preview image and validate form data
+	 */
+	private function _upload_mods()
+	{
+		$this->load->model('teedb/mod');
+		$this->load->library('image_lib');
+		
+		if(!$this->auth->logged_in())
+		{
+			$this->form_validation->add_message('You have to login.');
+			return array();
+		}
+		
+		if ($this->form_validation->run('mod') === FALSE)
+		{
+			return array();
+		}
+		
+		//Upload preview image files
+		$this->upload->initialize($this->config->item('mod'));
+		if(!$this->upload->do_upload('file'))
+		{
+			return array();
+		}
+		
+		//Upload data
+		$data = $this->upload->data();
+		
+		//Create thumbnail
+		$configResize['source_image'] = $data['full_path'];
+		$configResize['new_image'] = $this->config->item('upload_path', 'mod').'/'.$this->input->post('modname').'.png';
+		$configResize['width'] = $this->config->item('min_width', 'mod');
+		$configResize['height'] = $this->config->item('min_height', 'mod');
+		
+		$this->image_lib->initialize($configResize);
+		if(!$this->image_lib->resize())
+		{
+			//Add errors
+			$this->form_validation->add_message($this->image_lib->error_msg);
+			
+			//Trackback upload
+			@unlink($data['full_path']);
+			//Delete data array
+			unset($data);
+		}
+		else
+		{
+			//Extend upload data
+			@unlink($data['full_path']);
+			
+			$data = array();
+			$data[0]['preview'] = base_url($configResize['new_image']);
+			$data[0]['raw_name'] = $this->input->post('modname');
+			$data[0]['file_name'] = $this->input->post('modname');
+					
+			$this->mod->setMod(
+				$this->input->post('modname'),
+				$this->input->post('link'),
+				(bool) $this->input->post('server'),
+				(bool) $this->input->post('client')
+			);
+		}
+		
+		return $data;
 	}
 
-	function _error($msg=null) 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Upload multiple files
+	 * 
+	 * @param array Config-array
+	 * @return array Upload-data successful
+	 */
+	private function _upload($config)
 	{
-		$json = array(
-			'error' => true,
-			'html' => (is_array($msg))? $msg : array($msg)
-		);
-		$this->_return_json($json);
-		return false;
-	}
-
-	function _info($msg=null, $uploads=array()) 
-	{
-		$json = array(
-			'error' => false,
-			'html' => $msg,
-			'uploads' => $uploads
-		);
-		$this->_return_json($json);
-		return true;
-	}
-
-	function _return_json($json) 
-	{
-	    $this->output->set_header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header('Expires: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-	    $this->output->set_header("Pragma: no-cache");
-		form_open(); //To generate a new csrf hash
-		$json['csrf_token_name'] = $this->security->get_csrf_token_name();
-		$json['csrf_hash'] = $this->security->get_csrf_hash();
-		$this->security->csrf_set_cookie();
-		$this->output->append_output(json_encode($json));
+		if(!$this->auth->logged_in())
+		{
+			$this->form_validation->add_message('You have to login.');
+			return array();
+		}
+		
+		//Upload files
+		$this->upload->initialize($this->config->item($config));
+		return $this->upload->do_multi_upload('file');
 	}
 	
 	//-------------------------------------------------------
-	
-	function skins_submit()
-	{
-		if($this->input->post('name') === FALSE 
-			or isset($_FILES['file']['name']) and !empty($_FILES['file']['name'])){
-			$this->file('skin');
-			return;
-		}
-			
-		if($this->_skin_validate() === FALSE) {
-			$data['upload_data'] = array('raw_name' => $this->input->post('raw_name'),
-				'file_size' => $this->input->post('file_size'));
-			$this->load->view('skin/upload', $data);
-			return;
-		}
-		if($this->input->post('name') != $this->input->post('raw_name')){
-			if(is_file('upload/skins/'.$this->input->post('name').'.png')){
-				unlink('upload/skins/'.$this->input->post('name').'.png');
-				unlink('upload/skins/previews/'.$this->input->post('name').'.png');
-			}
-			if(is_file('upload/skins/'.$this->input->post('raw_name').'.png')){
-				rename('upload/skins/'.$this->input->post('raw_name').'.png', 
-					'upload/skins/'.$this->input->post('name').'.png');
-				rename('upload/skins/previews/'.$this->input->post('raw_name').'.png', 
-					'upload/skins/previews/'.$this->input->post('name').'.png');
-			}
-		}
-		$this->load->model('skin');
-		$this->skin->setSkin();		
-		$data['submit']=true;	
-		$this->load->view('skin/upload', $data);
-	}
-	
-	function _mapres()
-	{
-		if($this->input->post('name') === FALSE 
-			or isset($_FILES['file']['name']) and !empty($_FILES['file']['name'])){
-			$this->file('mapres');
-			return;
-		}
-			
-		if($this->_mapres_validate() === FALSE) {
-			$data['upload_data'] = array('raw_name' => $this->input->post('raw_name'),
-				'file_size' => $this->input->post('file_size'));
-			$this->load->view('mapres/upload', $data);
-			return;
-		}
-		if($this->input->post('name') != $this->input->post('raw_name')){
-			if(is_file('upload/mapress/'.$this->input->post('name').'.png')){
-				unlink('upload/mapress/'.$this->input->post('name').'.png');
-				unlink('upload/mapress/previews/'.$this->input->post('name').'.png');
-			}
-			if(is_file('upload/mapress/'.$this->input->post('raw_name').'.png')){
-				rename('upload/mapress/'.$this->input->post('raw_name').'.png', 
-					'upload/mapress/'.$this->input->post('name').'.png');
-				rename('upload/mapress/previews/'.$this->input->post('raw_name').'.png', 
-					'upload/mapress/previews/'.$this->input->post('name').'.png');
-			}
-		}
-		$this->load->model('Mapres');
-		$this->Mapres->setMapres();		
-		$data['submit']=true;	
-		$this->load->view('mapres/upload', $data);
-	}
-	
-	private function _skin_validate()
-	{
-		$this->form_validation->set_rules('name', 'Skinname',
-			'required|alpha_numeric|min_length[3]|max_length[15]|unique[Skin.name]');
-		$this->form_validation->set_rules('raw_name', 'Filename',
-			'required|alpha_dash');
-		$this->form_validation->set_rules('file_size', 'Filesize',
-			'required|numeric');
-
-		return $this->form_validation->run();
-	}
-	
-	private function _mapres_validate()
-	{
-		$this->form_validation->set_rules('name', 'Mapresname',
-			'required|alpha_numeric|min_length[3]|max_length[15]|unique[Skin.name]');
-		$this->form_validation->set_rules('raw_name', 'Filename',
-			'required|alpha_dash');
-		$this->form_validation->set_rules('file_size', 'Filesize',
-			'required|numeric');
-
-		return $this->form_validation->run();
-	}
-	
-	function skinpreview()
-	{		
-		if($this->_skinpreview_validate() === FALSE) {
-			$data['upload_data'] = array('raw_name' => $this->input->post('raw_name'),
-				'file_size' => $this->input->post('file_size'));
-			if($this->input->post('name'))
-				$data['upload_data']['name'] = $this->input->post('name');
-			$this->load->view('skin/upload', $data);
-			return;
-		}
-		$data['upload_data'] = array('raw_name' => $this->input->post('raw_name'),
-			'file_size' => $this->input->post('file_size'));
-		if($this->input->post('name'))
-			$data['upload_data']['name'] = $this->input->post('name');
-		$data['refresh'] = TRUE;
-		
-		$this->load->library('teepreview');
-		$this->teepreview->create_tee(base_url().'/upload/skins/'.$this->input->post('raw_name').'.png');	
-		$this->load->view('skin/upload', $data);	
-	}
-	
-	private function _skinpreview_validate()
-	{
-		$this->form_validation->set_rules('raw_name', 'Filename',
-			'required|alpha_dash');
-
-		return $this->form_validation->run();
-	}
 }

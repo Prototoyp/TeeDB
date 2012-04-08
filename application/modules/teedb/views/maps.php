@@ -27,7 +27,7 @@
 					
 					<li>
 						<div style="width:200px;height:80px">
-							<img src="<?php echo base_url(); ?>uploads/maps/previews/<?php echo $entry->name; ?>.png" alt="Map <?php echo $entry->name; ?>" />
+							<img src="<?php echo base_url('assets/images/nopic_map.png'); ?>" alt="Map <?php echo $entry->name; ?>" />
 						</div>
 						
 						<p style="padding-top:5px"><?php echo $entry->name; ?></p>
