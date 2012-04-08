@@ -12,18 +12,20 @@ class Skin_preview {
 
 	protected $CI;
 	
-	protected $name		= '';
-	protected $zoom		= 1;
+	protected $name				= '';
+	protected $full_src_path	= '';
+	protected $full_dst_path	= '';
+	protected $zoom				= 1;
 	
-	private $size;
+	private $size				= 64;
+	
+	public $error_msg 	= array();
 	
 	const BODY_SIZE 	= 96;
 	const EYE_SIZE 		= 32;
 	const HAND_SIZE 	= 32;
 	const FEET_WIDTH 	= 64;
 	const FEET_HEIGHT 	= 32;
-		
-	const PREV_FOLDER	= '/previews/';
 	
 	const EYE_NORMAL	= 1;
 	const EYE_ANGRY		= 2;
@@ -35,12 +37,15 @@ class Skin_preview {
 	/**
 	 * Constructor
 	 */
-	function __construct()
+	function __construct($props = array())
 	{
 		$this->CI =& get_instance();
 
 		//Load additional libraries, helpers, etc.
-		$this->CI->load->config('teedb/teedb');
+		$this->CI->load->config('teedb/upload');
+		
+		//Set preview image size
+		$this->size = 64 * $this->zoom;
 	}
 
 	// --------------------------------------------------------------------
@@ -49,20 +54,33 @@ class Skin_preview {
 	 * Create the preview file
 	 *
 	 * @access public
-	 * @param file Path to the skin file
+	 * @param file Name of the file e.g. skinname.png
 	 * @return boolean
 	 */
 	public function create($file)
 	{
-		//Set preview image size
-		$this->size = 64 * $this->zoom;
-		
-		//Set preview name
+		//Set image data
 		$this->name = pathinfo($file, PATHINFO_FILENAME);
-		
-		//load the skin file
-		if(!$src = @imagecreatefrompng($this->CI->config->item('upload_path_skins').'/'.$file))
+		$this->full_src_path = $this->CI->config->item('upload_path','skin').'/'.$file;
+		$this->full_dst_path = $this->CI->config->item('preview_path','skin').'/'.$file;
+				
+		//File exist
+		if ( ! file_exists($this->full_src_path))
 		{
+			$this->set_error('skinpreview_invalid_path');
+			return FALSE;
+		}
+		
+		//Load the skin file
+		if ( ! function_exists('imagecreatefrompng'))
+		{
+			$this->set_error(array('skinpreview_unsupported_imagecreate', 'skinpreview_png_not_supported'));
+			return FALSE;
+		}
+						
+		if(!$src = @imagecreatefrompng($this->full_src_path))
+		{
+			$this->set_error('skinpreview_source_image_required');
 			return FALSE;
 		}
 		
@@ -77,19 +95,26 @@ class Skin_preview {
 		imagealphablending($image, TRUE);
 		
 		// Generating the Tee.
-		if(!$this->_paint($image, $src))
+		if(!@$this->_paint($image, $src))
 		{
+			$this->set_error('skinpreview_paint_failed');
 			return FALSE;
 		}
-		imagedestroy($src);
+		@imagedestroy($src);
 		
-		// Saving the image to the disk.
-		$target = $this->CI->config->item('upload_path_skins').self::PREV_FOLDER.$this->name.'.png';
-		if(!imagepng($image, $target))
+		//Save image
+		if ( ! function_exists('imagepng'))
 		{
+			$this->set_error(array('skinpreview_unsupported_imagecreate', 'skinpreview_png_not_supported'));
 			return FALSE;
 		}
-		imagedestroy($image);
+
+		if ( ! @imagepng($image, $this->full_dst_path))
+		{
+			$this->set_error('skinpreview_save_failed');
+			return FALSE;
+		}
+		@imagedestroy($image);
 		
 		return TRUE;
 	}
@@ -148,7 +173,7 @@ class Skin_preview {
 		//Eye right
 		$eye_mirrored = &$this->_mirror_x($src, 64, 96, self::EYE_SIZE, self::EYE_SIZE);
 		imagecopyresampled($preview, $eye_mirrored, $eye_right_x, $eye_y, 0, 0, 25.6, 25.6, self::EYE_SIZE, self::EYE_SIZE);
-		imagedestroy($eye_mirrored);
+		@imagedestroy($eye_mirrored);
 	
 		return TRUE;
 	}
@@ -181,6 +206,50 @@ class Skin_preview {
 		}
 	   
 	    return $image_mirrored;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Set error message
+	 *
+	 * @param	string
+	 * @return	void
+	 */
+	public function set_error($msg)
+	{
+		$CI =& get_instance();
+		$CI->lang->load('skinpreview');
+
+		if (is_array($msg))
+		{
+			foreach ($msg as $val)
+			{
+
+				$msg = ($CI->lang->line($val) == FALSE) ? $val : $CI->lang->line($val);
+				$this->error_msg[] = $msg;
+				log_message('error', $msg);
+			}
+		}
+		else
+		{
+			$msg = ($CI->lang->line($msg) == FALSE) ? $msg : $CI->lang->line($msg);
+			$this->error_msg[] = $msg;
+			log_message('error', $msg);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Show error messages
+	 *
+	 * @param	string
+	 * @return	string
+	 */
+	public function display_errors($open = '<p>', $close = '</p>')
+	{
+		return (count($this->error_msg) > 0) ? $open . implode($close . $open, $this->error_msg) . $close : '';
 	}
 }
 
