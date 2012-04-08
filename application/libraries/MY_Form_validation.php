@@ -20,7 +20,7 @@ class MY_Form_validation extends CI_Form_validation {
     {
         if (count($this->_error_array) === 0)
         {
-                return FALSE;
+          	return FALSE;
         }
         else
 		{
@@ -197,6 +197,37 @@ class MY_Form_validation extends CI_Form_validation {
 		
 		$this->CI->form_validation->set_message('not_logged_in', 'You are logged in. No multi accounts allowed.');
 		return !$this->CI->auth->logged_in();
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Markup parser
+	 * 
+	 * Rules:
+	 * *text* => <strong>text</strong>
+	 * _text_ => <em>text</em>
+	 * -text- => <i>text</i>
+	 * 
+	 * @access	public
+	 * @param	string
+	 * @return	string	Formatted text
+	 */	
+	public function markup_parser($str)
+	{
+		$find = array(
+		  "'\*(.*?)\*'is",
+		  "'_(.*?)_'is",
+		  "'-(.*?)-'is"
+		);
+		
+		$replace = array(
+		  '<strong>\\1</strong>',
+		  '<em>\\1</em>',
+		  '<span style="text-decoration: line-through;">\\1</span>'
+		);
+		
+		return preg_replace($find, $replace, $str);
 	}
 
 }
