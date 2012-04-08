@@ -39,7 +39,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/TeeDB/';
+$config['base_url']	= 'http://teedb.info/';
 
 /*
 |--------------------------------------------------------------------------
@@ -211,7 +211,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------
@@ -353,7 +353,7 @@ $config['csrf_exclude_uris'] = array();
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = FALSE;
+$config['compress_output'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -404,7 +404,7 @@ $config['proxy_ips'] = '';
 | Set to TRUE/FALSE for set the site's maintenance mode on/off.
 |
 */
-$config['maintenance'] = FALSE;
+$config['maintenance'] = TRUE;
 
 
 /* End of file config.php */
