@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Transfer_Skins extends Transfer_Migration {
+class Migration_Transfer_Mapres extends Transfer_Migration {
 	
 	/**
 	 * Constructor
@@ -16,8 +16,8 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	{
         parent::__construct();
 		
-		$this->load->library(array('teedb/Skin_preview','security'));
-		$this->load->model(array('user/user','teedb/skin'));
+		$this->load->library(array('image_lib','security'));
+		$this->load->model(array('user/user','teedb/tileset'));
 	}
 	
 	/**
@@ -25,18 +25,13 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	 */	
 	function up() 
 	{
-		//Flush example data
-		$this->db->empty_table(Skin::TABLE);
+		$type = 'mapres';
 		
-		//Uploads
-		// $uploads = scandir('database/skins');
-		// $uploads = array_flip($uploads);
-		// unset($uploads['previews']);
-		// unset($uploads['.']);
-		// unset($uploads['..']);
+		//Flush example data
+		$this->db->empty_table(Mapres::TABLE);
 		
 		$uploads = array();
-	    $directory = opendir('database/skins'); 
+	    $directory = opendir('database/'.$type); 
 	    while($item = readdir($directory)){ 
 	         if(($item != ".") && ($item != "..") && ($item != "previews")){ 
 	              $uploads[$item] = true; 
@@ -47,7 +42,7 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 		//Skins
 		$old_skins = $this->old_db
 		->select('name, username, s.date')
-		->from('skins AS s')
+		->from($type.' AS s')
 		->join('user AS u', 's.user_id = u.id')
 		->get()->result();
 		
@@ -61,26 +56,13 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 				$files++;
 				
 				//Check
-				list($width, $height, $type, $attr) = getimagesize('database/skins/'.$skin->name.'.png');
-				
-				if($width != 256 or $height != 128)
+				if(filesize('database/'.$type.'/'.$skin->name.'.png') > 1000000)
 				{
 					$this->db
-					->set('type', 'skin')
+					->set('type', 'mapres')
 					->set('name', $skin->name)
 					->set('username', $skin->username)
-					->set('error', 'Dimension of skins must be 1024x512. Given '.$width.'x'.$height.'.')
-					->insert('transfer_invalid');
-					
-					$error++; 
-				}
-				elseif(filesize('database/skins/'.$skin->name.'.png') > 100000)
-				{
-					$this->db
-					->set('type', 'skin')
-					->set('name', $skin->name)
-					->set('username', $skin->username)
-					->set('error', 'Filesize greater than allowed 100kB for skin uploads.')
+					->set('error', 'Filesize greater than allowed 1MB for mapres uploads not allowed.')
 					->insert('transfer_invalid');
 					
 					$error++;
@@ -103,14 +85,11 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 						->set('user_id', $query->row()->id)
 						->set('update', 'NOW()', FALSE)
 						->set('create', $skin->date)
-						->insert(Skin::TABLE);
+						->insert(Tileset::TABLE);
 						
 						//Add file
-						copy('database/skins/'.$skin->name.'.png' , 'uploads/skins/'.$filename.'.png');
-						if(!copy('database/skins/previews/'.$skin->name.'.png' , 'uploads/skins/previews/'.$filename.'.png'))
-						{
-							$this->skin_preview->create($filename);
-						}
+						copy('database/'.$type.'/'.$skin->name.'.png' , 'uploads/'.$type.'/'.$filename.'.png');
+						$this->skin_preview->create($filename);
 					}
 					else
 					{
