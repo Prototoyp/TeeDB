@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Rates extends Ajax_Controller {
+class Rates extends Request_Controller {
 
 	function __construct()
 	{
@@ -35,15 +35,13 @@ class Rates extends Ajax_Controller {
 		return $this->rate->setRate($type, $id, $rate);
 	}
 	
-	function ajax_index()
+	function _ajax_index()
 	{
-		$this->_output_json(
-			$this->_set_rate(), 
-			TRUE
-		);
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_set_rate());
 	}
 	
-	function post_index()
+	function _post_index()
 	{
 		//$this->load->view($this->_set_rate());
 		show_error('Enable javascript to use this feature!');
