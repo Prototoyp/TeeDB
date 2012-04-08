@@ -25,7 +25,7 @@
  * @filesource
  */
 
-class News extends CI_Controller {
+class News extends Request_Controller {
 	
 	/**
 	 * Constructor
@@ -40,6 +40,9 @@ class News extends CI_Controller {
 		$this->load->model(array('blog/blog', 'blog/comment'));
 	}
 	
+	/**
+	 * News overview
+	 */
 	function index($order='new', $direction='desc', $from=0)
 	{
 		//Check input $order
@@ -90,16 +93,19 @@ class News extends CI_Controller {
 		$this->template->view('news', $data);
 	}
 	
+	/**
+	 * Show news by given title
+	 */
 	public function title($title, $from=0)
 	{
 		//Set output
 		$data = array();
 		$data['news_titles'] = $this->blog->get_latest_titles();
-		$data['news'] = $this->blog->get_news(str_replace('-', ' ', $title));
+		$data['news'] = $this->blog->get_news($title);
 		
 		//Init pagination
 		$config['base_url'] = 'blog/news/title/'.$title;
-		$config['total_rows'] = $this->comment->count_comments($data['news']->id);
+		$config['total_rows'] = (isset($data['news']) && $data['news'])? $this->comment->count_comments($data['news']->id) : 0;
 		$config['per_page'] = 5;
 		$config['num_links'] = 8;
 		$config['uri_segment'] = 5;
@@ -124,79 +130,32 @@ class News extends CI_Controller {
 		$this->template->set_subtitle('News');
 		$this->template->view('title', $data);
 	}
+
+	public function _post_title($title, $from=0)
+	{
+		$this->_comment();
+		$this->title($title, $from);
+	}
 	
-	public function submit()
+	public function _ajax_title()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_comment());
+	}
+	
+	private function _comment()
 	{
 		if(!$this->auth->logged_in())
 		{
-			return $this->_error('You have to login.');
+			$this->form_validation->add_message('You have to login.');
 		}
-		
-		if (!$this->_submit_validate())
+
+		if($this->form_validation->run('comment') === TRUE)
 		{
-			return $this->_error(validation_errors(' ', ' '));
+			$this->blog->setComment();
+			return $this->input->post('comment');
 		}
 		
-		$this->blog->setComment();
-		return $this->_info('Comment added.', $this->input->post('comment'));
-	}
-
-	private function _submit_validate()
-	{
-		function _parser($str)
-		{
-			$find = array(
-			  "'\*(.*?)\*'is",
-			  "'_(.*?)_'is",
-			  "'-(.*?)-'is"
-			);
-			
-			$replace = array(
-			  '<strong>\\1</strong>',
-			  '<em>\\1</em>',
-			  '<span style="text-decoration: line-through;">\\1</span>'
-			);
-			
-			return preg_replace($find, $replace, $str);
-		}
-		
-		$this->form_validation->set_rules('id', 'id', 'trim|required|is_natural_no_zero||exists[blog.id]');
-		$this->form_validation->set_rules('comment', 'comment text', 'trim|required|min_length[10]|max_length[500]|unique[comments.comment]|no_spam[comments.3]|htmlspecialchars|nl2br|_parser');
-		
-		return $this->form_validation->run();
-	}
-
-	function _error($msg=null) 
-	{
-		$json = array(
-			'error' => true,
-			'html' => (is_array($msg))? $msg : array($msg)
-		);
-		$this->_return_json($json);
-		return false;
-	}
-
-	function _info($msg=null, $comment=null) 
-	{
-		$json = array(
-			'error' => false,
-			'html' => $msg,
-			'comment' => $comment
-		);
-		$this->_return_json($json);
-		return true;
-	}
-
-	function _return_json($json) 
-	{
-	    $this->output->set_header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header('Expires: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-	    $this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-	    $this->output->set_header("Pragma: no-cache");
-		form_open(); //To generate a new csrf hash
-		$json['csrf_token_name'] = $this->security->get_csrf_token_name();
-		$json['csrf_hash'] = $this->security->get_csrf_hash();
-		$this->security->csrf_set_cookie();
-		$this->output->append_output(json_encode($json));
+		return array();
 	}
 }

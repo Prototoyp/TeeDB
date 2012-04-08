@@ -107,7 +107,7 @@ class Blog extends CI_Model{
 		->from(self::TABLE.' as news')
 		->join(User::TABLE.' as user', 'news.user_id = user.id')
 		->join(Comment::TABLE.' as comment', 'news.id = comment.news_id', 'left')
-		->where('news.title', $title)
+		->where('news.url_title', $title)
 		->group_by('news.id')
 		->limit(1)
 		->get();
