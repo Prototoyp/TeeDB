@@ -64,11 +64,11 @@
 						</div>
 						
 			    		<li style="width: 655px; height:190px; text-align: left;">		
-							<?php echo form_open('blog/news/submit', 'id="comment"', array('id' => $news->id)); ?>
+							<?php echo form_open(NULL, 'id="comment"', array('id' => $news->id)); ?>
 								<label for="comment">Your comment:</label><br />
 								<?php echo form_textarea('comment',set_value('comment')); ?>
 								<br/><br />
-								<?php echo form_button('submit','Submit'); ?>
+								<?php echo form_submit('submit','Submit'); ?>
 							<?php echo form_close(); ?>	
 							<br class="clear" />				
 						</li>
