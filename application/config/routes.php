@@ -67,6 +67,8 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
+$route['feed'] = "blog/feed";
+
 $route['demos'] = "teedb/demos";
 $route['demos/(:any)'] = "teedb/demos/index/$1";
 
