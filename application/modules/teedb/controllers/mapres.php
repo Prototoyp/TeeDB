@@ -6,10 +6,9 @@ class Mapres extends Public_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->library('pagination');
-		$this->load->helper('rate');
-		
+		$this->load->library('pagination');	
 		$this->load->model('teedb/tileset');
+		$this->load->config('pagination');
 	}
 	
 	function index($order='new', $direction='desc', $from=0)
@@ -32,13 +31,9 @@ class Mapres extends Public_Controller {
 		}
 		
 		//Init pagination
-		$config['base_url'] = 'teedb/mapres/index/'.$order.'/'.$direction;
+		$config = array();
+		$config['base_url'] = 'mapres/'.$order.'/'.$direction;
 		$config['total_rows'] = $this->tileset->count_mapres();
-		$config['per_page'] = 20;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 6;
-		$config['cur_tag_open'] = '<span id="cur">';
-		$config['cur_tag_close'] = '</span>';
 		$this->pagination->initialize($config);
 		
 		//Check input $form
@@ -47,8 +42,8 @@ class Mapres extends Public_Controller {
 		
 		//Set limit
 		$limit = $config['total_rows'] - $from; 
-		if($limit >= $config['per_page']){
-			$limit = $config['per_page'];
+		if($limit >= $this->config->item('per_page')){
+			$limit = $this->config->item('per_page');
 		}
 		
 		//Set output

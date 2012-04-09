@@ -6,10 +6,9 @@ class Skins extends Public_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->library('pagination');
-		$this->load->helper('rate');
-		
+		$this->load->library('pagination');	
 		$this->load->model('teedb/skin');
+		$this->load->config('pagination');
 	}
 	
 	function index($order='new', $direction='desc', $from=0)
@@ -32,23 +31,19 @@ class Skins extends Public_Controller {
 		}
 		
 		//Init pagination
-		$config['base_url'] = 'teedb/skins/index/'.$order.'/'.$direction;
+		$config = array();
+		$config['base_url'] = base_url('/skins/'.$order.'/'.$direction);
 		$config['total_rows'] = $this->skin->count_skins();
-		$config['per_page'] = 20;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 6;
-		$config['cur_tag_open'] = '<span id="cur">';
-		$config['cur_tag_close'] = '</span>';
 		$this->pagination->initialize($config);
 		
 		//Check input $form
-		if(!is_numeric($from) || $from<0 || $from > $config['total_rows'])
-			$from=0;
+		if(!is_numeric($from) || $from < 0 || $from > $config['total_rows'])
+			$from = 0;
 		
 		//Set limit
 		$limit = $config['total_rows'] - $from; 
-		if($limit >= $config['per_page']){
-			$limit = $config['per_page'];
+		if($limit >= $this->config->item('per_page')){
+			$limit = $this->config->item('per_page');
 		}
 		
 		//Set output

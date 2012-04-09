@@ -3,7 +3,6 @@
 	<ul>
 		<li><?php echo ($order=='new' and $direction=='desc')? anchor('mods/new/asc', 'Newest') : anchor('mods/new/desc', 'Newest'); ?></li>
 		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('mods/rate/asc', 'Rating') : anchor('mods/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('mods/dw/asc', 'Downloads') : anchor('mods/dw/desc', 'Downloads'); ?></li>
 		<li><?php echo ($order=='name' and $direction=='asc')? anchor('mods/name/desc', 'Name') : anchor('mods/name/asc', 'Name'); ?></li>
 		<li><?php echo ($order=='author' and $direction=='asc')? anchor('mods/author/desc', 'Author') : anchor('mods/author/asc', 'Author'); ?></li>
 	</ul>
