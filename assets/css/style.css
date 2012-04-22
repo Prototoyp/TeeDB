@@ -783,7 +783,7 @@ button, .button, textarea, input, select{
     float: left;
 }
 
-button, .button, input[type=submit]{
+button, .button, input[type="submit"]{
 	width: 163px;
 	font-weight: bold;
 }
@@ -793,7 +793,7 @@ button, .button{
 }
 
 
-button, .button:hover, input[type=submit]:hover{
+button, .button:hover, input[type="submit"]:hover{
 	background: #4C3922 !important;
 	cursor: pointer;
 }
@@ -806,6 +806,27 @@ textarea{
 
 input:focus, textarea:focus, label:focus{
 	background: #4C3922;
+}
+
+input[type="submit"].leight{
+    color: #3A2B1B;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: #A16E36 !important;
+    border: 0px solid #A16E36 !important;
+    border-radius: 6px; 
+    -moz-border-radius: 6px; 
+    -webkit-border-radius: 6px;
+    width: 110px;
+    height: 17px;
+}
+
+input[type="submit"].leight:hover{
+    background-color: #825a26 !important;
+    border: 0px solid #825a26 !important;
+    border-radius: 6px; 
+    -moz-border-radius: 6px; 
+    -webkit-border-radius: 6px;
 }
 
 /* -------------------------------------------------------------------- */

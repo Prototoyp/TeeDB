@@ -1,27 +1,148 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class MyTeeDB extends User_Controller {
+class MyTeeDB extends Request_Controller {
 
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		parent::__construct();
 		
-		$this->load->library('user/auth');
-		
-		if($this->auth == NULL || !$this->auth->logged_in()) {
-			redirect('user/login');
-		}
-		
-		$this->load->library(array('pagination','form_validation'));
-		$this->load->helper(array('rate','inflector', 'date'));
+		$this->load->library(array('user/auth', 'pagination','form_validation', 'session'));
+		$this->load->helper(array('inflector', 'date'));
 		$this->load->model(array('teedb/skin', 'teedb/mod', 'teedb/gameskin', 'teedb/tileset', 'teedb/demo', 'teedb/map'));
 		
-		$this->load->config('teedb/teedb');
+		$this->load->config('teedb/upload');
+		$this->load->config('teedb/pagination');
+		
+		//User_Controller
+		if(!$this->auth->logged_in())
+		{
+			redirect('user/login');
+		}
 	}
+
+	// --------------------------------------------------------------------
 	
-	function index(){
+	/**
+	 * Show my stuff
+	 */
+	
+	/**
+	 * On default show my skins
+	 */
+	function index()
+	{
 		$this->skins();
 	}
+	
+	function _post_index($order='new', $direction='desc', $from=0)
+	{
+		$this->_post_skins($order,$direction,$from);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Skin form editing
+	 */	
+	public function _post_skins($order='new', $direction='desc', $from=0)
+	{
+		$data = array();
+		
+		if($this->form_validation->run('is_id') === TRUE)
+		{
+			//Name before renaming
+			$old_name = $this->skin->get_name($this->input->post('id'));
+			
+			//Reset validation
+			$this->form_validation->reset_validation();
+			
+			if($this->input->post('change'))
+			{
+				if($this->form_validation->run('my_skin') === TRUE)
+				{
+					//Rename skinfile
+					if(!@rename($this->config->item('upload_path','skin').'/'.$old_name.'.png',
+								$this->config->item('upload_path','skin').'/'.$this->input->post('skinname').'.png'))
+					{
+						$this->form_validation->add_message('An error occurred while trying to rename the file.');
+					}
+					//Rename preview file
+					elseif(!@rename($this->config->item('preview_path','skin').'/'.$old_name.'.png',
+									$this->config->item('preview_path','skin').'/'.$this->input->post('skinname').'.png'))
+					{
+						
+						//Coudn't rename preview file? -> create new one
+						if(!$this->skin_preview->create($old_name.'.png'))
+						{
+							$this->form_validation->add_message('Coundnt rename preview file.');
+							$this->form_validation->add_message($this->skin_preview->error_msg);
+						}
+						else
+						{
+							if(file_exists($this->config->item('preview_path','skin').'/'.$old_name.'.png'))
+							{
+								@unlink($this->config->item('preview_path','skin').'/'.$old_name.'.png');
+							}
+						}
+					}
+					
+					//Rename skin in DB
+					$this->skin->change_name(
+						$this->input->post('id'), 
+						$this->input->post('skinname')
+					);
+					
+					$data['changed'] = $old_name;
+				}
+			}
+			elseif($this->input->post('delete'))
+			{
+				$this->session->set_userdata('delete_id', $this->input->post('id'));
+				$data['delete'] = $old_name;
+				$data['delete_id'] = $this->input->post('id');
+			}
+			elseif($this->input->post('really_delete'))
+			{
+				if($this->input->post('id') != $this->session->userdata('delete_id'))
+				{
+					$this->form_validation->add_message('Delete ID doesn\'t match confirm ID.');
+				}
+				else
+				{
+					$this->session->unset_userdata('delete_id');
+					$this->skin->remove($this->input->post('id'));
+					@unlink($this->config->item('upload_path','skin').'/'.$old_name.'.png');
+					@unlink($this->config->item('preview_path','skin').'/'.$old_name.'.png');
+					$data['delete'] = $old_name;
+				}
+				
+			}
+		}
+
+		$this->load->vars($data);
+		$this->skins($order, $direction, $from);
+	}
+	
+	/**
+	 * Show my skins
+	 */
+	public function skins($order='new', $direction='desc', $from=0)
+	{
+		list($limit, $sort) = $this->_sort($order, $direction, $from, 'skin', $this->skin->count_my_skins());
+		
+		$data['uploads'] = $this->skin->get_my_skins($limit, $from, $sort, $direction);
+		$data['direction'] = $direction;
+		$data['order'] = $order;
+		$data['type'] = 'skins';
+		
+		$this->template->set_subtitle('My skins');
+		$this->template->view('image_edit', $data);
+	}
+
+	// --------------------------------------------------------------------
 
 	function demos($order='new', $direction='desc', $from=0){
 		list($limit, $sort) = $this->_sort($order, $direction, $from, 'demo', $this->demo->count_my_demos());
@@ -92,23 +213,8 @@ class MyTeeDB extends User_Controller {
 		$this->template->set_subtitle('MyTeeDB');
 		$this->template->view('myteedb', $data);
 	}
-
-	function skins($order='new', $direction='desc', $from=0)
-	{
-		$data = $this->_input_request('skinname', $this->skin, $this->config->item('upload_path_skins'));
-		
-		list($limit, $sort) = $this->_sort($order, $direction, $from, 'skin', $this->skin->count_my_skins(), 10);
-		
-		$data['uploads'] = $this->skin->get_my_skins($limit, $from, $sort, $direction);
-		$data['direction'] = $direction;
-		$data['order'] = $order;
-		$data['type'] = 'skins';
-		
-		$this->template->set_subtitle('My skins');
-		$this->template->view('image_edit', $data);
-	}
 	
-	function _sort(&$order, &$direction, &$from, $type='skin', $count=0, $per_page=20)
+	function _sort($order, $direction, $from, $type='skin', $count=0)
 	{
 		if($type == 'mod') $type = 'modi';
 		
@@ -134,13 +240,8 @@ class MyTeeDB extends User_Controller {
 		if($type == 'mapres') $type = 'mapre';
 		
 		//Init pagination
-		$config['base_url'] = 'teedb/myteedb/'.plural($type).'/'.$order.'/'.$direction;
+		$config['base_url'] = 'myteedb/'.plural($type).'/'.$order.'/'.$direction;
 		$config['total_rows'] = $count;
-		$config['per_page'] = $per_page;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 6;
-		$config['cur_tag_open'] = '<span id="cur">';
-		$config['cur_tag_close'] = '</span>';
 		$this->pagination->initialize($config);
 		
 		//Check input $form
@@ -149,8 +250,8 @@ class MyTeeDB extends User_Controller {
 		
 		//Set limit
 		$limit = $config['total_rows'] - $from; 
-		if($limit >= $config['per_page']){
-			$limit = $config['per_page'];
+		if($limit >= $this->config->item('per_page')){
+			$limit = $this->config->item('per_page');
 		}
 		
 		return array($limit, $sort);

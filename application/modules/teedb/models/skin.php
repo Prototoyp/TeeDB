@@ -334,7 +334,18 @@ class Skin extends CI_Model {
 		->get(self::TABLE);
 		
 		return $query->row()->name;
-	}	
+	}
+	
+	public function get_my_name($id)
+	{
+		$query = $this->db
+		->select('name')
+		->where('id', $id)
+		->where('user.id', $this->auth->get_id())
+		->get(self::TABLE);
+		
+		return $query->row()->name;
+	}
 }
 
 /* End of file: skin.php */
