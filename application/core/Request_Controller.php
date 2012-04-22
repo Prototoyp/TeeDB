@@ -43,7 +43,7 @@ class Request_Controller extends Public_Controller {
 	    	}
 			else 
 			{
-            	show_error('No post-handler.'.$method);
+            	show_error('No post-handler.');
 			}
 		}
 		else
