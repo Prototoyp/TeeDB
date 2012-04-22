@@ -34,6 +34,7 @@
 			
 			<?php if($type != 'mods'): ?>
 				<?php echo form_upload('file[]', null, 'multiple'); ?>
+				<?php echo form_submit('upload', 'Upload'); ?>
 			<?php else: ?>
 				<div style="margin: 20px 0;">
 					<div style="float: left;">
@@ -58,9 +59,8 @@
 						<?php echo form_upload('file'); ?>	
 					</div>
 				</div>
+				<?php echo form_submit('upload', 'Submit'); ?>
 			<?php endif; ?>
-			
-		<?php echo form_submit('upload', 'Upload'); ?>
 		
 		<?php echo form_close(); ?>
 		
