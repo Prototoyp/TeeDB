@@ -219,7 +219,7 @@ class Skin_preview {
 	public function set_error($msg)
 	{
 		$CI =& get_instance();
-		$CI->lang->load('skinpreview');
+		$CI->lang->load('teedb/skinpreview');
 
 		if (is_array($msg))
 		{
