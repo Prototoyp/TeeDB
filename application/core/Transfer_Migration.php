@@ -13,6 +13,8 @@ class Transfer_Migration extends CI_Migration {
 	{
 		parent::__construct();
 		
+		$this->load->helper('file');
+		
 		if (!$this->old_db = $this->load->database('transfer', TRUE))
 		{
 			show_error('Cant connect to transfer DB.');
@@ -36,25 +38,14 @@ class Transfer_Migration extends CI_Migration {
 		echo 'Count: '.$count.'<br>';
 		foreach ($parts as $part => $value) {
 			echo $part.': '.$value.' ('.round(($value*100)/$count).'%)<br>';
-			$chart_values .= $value.',';
+			$chart_values .= round(($value*100)/$count).',';
 			$chart_labels .= $part.'|';
 		}
 		echo '<br>------------------<br>';
 		
-		echo '<img src="http://chart.apis.google.com/chart?cht=p&chs=250x250&chd=t:'.$chart_values.'&chtt=Usertransfer&chl='.$chart_labels.'" />';
-	}
-	
-	/**
-	 * Delete files in given dir
-	 */
-	protected function delete_files($dir)
-	{
-		$handle = opendir(".");  
-		while($data = readdir($handle))  
-	    {  
-	    	if(!is_dir($data) && $data != "." && $data != "..") unlink($data); 
-	    } 
-	  	closedir($handle);
+		$chart_values = substr($chart_values, 0, -1);
+		$chart_labels = substr($chart_labels, 0, -1);
+		echo '<img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:'.$chart_values.'&chtt=Usertransfer&chl='.$chart_labels.'" />';
 	}
 	
 }
