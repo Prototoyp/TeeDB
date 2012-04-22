@@ -16,7 +16,7 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	{
         parent::__construct();
 		
-		$this->load->library(array('teedb/Skin_preview','security'));
+		$this->load->library(array('teedb/Skin_preview'));
 		$this->load->model(array('user/user','teedb/skin'));
 	}
 	
@@ -36,12 +36,14 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 		// unset($uploads['..']);
 		
 		$uploads = array();
-	    $directory = opendir('database/skins'); 
-	    while($item = readdir($directory)){ 
-	         if(($item != ".") && ($item != "..") && ($item != "previews")){ 
-	              $uploads[$item] = true; 
-	         } 
-	    }
+	    // $directory = opendir('database/skins'); 
+	    // while($item = readdir($directory)){ 
+	         // if(($item != ".") && ($item != "..") && ($item != "previews")){ 
+	              // $uploads[$item] = true; 
+	         // } 
+	    // }
+	    $uploads = get_filenames('database/skins');
+		$uploads = array_flip($uploads);
 		$countfiles = count($uploads);
 		
 		//Skins
@@ -151,8 +153,8 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	{
 		$this->db->empty_table(Skin::TABLE);
 		
-		$this->delete_files('uploads/skins');
-		$this->delete_files('uploads/skins/previews');
+		delete_files('uploads/skins');
+		delete_files('uploads/skins/previews');
 		
 		$this->db->where('type', 'skin')->delete('transfer_invalid'); 
 	}

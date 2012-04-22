@@ -61,14 +61,15 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		$old_activ_users = $this->old_db
 		->select('id, username, passwort, email, RegDatum')
 		->where('activated', 1)
-		->get('user')
-		->result();
+		->get('user');
 		
 		$_POST = array();
 		$error = 0;
-		foreach($old_activ_users as $user)
+		$count_active = $old_activ_users->num_rows();
+		foreach($old_activ_users->result() as $user)
 		{
 			$_POST['username'] = $user->username;
+			//Pseudo password for validation
 			$_POST['password'] = 'validpassword';
 			$_POST['passconf'] = 'validpassword';
 			$_POST['email'] = $user->email;
@@ -107,14 +108,14 @@ class Migration_Transfer_Users extends Transfer_Migration {
 			$_POST = array();
 			$this->form_validation->reset_validation();
 		}
-
+		
 		$count_deleted = $this->old_db
 		->select('count(*) as count')
 		->where('activated', 0)
 		->get('user')
 		->row()->count;
 		$count = $this->old_db->count_all_results('user');
-		$this->_output_info('Users', $count, array('Invalid' => $error, 'Not activated/ Deleted' => $count_deleted));
+		$this->_output_info('Users', $count, array('Transfered' => $count_active-$error, 'Invalid' => $error, 'Not activated/ Deleted' => $count_deleted));
 	}
 
 	/**

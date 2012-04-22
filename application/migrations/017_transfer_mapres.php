@@ -16,7 +16,7 @@ class Migration_Transfer_Mapres extends Transfer_Migration {
 	{
         parent::__construct();
 		
-		$this->load->library(array('image_lib','security'));
+		$this->load->library(array('image_lib'));
 		$this->load->model(array('user/user','teedb/tileset'));
 	}
 	
