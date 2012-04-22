@@ -6,6 +6,7 @@ if( ! function_exists('relative_time'))
     {
         $CI =& get_instance();
         $CI->lang->load('date');
+		$CI->lang->load('MY_date');
         
         if(!is_numeric($datetime))
         {
