@@ -16,7 +16,7 @@
 
 <footer id="main" class="wrapper light">
 	<p class="center" style="padding: 0">
-		TeeDB &copy; Copyright <?php echo date("Y"); ?> | Disclaimer All Rights Reserved | Privacy Policy - Page rendered in {elapsed_time} seconds
+		TeeDB &copy; Copyright 2008 - <?php echo date("Y"); ?> All rights reserved | <?php echo anchor('privacy_policy', 'Privacy policy'); ?> | <?php echo anchor('disclaimer', 'Disclaimer'); ?> | Page rendered in {elapsed_time} seconds
 	</p>
 </footer>
 
@@ -32,7 +32,7 @@
 <!-- end scripts-->
 
 <script>
-	var _gaq=[['_setAccount','<?php echo $google_analytic_id; ?>'],['_trackPageview']];
+	var _gaq=[['_setAccount','<?php echo $google_analytic_id; ?>'],['_gat._anonymizeIp'],['_trackPageview']];
 	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 	s.parentNode.insertBefore(g,s)}(document,'script'));

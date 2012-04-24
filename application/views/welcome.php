@@ -21,7 +21,7 @@
 			<header style="margin-bottom: 10px;">
 				<h2><?php echo anchor('blog/news/title/'.url_title($news->title), $news->title, 'class="none" style="color: #A16E36;"'); ?></h2>
 				<time datetime="<?php echo date('c', human_to_unix($news->create)); ?>">
-					<?php echo datetime_to_human($news->create); ?>
+					<?php echo relative_time($news->create); ?>
 				</time>
 			</header>
 			
@@ -147,7 +147,7 @@
 		<p>
 			<b>Last-User:</b> 
 			<?php if(isset($last_user) and $last_user): ?>
-			<?php echo anchor('#/profile/name/'.$last_user->name ,$last_user->name, 'class="none solid"').' ('.datetime_to_human($last_user->create).')'; ?><br>
+			<?php echo anchor('#/profile/name/'.$last_user->name ,$last_user->name, 'class="none solid"').' ('.relative_time($last_user->create).')'; ?><br>
 			<?php else: ?>
 			No user signup, yet.<br />
 	   		<?php endif; ?>
