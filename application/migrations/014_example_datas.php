@@ -18,7 +18,7 @@ class Migration_Example_Datas extends CI_Migration {
 		
 		$this->load->library(array('user/auth', 'teedb/Skin_preview', 'image_lib'));
 		$this->load->model(array('user/user', 'blog/blog', 'teedb/skin', 'teedb/tileset', 'teedb/gameskin', 'teedb/map'));
-		$this->load->config('teedb/teedb');
+		$this->load->config('teedb/upload');
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class Migration_Example_Datas extends CI_Migration {
 				
 				//Generate the files
 				file_put_contents(
-					$this->config->item('upload_path_skins').'/default.png', 
+					$this->config->item('upload_path', 'skin').'/default.png', 
 					base64_decode($default)
 				);
 				$this->skin_preview->create('default.png');
@@ -94,12 +94,12 @@ class Migration_Example_Datas extends CI_Migration {
 				
 				//Generate the files
 				file_put_contents(
-					$this->config->item('upload_path_mapres').'/grass_doodads.png', 
+					$this->config->item('upload_path', 'mapres').'/grass_doodads.png', 
 					base64_decode($doodads)
 				);
 				
-				$configResize['source_image'] = $this->config->item('upload_path_mapres').'/grass_doodads.png';
-				$configResize['new_image'] = $this->config->item('upload_path_mapres').'/previews/';
+				$configResize['source_image'] = $this->config->item('upload_path', 'mapres').'/grass_doodads.png';
+				$configResize['new_image'] = $this->config->item('preview_path', 'mapres');
 				$configResize['width'] = 110;
 				$configResize['height'] = 64;
 					
@@ -124,12 +124,12 @@ class Migration_Example_Datas extends CI_Migration {
 				
 				//Generate the files
 				file_put_contents(
-					$this->config->item('upload_path_gameskins').'/game.png', 
+					$this->config->item('upload_path', 'gameskin').'/game.png', 
 					base64_decode($game)
 				);
 				
-				$configResize['source_image'] = $this->config->item('upload_path_gameskins').'/game.png';
-				$configResize['new_image'] = $this->config->item('upload_path_gameskins').'/previews/';
+				$configResize['source_image'] = $this->config->item('upload_path', 'gameskin').'/game.png';
+				$configResize['new_image'] = $this->config->item('preview_path', 'gameskin');
 				$configResize['width'] = 110;
 				$configResize['height'] = 64;
 					
@@ -154,7 +154,7 @@ class Migration_Example_Datas extends CI_Migration {
 // 				
 				// //Generate the files
 				// file_put_contents(
-					// $this->config->item('upload_path_maps').'/ctf1.png', 
+					// $this->config->item('upload_path', 'map').'/ctf1.png', 
 					// base64_decode($game)
 				// );
 // 				
