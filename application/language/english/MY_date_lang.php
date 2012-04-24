@@ -25,10 +25,10 @@
  * @filesource
  */
 
-$lang['date_decade'] = "Decade";
-$lang['date_decades'] = "Decades";
-$lang['date_ago']    = "ago";
-$lang['date_to_go']    = "to go";
+$lang['date_decade']	= "Decade";
+$lang['date_decades']	= "Decades";
+$lang['date_ago']		= "ago";
+$lang['date_to_go']		= "to go";
 
 /* End of file upload_lang.php */
 /* Location: ./system/language/english/date_lang.php */

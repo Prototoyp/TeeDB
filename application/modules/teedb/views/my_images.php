@@ -1,18 +1,20 @@
 <aside>	
 	<h2>View my...</h2>
 	<ul>
-		<?php if($type != 'demos'): ?><li><?php echo anchor('teedb/myteedb/demos', 'Demos'); ?></li><?php endif; ?>
-		<?php if($type != 'gameskins'): ?><li><?php echo anchor('teedb/myteedb/gameskins', 'Gameskins'); ?></li><?php endif; ?>
-		<?php if($type != 'mapres'): ?><li><?php echo anchor('teedb/myteedb/mapres', 'Mapres'); ?></li><?php endif; ?>
-		<?php if($type != 'maps'): ?><li><?php echo anchor('teedb/myteedb/maps', 'Maps'); ?></li><?php endif; ?>
-		<?php if($type != 'mods'): ?><li><?php echo anchor('teedb/myteedb/mods', 'Mods'); ?></li><?php endif; ?>
-		<?php if($type != 'skins'): ?><li><?php echo anchor('teedb/myteedb/skins', 'Skins'); ?></li><?php endif; ?>
+		<?php if($type != 'demos'): ?><li><?php echo anchor('myteedb/demos', 'Demos'); ?></li><?php endif; ?>
+		<?php if($type != 'gameskins'): ?><li><?php echo anchor('myteedb/gameskins', 'Gameskins'); ?></li><?php endif; ?>
+		<?php if($type != 'mapres'): ?><li><?php echo anchor('myteedb/mapres', 'Mapres'); ?></li><?php endif; ?>
+		<?php if($type != 'maps'): ?><li><?php echo anchor('myteedb/maps', 'Maps'); ?></li><?php endif; ?>
+		<?php if($type != 'mods'): ?><li><?php echo anchor('myteedb/mods', 'Mods'); ?></li><?php endif; ?>
+		<?php if($type != 'skins'): ?><li><?php echo anchor('myteedb/skins', 'Skins'); ?></li><?php endif; ?>
 	</ul>
 	<br style="clear:both;" />
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('teedb/myteedb/skins/new/asc', 'Newest') : anchor('teedb/myteedb/skins/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('teedb/myteedb/skins/name/desc', 'Name') : anchor('teedb/myteedb/skins/name/asc', 'Name'); ?></li>
+		<li><?php echo ($order=='new' and $direction=='desc')? anchor('myteedb/'.$type.'/new/asc', 'Newest') : anchor('myteedb/'.$type.'/new/desc', 'Newest'); ?></li>
+		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('myteedb/'.$type.'/rate/asc', 'Rating') : anchor('myteedb/'.$type.'/rate/desc', 'Rating'); ?></li>
+		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('myteedb/'.$type.'/dw/asc', 'Downloads') : anchor('myteedb/'.$type.'/dw/desc', 'Downloads'); ?></li>
+		<li><?php echo ($order=='name' and $direction=='asc')? anchor('myteedb/'.$type.'/name/desc', 'Name') : anchor('myteedb/'.$type.'/name/asc', 'Name'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
@@ -27,24 +29,24 @@
 		<div id="info">		
 			<?php if(isset($delete) && isset($delete_id)): ?>
 				<p class="info border"><span class="icon color icon112"></span>
-					Are you really sure you want to remove the skin <?php echo $delete; ?>?
+					Are you really sure you want to remove the <?php echo $type.' '.$delete; ?>?
 				</p>
 			<?php endif; ?>
 			<?php 
 				echo (isset($changed) && $changed)? 
 					'<p class="success color border">
 						<span class="icon color icon101"></span>
-						Skin '.$changed.' changed successful to '.$this->input->post(singular($type).'name').'.
+						'.ucfirst($type).' '.$changed.' changed successful to '.$this->input->post(singular($type).'name').'.
 					</p>'
 					 : 
-					 (isset($delete) && !isset($delete_id))?
+					 ((isset($delete) && !isset($delete_id))?
 					'<p class="success color border">
 						<span class="icon color icon101"></span>
-						Skin '.$delete.' successful removed
+						'.ucfirst($type).' '.$delete.' successful removed
 					</p>'
 					 :
 					 validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'
-				);
+				));
 			?>
 		</div>
 		
@@ -61,10 +63,10 @@
 							</p>
 							<br />
 							<p style="text-align: left;font-size: 10px">
-									<strong>Filesize:</strong> <?php echo round(@filesize('uploads/'.$type.'/'.$entry->name.'.png')/1000); ?> kB<br />
-									<?php echo relative_time($entry->create); ?><br />
-									<br />
-									<span style="margin-top: 2px;">Likes: </span>
+								<strong>Filesize:</strong> <?php echo round(@filesize('uploads/'.$type.'/'.$entry->name.'.png')/1000); ?> kB<br />
+								<?php echo relative_time($entry->create); ?><br />
+								<br />
+								<span style="margin-top: 2px;">Likes: </span>
 							</p>
 							<div class="rate">
 								<?php $prec = ($entry->rate_count > 0)? round($entry->rate_sum/$entry->rate_count)*90 : 50; ?>

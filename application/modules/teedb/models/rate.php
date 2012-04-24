@@ -36,6 +36,13 @@ class Rate extends CI_Model {
 
 	// --------------------------------------------------------------------
 	
+	/**
+	 * Set a new rate
+	 * 
+	 * @param string Type ENUM( skin, mapres, ...)
+	 * @param integer ID of the entry to rate
+	 * @param integer Value to rate. Can be 0 for 'flop' or 1 for 'top'
+	 */
 	function setRate($type, $id, $value)
 	{
 		if($user_id = $this->auth->get_id())

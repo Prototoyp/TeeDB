@@ -38,7 +38,14 @@ class MY_Form_validation extends CI_Form_validation {
      */
 	function add_message($message)
 	{
-		$this->_error_array[] = $message;
+		if(is_array($message))
+		{
+			$this->_error_array = array_merge($this->_error_array, $message);
+		}
+		else
+		{
+			$this->_error_array[] = $message;
+		}
 	}
     
     // --------------------------------------------------------------------

@@ -341,7 +341,7 @@ class Skin extends CI_Model {
 		$query = $this->db
 		->select('name')
 		->where('id', $id)
-		->where('user.id', $this->auth->get_id())
+		->where('user_id', $this->auth->get_id())
 		->get(self::TABLE);
 		
 		return $query->row()->name;

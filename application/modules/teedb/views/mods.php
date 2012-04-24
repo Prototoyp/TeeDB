@@ -25,7 +25,7 @@
 				<?php foreach($mods as $entry): $entry->rate_sum = (int)$entry->rate_sum; ?>
 					
 					<li>
-						<img style="float:left" src="<?php echo base_url(); ?>uploads/mods/<?php echo $entry->name; ?>.png" alt="Mod <?php echo $entry->name; ?>" />
+						<img style="float:left" src="<?php echo base_url("uploads/mods/$entry->name"); ?>.png" alt="Mod <?php echo $entry->name; ?>" />
 						<div style="float:left; padding-left:16px;">
 							<p><?php echo $entry->name; ?></p>
 							<p style="font-size: 10px">

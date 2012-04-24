@@ -150,6 +150,17 @@ class Map extends CI_Model {
 		
 		return $query->row()->name;
 	}
+	
+	public function get_my_name($id)
+	{
+		$query = $this->db
+		->select('name')
+		->where('id', $id)
+		->where('user_id', $this->auth->get_id())
+		->get(self::TABLE);
+		
+		return $query->row()->name;
+	}
 
 	// --------------------------------------------------------------------
 	

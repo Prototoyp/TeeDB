@@ -109,7 +109,7 @@ class Mod extends CI_Model {
 	public function get_my_mods($limit, $offset='0', $order='update', $direction='DESC')
 	{
 		$query = $this->db
-		->select('modi.id, modi.name, modi.downloads, user.name AS username, modi.create')
+		->select('modi.id, modi.name, modi.downloads, user.name AS username, modi.create, modi.server, modi.client, modi.link')
 		->select('SUM(rate.value) AS rate_sum, COUNT(rate.user_id) AS rate_count')
 		->from(self::TABLE.' as modi')
 		->join(User::TABLE.' as user', 'modi.user_id = user.id')
@@ -149,6 +149,17 @@ class Mod extends CI_Model {
 		
 		return $query->row()->name;
 	}
+	
+	public function get_my_mod($id)
+	{
+		$query = $this->db
+		->select('name, server, client, link')
+		->where('id', $id)
+		->where('user_id', $this->auth->get_id())
+		->get(self::TABLE);
+		
+		return $query->row();
+	}
 
 	// --------------------------------------------------------------------
 	
@@ -164,6 +175,33 @@ class Mod extends CI_Model {
 	{		
 		return $this->db
 		->set('name', $name)
+		->set('update', 'NOW()', FALSE)
+		->where('id', $id)
+		->update(self::TABLE);
+	}
+	
+	public function change_server($id,$bool)
+	{		
+		return $this->db
+		->set('server', $bool)
+		->set('update', 'NOW()', FALSE)
+		->where('id', $id)
+		->update(self::TABLE);
+	}
+	
+	public function change_client($id,$bool)
+	{		
+		return $this->db
+		->set('client', $bool)
+		->set('update', 'NOW()', FALSE)
+		->where('id', $id)
+		->update(self::TABLE);
+	}
+	
+	public function change_link($id,$link)
+	{		
+		return $this->db
+		->set('link', $link)
 		->set('update', 'NOW()', FALSE)
 		->where('id', $id)
 		->update(self::TABLE);

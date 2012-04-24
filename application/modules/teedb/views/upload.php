@@ -47,7 +47,7 @@
 							<?php echo form_checkbox('server',set_value('server', 'server')); ?> <span class="solid">Server</span>
 						</div>
 						<div style="width: 50%; float:left">
-						<?php echo form_checkbox('client',set_value('client', 'client')); ?> <span class="solid">Client</span>
+							<?php echo form_checkbox('client',set_value('client', 'client')); ?> <span class="solid">Client</span>
 						</div>
 					</div>
 					<div style="float: left">
@@ -56,8 +56,13 @@
 					</div>
 					<div style="float: left;margin-left: 20px;width:333px;height: 46px">
 						<label for="file">Screenshot:</label><br />				
-						<?php echo form_upload('file'); ?>	
+						<?php echo form_upload('file', NULL, 'style="width:321px"'); ?>
+						<br/>
+						<span style="font-size: 10px">
+							Resized to 180x180. For a good result we recommend to upload an image with same height as wide.
+						</span>
 					</div>
+					<br style="clear:left" />
 				</div>
 				<?php echo form_submit('upload', 'Submit'); ?>
 			<?php endif; ?>
