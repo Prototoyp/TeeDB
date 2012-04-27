@@ -1,53 +1,32 @@
 <aside>	
 	<h2>View my...</h2>
 	<ul>
-		<?php if($type != 'demos'): ?><li><?php echo anchor('myteedb/demos', 'Demos'); ?></li><?php endif; ?>
-		<?php if($type != 'gameskins'): ?><li><?php echo anchor('myteedb/gameskins', 'Gameskins'); ?></li><?php endif; ?>
-		<?php if($type != 'mapres'): ?><li><?php echo anchor('myteedb/mapres', 'Mapres'); ?></li><?php endif; ?>
-		<?php if($type != 'maps'): ?><li><?php echo anchor('myteedb/maps', 'Maps'); ?></li><?php endif; ?>
-		<?php if($type != 'mods'): ?><li><?php echo anchor('myteedb/mods', 'Mods'); ?></li><?php endif; ?>
-		<?php if($type != 'skins'): ?><li><?php echo anchor('myteedb/skins', 'Skins'); ?></li><?php endif; ?>
+		<li><?php echo anchor('myteedb/demos', 'Demos'); ?></li>
+		<li><?php echo anchor('myteedb/gameskins', 'Gameskins'); ?></li>
+		<li><?php echo anchor('myteedb/mapres', 'Mapres'); ?></li>
+		<li><?php echo anchor('myteedb/mods', 'Mods'); ?></li>
+		<li><?php echo anchor('myteedb/skins', 'Skins'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<h2>Sorted by...</h2>
 	<ul>
-		<li><?php echo ($order=='new' and $direction=='desc')? anchor('myteedb/'.$type.'/new/asc', 'Newest') : anchor('myteedb/'.$type.'/new/desc', 'Newest'); ?></li>
-		<li><?php echo ($order=='rate' and $direction=='desc')? anchor('myteedb/'.$type.'/rate/asc', 'Rating') : anchor('myteedb/'.$type.'/rate/desc', 'Rating'); ?></li>
-		<li><?php echo ($order=='dw' and $direction=='desc')? anchor('myteedb/'.$type.'/dw/asc', 'Downloads') : anchor('myteedb/'.$type.'/dw/desc', 'Downloads'); ?></li>
-		<li><?php echo ($order=='name' and $direction=='asc')? anchor('myteedb/'.$type.'/name/desc', 'Name') : anchor('myteedb/'.$type.'/name/asc', 'Name'); ?></li>
+		<li><?php echo anchor('myteedb/maps/new/'.(($order=='new' and $direction=='desc')? 'asc' : 'desc'), 'Newest'); ?></li>
+		<li><?php echo anchor('myteedb/maps/rate/'.(($order=='rate' and $direction=='desc')? 'asc' : 'desc'), 'Newest'); ?></li>
+		<li><?php echo anchor('myteedb/maps/dw/'.(($order=='dw' and $direction=='desc')? 'asc' : 'desc'), 'Newest'); ?></li>
+		<li><?php echo anchor('myteedb/maps/name/'.(($order=='name' and $direction=='desc')? 'asc' : 'desc'), 'Newest'); ?></li>
 	</ul>
 	<br style="clear:both;" />
 	<div style="text-align: center;margin-top:20px">
-		<?php echo anchor('teedb/upload/'.$type, 'Upload more '.$type.'!', 'class="button solid"'); ?>
+		<?php echo anchor('teedb/upload/maps', 'Upload more maps!', 'class="button solid"'); ?>
 	</div>
 </aside>
 
 <section id="content">
-	<section id="skins">
-		<h2 style="margin-bottom: 10px;">My <?php echo ucfirst($type); ?></h2>
+	<section id="maps">
+		<h2 style="margin-bottom: 10px;">My Maps</h2>
 		
 		<div id="info">		
-			<?php if(isset($delete) && isset($delete_id)): ?>
-				<p class="info border"><span class="icon color icon112"></span>
-					Are you really sure you want to remove the <?php echo $type.' '.$delete; ?>?
-				</p>
-			<?php endif; ?>
-			<?php 
-				echo (isset($changed) && $changed)? 
-					'<p class="success color border">
-						<span class="icon color icon101"></span>
-						'.ucfirst($type).' '.$changed.' changed successful to '.$this->input->post(singular($type).'name').'.
-					</p>'
-					 : 
-					 ((isset($delete) && !isset($delete_id))?
-					'<p class="success color border">
-						<span class="icon color icon101"></span>
-						'.ucfirst($type).' '.$delete.' successful removed
-					</p>'
-					 :
-					 validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'
-				));
-			?>
+			<?php echo show_messages(); ?>
 		</div>
 		
 		<div id="list">
@@ -56,15 +35,17 @@
 					
 					<li style="height: 245px">
 						<?php echo form_open(null, null, array('id' => $entry->id)); ?>
-							<img src="<?php echo base_url('uploads/'.$type.'/previews/'.$entry->name.'.png'); ?>" alt="Preview of <?php echo $type.' '.$entry->name; ?>" />
+							<img src="<?php echo base_url('assets/images/nopic_map.png'); ?>" alt="Preview of map <?php echo $entry->name; ?>" />
 							<p>
 								<span style="text-align: left;font-size: 10px">Change name:</span><br />
-								<?php echo form_input(singular($type).'name',$entry->name, 'style="width: 97px; background-color: #A16E36 !important; color: #543F24"'); ?><br />
+								<?php echo form_input('mapname',$entry->name, 'style="width: 187px; background-color: #A16E36 !important; color: #543F24"'); ?><br />
 							</p>
 							<br />
 							<p style="text-align: left;font-size: 10px">
-								<strong>Filesize:</strong> <?php echo round(@filesize('uploads/'.$type.'/'.$entry->name.'.png')/1000); ?> kB<br />
+								<strong>Filesize:</strong> <?php echo round(@filesize('uploads/maps/'.$entry->name.'.png')/1000); ?> kB<br />
 								<?php echo relative_time($entry->create); ?><br />
+							</p>
+							<p style="text-align: left;font-size: 10px">
 								<br />
 								<span style="margin-top: 2px;">Likes: </span>
 							</p>
@@ -78,14 +59,12 @@
 								</div>
 							</div>
 							<br />
-							<?php echo form_submit('change', 'Change name', 'style="font-size:10px" class="leight"'); ?>
-							<br />
+							<?php echo form_submit('change', 'Change name', 'style="font-size:10px; width:96px" class="leight"'); ?>
 							<?php if(isset($delete_id) && $entry->id == $delete_id): ?>
-								<?php echo form_submit('really_delete', 'Yes, delete this', 'style="font-size:10px" class="leight"'); ?>								
+								<?php echo form_submit('really_delete', 'Yes, delete this', 'style="font-size:10px; width:96px" class="leight"'); ?>								
 							<?php else: ?>
-								<?php echo form_submit('delete', 'Delete skin', 'style="font-size:10px" class="leight"'); ?>
-							<?php endif; ?>
-		
+								<?php echo form_submit('delete', 'Delete map', 'style="font-size:10px; width:96px" class="leight"'); ?>
+							<?php endif; ?>								
 						<?php echo form_close(); ?>
 					</li>
 				<?php endforeach; ?>

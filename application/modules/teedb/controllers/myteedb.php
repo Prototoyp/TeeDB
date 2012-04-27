@@ -247,7 +247,7 @@ class MyTeeDB extends Request_Controller {
 		$data['type'] = 'demos';
 		
 		$this->template->set_subtitle('My demos');
-		$this->template->view('my_images', $data);
+		$this->template->view('my_demos', $data);
 	}
 
 	// --------------------------------------------------------------------
@@ -533,14 +533,15 @@ class MyTeeDB extends Request_Controller {
 							$this->input->post('mapname')
 						);
 						
-						$data['changed'] = $old_name;
+						$this->template->add_success_msg('Map '.$old_name.' successful renamed to '.$this->input->post('mapname'));
 					}
 				}
 				elseif($this->input->post('delete'))
 				{
 					$this->session->set_userdata('delete_map_id', $this->input->post('id'));
-					$data['delete'] = $old_name;
 					$data['delete_id'] = $this->input->post('id');
+					
+					$this->template->add_info_msg('Are you really sure you want to remove the map '.$old_name.'?');
 				}
 				elseif($this->input->post('really_delete'))
 				{
@@ -555,6 +556,8 @@ class MyTeeDB extends Request_Controller {
 						@unlink($this->config->item('upload_path','map').'/'.$old_name.'.png');
 						@unlink($this->config->item('preview_path','map').'/'.$old_name.'.png');
 						$data['delete'] = $old_name;
+						
+						$this->template->add_success_msg('Map '.$old_name.' successful removed.');
 					}
 					
 				}
@@ -572,10 +575,9 @@ class MyTeeDB extends Request_Controller {
 		$data['uploads'] = $this->map->get_my_maps($limit, $from, $sort, $direction);
 		$data['direction'] = $direction;
 		$data['order'] = $order;
-		$data['type'] = 'maps';
 		
 		$this->template->set_subtitle('My maps');
-		$this->template->view('my_images', $data);
+		$this->template->view('my_maps', $data);
 	}
 
 	// --------------------------------------------------------------------
