@@ -9,7 +9,7 @@ class Feed extends CI_Controller {
     {
         parent::__construct();
 		
-        $this->load->helper(array('url', 'date'));
+        $this->load->helper(array('url', 'date', 'xml'));
     	$this->load->library('template');
     	$this->load->model('blog/blog');
     }
