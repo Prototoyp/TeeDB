@@ -33,12 +33,15 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		
 		$this->dbforge->add_field(array(
 			'id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-			'type' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
 			'name' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
 			'username' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
+			'email' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
+			'create' => array('type' => 'DATETIME', 'null' => FALSE),
+			'old_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
+			'password' => array('type' => 'VARCHAR', 'constraint' => 32, 'null' => FALSE),
 			'error' => array('type' => 'TEXT', 'null' => FALSE)
 		));
-		$this->dbforge->create_table('transfer_invalid', TRUE);
+		$this->dbforge->create_table('transfer_invalid_users', TRUE);
 		
 		
 		//Build user password transfer table
@@ -65,6 +68,7 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		
 		$_POST = array();
 		$error = 0;
+		$has_uploads = 0;
 		$count_active = $old_activ_users->num_rows();
 		foreach($old_activ_users->result() as $user)
 		{
@@ -96,12 +100,20 @@ class Migration_Transfer_Users extends Transfer_Migration {
 			else
 			{
 				$this->db
-				->set('type', 'user')
 				->set('username', $user->username)
+				->set('email', $user->email)
+				->set('password', $user->passwort)
+				->set('old_id', $user->id)
 				->set('error', validation_errors())
-				->insert('transfer_invalid');
+				->set('create', $user->RegDatum)
+				->insert('transfer_invalid_users');
 				
 				$error++;
+				
+				if($this->has_uploads($user->id))
+				{
+					$has_uploads++;
+				}
 			}
 			
 			//Reset form input
@@ -115,7 +127,8 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		->get('user')
 		->row()->count;
 		$count = $this->old_db->count_all_results('user');
-		$this->_output_info('Users', $count, array('Transfered' => $count_active-$error, 'Invalid' => $error, 'Not activated/ Deleted' => $count_deleted));
+		$this->_output_info('Users', $count, array('Transfered' => $count_active-$error, 'Invalid (No uploads)' => $error-$has_uploads, 'Invalid (Has uploads)' => $has_uploads, 'Not activated/ Deleted' => $count_deleted));
+		$this->_output_info('Invalid Users', $error, array('Has uploads' => $has_uploads, 'Has no uploads' => $error-$has_uploads));
 	}
 
 	/**
@@ -124,9 +137,28 @@ class Migration_Transfer_Users extends Transfer_Migration {
 	function down() 
 	{
 		$this->dbforge->drop_table('transfer_user');
-		$this->dbforge->drop_table('transfer_invalid');
+		$this->dbforge->drop_table('transfer_invalid_users');
 		
 		$this->db->empty_table(User::TABLE);
+	}
+	
+	
+	public function has_uploads($id)
+	{
+		$tables = array('tw_gameskins', 'tw_mapres', 'tw_maps', 'tw_mods', 'tw_demos', 'tw_skins');
+		
+		foreach($tables as $table){		
+			$query = $this->old_db
+				->select('id')
+				->where('user_id', $id)
+				->get($table);
+			if($query->num_rows() > 0)
+			{
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
 	}
 }
 

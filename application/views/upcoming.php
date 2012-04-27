@@ -2,6 +2,7 @@
   	body{
 		color: #3A2B1B;
 		background-color: #A16E36;
+		font-size: 100%;
   	}
   	#wrapper{
   		text-align: center;
@@ -35,56 +36,46 @@
 	
 <div id="wrapper">
 	
-	<img src="assets/images/logo.png" alt="Logo">
+	<a class="none" href="<?php echo base_url(); ?>">
+		<img src="assets/images/logo.png" alt="Logo">
+	</a>
 	
-	<h2>TeeDB update!</h2>
-	
-	<p>
-		Last steps to a new version of TeeDB. Transfer old TeeDB data to new one.
-	<p/>
-	
-	<br /><br />
-	
-	<h2>1. Usertransfer</h2>
-	<br />
-	
-	<section id ="userchange">
-		<h2>Change invalid username</h2>
+	<section id ="update">
+		<header><h2>TeeDB update! - Usertransfer</h2></header>
 		
-		Check in the list below your username is not valid anymore.<br/>
-		If so your are able to change your name here.<br/>
-		<p class="info border"><span class="icon color icon112"></span>Only invalid username changes accepted!</p>
-		
-		<?php if(isset($success)): ?>			
-		<?php echo ($success)? 
-				'<p class="success color border">
-					<span class="icon color icon101"></span>
-					Username successful changed.
-				</p>'
-				 : 
-				 validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'
-			);
-		?>
-		<?php endif; ?>
-		
-		<?php echo form_open('upcoming'); ?>
-			<p>
-				<label for="username">Username (before):</label>
-				<?php echo form_input('username',set_value('username')); ?>
-				<br /><br />
-				<label for="password">Password:</label>
-				<?php echo form_password('password'); ?>
-				<br /><br />
-				<label for="new_username">New username:</label>
-				<?php echo form_input('new_username',set_value('new_username')); ?>
-				<br /><br /><br />
-				<?php echo form_submit('new_user','Change username'); ?><br />
-			</p>
-		<?php echo form_close(); ?>
-	
-	<br /><br />
+		<article style="text-align: left">
+			<br />	
+			Last steps to a new version of TeeDB. Transfer old TeeDB data to new one.<br />
+			<br />			
+			TeeDB has a lot of new rules to validate data.<br/>
+			Thats why not all data from the old database can be transfered.<br/>
+			<br/>
+			To transfer the most of the old data and as simple as impossible the transfer is going step by step.<br/>
+			<br/>
+			For now: Usertransfer<br/>
+			<br/>
+			All accounts 
+			
+			<strong>Clear usernames!</strong> Means no more names like "!.,~^MyNam€~,.!" .<br />
+			<br />
+			Check in the list below if your username is invalid.<br/>
+			If so, you are able to change your username <?php echo anchor('upcoming/change_username', 'here'); ?>.<br/>
+			<br/>
+			<u>Notice:</u> Only username changes for the users in the list are accepted.
+			<br/><br/><br/><br/>
+			<strong>Some stats about the usertransfer:</strong><br/>
+			<br/>
+			<strong>Count:</strong> 2250<br>
+			<strong>Transfered:</strong> 1350 (60%)<br/>
+			<strong>Invalid:</strong> 210 (9%)<br/>
+			- Invalid (No uploads): 146 (6%)<br/>
+			- Invalid (Has uploads): 64 (3%)<br/>
+			<strong>Not activated/ Deleted:</strong> 690 (31%)<br/>
+			<br/>
+			<img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:60,6,3,31&chtt=Usertransfer&chl=Transfered|Invalid (No uploads)|Invalid (Has uploads)|Not activated/ Deleted" /><br />
+		</article>
 	</section>
-	
+	<br/><br/>
 	<section id="data">
 		<h2>Data dismatched user signup rules</h2>
 		<br />

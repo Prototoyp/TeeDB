@@ -112,6 +112,53 @@ class Auth {
 	 */
 	public function login()
 	{
+		//FIXME: Only for transfer
+		{
+			
+			$query = $this->CI->db
+			->select('id')
+			->where('name', $this->CI->input->post('username'))
+			->where('password IS NULL', NULL, FALSE)
+			->limit(1)
+			->get(User::TABLE);
+			
+			if ($query->num_rows())
+			{
+				$user = $query->row();
+				
+				$query = $this->CI->db
+				->select('old_id, password')
+				->where('user_id', $user->id)
+				->limit(1)
+				->get('transfer_user');
+				
+				if ($query->num_rows())
+				{
+					$user_transfer = $query->row();
+					
+					if($user_transfer->password == md5(md5($user_transfer->old_id).$this->CI->input->post('password')))
+					{
+						//Transfer pw
+						$this->CI->db
+						->set('password', $this->get_hash($this->CI->input->post('password')))
+						->set('update', 'NOW()', FALSE)
+						->where('id', $user->id)
+						->update(User::TABLE);
+						
+						$this->CI->db
+						->where('user_id', $user->id)
+						->delete('transfer_user');
+						
+						return TRUE;
+					}
+					else
+					{
+						return FALSE;
+					}
+				}
+			}
+		}
+		
 		self::$user_id = $this->CI->user->login(
 			$this->CI->input->post('username'), 
 			$this->get_hash($this->CI->input->post('password'))

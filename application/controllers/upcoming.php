@@ -33,6 +33,10 @@ class UpComing extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		
+		$this->load->helper('form');
+		$this->load->library(array('form_validation', 'auth'));
+		$this->load->model('user/user');
 	}
 	
 	public function index()
@@ -43,14 +47,84 @@ class UpComing extends MY_Controller {
 		$data = array();
 		$data['transfers'] = $this->db
 		->select('username, error')
-		->where('type', 'user')
-		->get('transfer_invalid')
+		->where('name', '')
+		->get('transfer_invalid_users')
 		->result();
 		
 		$this->template->clear_layout();
 		$this->template->set_theme('default');
 		$this->template->set_subtitle('Update');
 		$this->template->view('upcoming', $data);
+	}
+	
+	public function change_username()
+	{
+		$data = array();
+		
+		if($this->_validate() == TRUE)
+		{
+			$data['success'] = TRUE;
+			
+			//change username
+			$this->db
+			->set('name', $this->input->post('new_username'))
+			->where('username', $this->input->post('username'))
+			->update('transfer_invalid_users');
+			
+			//Add user
+			$user = $this->db
+			->select('email')
+			->where('username', $this->input->post('username'))
+			->get('transfer_invalid_users')
+			->row();
+		
+			$this->db
+			->set('name', $this->input->post('new_username'))
+			->set('password', $this->auth->get_hash($this->input->post('password')))
+			->set('email', $user->email)
+			->set('status', 1)
+			->set('update', 'NOW()', FALSE)
+			->set('create', $user->create)
+			->insert(USER::TABLE);
+		}
+		
+		$data['transfers'] = $this->db
+		->select('username, name')
+		->where('name !=', '')
+		->get('transfer_invalid_users')
+		->result();
+		
+		$this->template->clear_layout();
+		$this->template->set_theme('default');
+		$this->template->set_subtitle('Change username');
+		$this->template->view('user_transfer', $data);
+	}
+	
+	public function _validate()
+	{
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|exist[transfer_invalid.username]');
+		$this->form_validation->set_rules('password', 'Password', 'required|callback_pw_check');
+		$this->form_validation->set_rules('new_username', 'New username', 'not_logged_in|trim|required|alpha_numeric|min_length[3]|max_length[20]|unique[users.name]');
+		
+		return $this->form_validation->run();
+	}
+	
+	function pw_check($str)
+	{
+		$this->form_validation->set_message('pw_check', 'Invalid password.');
+		
+		$query = $this->db
+		->select('old_id, password')
+		->where('username', $this->input->post('username'))
+		->get('transfer_invalid_users');
+		
+		if ($query->num_rows())
+		{
+			$user = $query->row();
+			return ($user->password == md5(md5($user->old_id).$str));
+		}
+		
+		return FALSE;
 	}
 }
 
