@@ -62,6 +62,7 @@ class MY_Form_validation extends CI_Form_validation {
 		
 		// Create new validation object
 		$this->CI->form_validation = new MY_Form_validation($rules);
+		$this->CI->form_validation->set_error_delimiters($this->_error_prefix, $this->_error_suffix);
 	}
     
     // --------------------------------------------------------------------

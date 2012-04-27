@@ -13,6 +13,23 @@ $template['theme'] = 'teedb';
 
 /*
 |--------------------------------------------------------------------------
+| Set message delimiters
+|--------------------------------------------------------------------------
+|
+| Set global message delimiters for errors [validation_errors (form_validation)
+| and display_errors (upload validation)], success and info messages.
+|
+*/
+
+$template['error_delimiters']['open'] = '<p class="error color border"><span class="icon color icon100"></span>';
+$template['error_delimiters']['close'] = '</p>';
+$template['success_delimiters']['open'] = '<p class="success color border"><span class="icon color icon101"></span>';
+$template['success_delimiters']['close'] = '</p>';
+$template['info_delimiters']['open'] = '<p class="info border"><span class="icon color icon112"></span>';
+$template['info_delimiters']['close'] = '</p>';
+
+/*
+|--------------------------------------------------------------------------
 | Add layout views
 |--------------------------------------------------------------------------
 |

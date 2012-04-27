@@ -20,6 +20,14 @@ class Template {
 	protected $css 			= array();
 	protected $js 			= array();
 	
+	private $_success_array	= array();
+	private $_info_array	= array();
+	
+	private $_success_prefix = '<p>';
+	private $_success_suffix = '</p>';
+	
+	private $_info_prefix 	= '<p>';
+	private $_info_suffix 	= '</p>';
 	
 	/**
 	 * Constructor
@@ -83,6 +91,22 @@ class Template {
 					break;
 				case 'google_analytic_id':
 					$this->footer_data[$key] = $item;
+					break;
+				case 'error_delimiters':
+					if($this->CI->load->library('form_validation'))
+					{
+						$this->CI->form_validation->set_error_delimiters($item['open'], $item['close']);
+					}
+					if($this->CI->load->library('upload'))
+					{
+						$this->CI->upload->set_error_delimiters($item['open'], $item['close']);
+					}
+					break;
+				case 'info_delimiters':
+					$this->set_info_delimiters($item['open'], $item['close']);
+					break;
+				case 'success_delimiters':
+					$this->set_success_delimiters($item['open'], $item['close']);
 					break;
 				default:
 					$this->$key = $item;
@@ -183,6 +207,168 @@ class Template {
 		else
 		{
 			$this->header_data['title'] = $subtitle;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set The Success Delimiter
+	 *
+	 * Permits a prefix/suffix to be added to each success message
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
+	public function set_success_delimiters($prefix = '<p>', $suffix = '</p>')
+	{
+		$this->_success_prefix = $prefix;
+		$this->_success_suffix = $suffix;
+
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set The Success Delimiter
+	 *
+	 * Permits a prefix/suffix to be added to each success message
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
+	public function set_info_delimiters($prefix = '<p>', $suffix = '</p>')
+	{
+		$this->_info_prefix = $prefix;
+		$this->_info_suffix = $suffix;
+
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Success String
+	 *
+	 * Returns the success messages as a string, wrapped in the success delimiters
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	str
+	 */
+	public function success_string($prefix = '', $suffix = '')
+	{
+		// No success messages
+		if (count($this->_success_array) === 0)
+		{
+			return '';
+		}
+
+		if ($prefix == '')
+		{
+			$prefix = $this->_success_prefix;
+		}
+
+		if ($suffix == '')
+		{
+			$suffix = $this->_success_suffix;
+		}
+
+		// Generate the success string
+		$str = '';
+		foreach ($this->_success_array as $val)
+		{
+			if ($val != '')
+			{
+				$str .= $prefix.$val.$suffix."\n";
+			}
+		}
+
+		return $str;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Info String
+	 *
+	 * Returns the info messages as a string, wrapped in the info delimiters
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	str
+	 */
+	public function info_string($prefix = '', $suffix = '')
+	{
+		// No info messages
+		if (count($this->_info_array) === 0)
+		{
+			return '';
+		}
+
+		if ($prefix == '')
+		{
+			$prefix = $this->_info_prefix;
+		}
+
+		if ($suffix == '')
+		{
+			$suffix = $this->_info_suffix;
+		}
+
+		// Generate the success string
+		$str = '';
+		foreach ($this->_info_array as $val)
+		{
+			if ($val != '')
+			{
+				$str .= $prefix.$val.$suffix."\n";
+			}
+		}
+
+		return $str;
+	}
+    
+    // --------------------------------------------------------------------
+ 
+    /**
+     * Add an success message
+	 * 
+	 * @access	public
+	 * @param	string	success message
+     */
+	function add_success_msg($message)
+	{
+		if(is_array($message))
+		{
+			$this->_success_array = array_merge($this->_success_array, $message);
+		}
+		else
+		{
+			$this->_success_array[] = $message;
+		}
+	}
+    
+    // --------------------------------------------------------------------
+ 
+    /**
+     * Add an info message
+	 * 
+	 * @access	public
+	 * @param	string	info message
+     */
+	function add_info_msg($message)
+	{
+		if(is_array($message))
+		{
+			$this->_info_array = array_merge($this->_info_array, $message);
+		}
+		else
+		{
+			$this->_info_array[] = $message;
 		}
 	}
 }

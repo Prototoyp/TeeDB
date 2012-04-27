@@ -7,7 +7,10 @@
  * @category	Validation
  * @author		Andreas Gehle
  */
-class MY_Upload extends CI_Upload {	
+class MY_Upload extends CI_Upload {
+	
+	private $_error_prefix = '<p>';
+	private $_error_suffix = '</p>';	
 	
 	public $min_width	= 0;
     public $min_height	= 0;
@@ -232,8 +235,18 @@ class MY_Upload extends CI_Upload {
 	 * @param	string
 	 * @return	string
 	 */
-	public function display_errors($open = '<p>', $close = '</p>')
+	public function display_errors($open = '', $close = '')
 	{
+		if ($open == '')
+		{
+			$open = $this->_error_prefix;
+		}
+
+		if ($close == '')
+		{
+			$close = $this->_error_suffix;
+		}
+		
 		if(count($this->error_msg) > 0)
 		{
 			//Multiupload will have multidimensional array
@@ -257,6 +270,25 @@ class MY_Upload extends CI_Upload {
 		}
 		
 		return '';
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set The Error Delimiter
+	 *
+	 * Permits a prefix/suffix to be added to each error message
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
+	public function set_error_delimiters($prefix = '<p>', $suffix = '</p>')
+	{
+		$this->_error_prefix = $prefix;
+		$this->_error_suffix = $suffix;
+
+		return $this;
 	}
 }
 
