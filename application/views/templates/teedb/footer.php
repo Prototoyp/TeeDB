@@ -16,7 +16,7 @@
 
 <footer id="main" class="wrapper light">
 	<p class="center" style="padding: 0">
-		TeeDB &copy; Copyright 2008 - <?php echo date("Y"); ?> All rights reserved | <?php echo anchor('privacy_policy', 'Privacy policy'); ?> | <?php echo anchor('disclaimer', 'Disclaimer'); ?> | Page rendered in {elapsed_time} seconds
+		TeeDB &copy; Copyright 2008 - <?php echo date("Y"); ?> All rights reserved | <?php echo anchor('privacy_policy', 'Privacy policy'); ?> | Page rendered in {elapsed_time} seconds
 	</p>
 </footer>
 

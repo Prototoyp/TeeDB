@@ -21,8 +21,8 @@
 			<a href="http://game-server-germany.eu/" target="_blank">Dani, Kai</a>
 			<p>Without these two guys teedb.info doesnt exist.</p>
 			
-			<h3>Main coder/ developer</h3>
-			<a href="https://github.com/kugel" target="_blank">Kugel (Me)</a>
+			<h3>Developer</h3>
+			<a href="https://github.com/kugel" target="_blank">Kugel</a>
 			<p>Build up teedb as it is today.</p>
 		</article>
 	</section>

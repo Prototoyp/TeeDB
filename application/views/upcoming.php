@@ -91,7 +91,7 @@
 				<?php $i=0; foreach($transfers as $entry): $i++; ?>
 				<tr>
 					<td><?php echo $i; ?></td>
-					<td><?php echo $entry->username; ?></td>
+					<td><?php echo htmlspecialchars($entry->username); ?></td>
 					<td><?php echo $entry->error; ?></td>
 				</tr>
 				<?php endforeach; ?>

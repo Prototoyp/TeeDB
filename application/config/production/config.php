@@ -258,7 +258,7 @@ $config['cache_path'] = '';
 | http://codeigniter.com/user_guide/libraries/sessions.html
 |
 */
-$config['encryption_key'] = 'Nki3XPZNyAvAta4UJugmSNBCf3aZ1eEM';
+$config['encryption_key'] = 'Nki437yAvAtug0897fgjSNBCf3aZbkz65r';
 
 /*
 |--------------------------------------------------------------------------

@@ -73,7 +73,7 @@ class UpComing extends MY_Controller {
 			
 			//Add user
 			$user = $this->db
-			->select('email')
+			->select('email, create')
 			->where('username', $this->input->post('username'))
 			->get('transfer_invalid_users')
 			->row();
@@ -102,7 +102,7 @@ class UpComing extends MY_Controller {
 	
 	public function _validate()
 	{
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|exist[transfer_invalid.username]');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|exist[transfer_invalid_users.username]');
 		$this->form_validation->set_rules('password', 'Password', 'required|callback_pw_check');
 		$this->form_validation->set_rules('new_username', 'New username', 'not_logged_in|trim|required|alpha_numeric|min_length[3]|max_length[20]|unique[users.name]');
 		
