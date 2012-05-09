@@ -11,7 +11,29 @@ class Migrate extends MY_Controller {
 		
 		//IMPORTATNT: Enable Migratetion in config file only if needed
 		//Set to false up after working.
-		$this->load->library('migration');
+		$this->load->library(array('migration', 'form_validation'));
+		$this->load->helper('form');
+		
+		$this->load->config('migration');
+	}
+	
+	function index()
+	{
+		$data['enabled'] = $this->config->item('migration_enabled');
+		$data['config'] = $this->config->item('migration_version');
+		$data['current'] = $this->migration->get_version();
+		
+		$data['versions'] = array();
+		$files = $this->migration->get_migrations();
+		$data['latest'] = count($files);
+		for($version = 1, $count = $data['latest']; $version <= $count; $version++)
+		{
+			$data['versions'][$version] = basename($files[$version-1], '.php');
+		}
+		
+		$this->template->set_theme('default');
+		$this->template->set_subtitle('Migration');
+		$this->template->view('migrate', $data);
 	}
 
 	// --------------------------------------------------------------------
@@ -25,11 +47,23 @@ class Migrate extends MY_Controller {
 	{
 		if ( ! $this->migration->current())
 		{
-			show_error($this->migration->error_string());
-			exit;
+			$errors = $this->migration->error_string();
+			
+			if($errors === '')
+			{
+				$this->form_validation->add_message('Coundn\'t migrate to recommended version. Error unknown.');
+			}
+			else
+			{
+				$this->form_validation->add_message($this->migration->error_string());
+			}
+		}
+		else
+		{
+			$this->template->add_success_msg('Migrate to recommended version successful.');
 		}
 
-		$this->output->append_output("<br />Migration Successful<br />");
+		$this->index();
 	}
 
 	// --------------------------------------------------------------------
@@ -43,11 +77,23 @@ class Migrate extends MY_Controller {
 	{
 		if ( ! $this->migration->latest())
 		{
-			show_error($this->migration->error_string());
-			exit;
+			$errors = $this->migration->error_string();
+			
+			if($errors === '')
+			{
+				$this->form_validation->add_message('Coundn\'t migrate to latest version. Error unknown.');
+			}
+			else
+			{
+				$this->form_validation->add_message($this->migration->error_string());
+			}
+		}
+		else
+		{
+			$this->template->add_success_msg('Migrate to latest version successful.');
 		}
 
-		$this->output->append_output("<br />Migration Successful<br />");
+		$this->index();
 	}
 
 	// --------------------------------------------------------------------
@@ -62,16 +108,51 @@ class Migrate extends MY_Controller {
 	 */
 	public function version($id = NULL)
 	{
-		// No $id supplied? Use the config version
-		$id OR $id = $this->config->item('migration_version');
-
-		if ( ! $this->migration->version($id))
+		$this->form_validation->set_rules('version', 'version', 'trim|required|is_natural_no_zero');
+		
+		if ($this->form_validation->run() == TRUE)
 		{
-			show_error($this->migration->error_string());
-			exit;
+			$id = $this->input->post('version');
+		}
+		else
+		{
+			if($this->input->post('version_migrate'))
+			{
+				//id has been sent by form and we have errors
+				$this->index();
+				return;
+			}
+			else
+			{
+				if(is_null($id))
+				{
+					$this->form_validation->add_message('The version id must be set in the URL or use the form.');
+					$this->index();
+					return;
+				}
+			}
 		}
 
-		$this->output->append_output("<br />Migration Successful<br />");
+		//migrate to version
+		if ( ! $this->migration->version($id))
+		{
+			$errors = $this->migration->error_string();
+			
+			if($errors === '')
+			{
+				$this->form_validation->add_message('Coundn\'t migrate to version '.$id.'. Error unknown.');
+			}
+			else
+			{
+				$this->form_validation->add_message($this->migration->error_string());
+			}
+		}
+		else
+		{
+			$this->template->add_success_msg('Migrate to version '.$id.' successful.');
+		}
+
+		$this->index();
 	}
 }
 

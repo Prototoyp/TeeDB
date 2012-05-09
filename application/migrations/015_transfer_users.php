@@ -99,6 +99,17 @@ class Migration_Transfer_Users extends Transfer_Migration {
 			}
 			else
 			{
+				$error++;
+				
+				if($count = $this->count_uploads($user->id))
+				{
+					$has_uploads++;
+					$this->form_validation->add_message('<strong style="color:red">I have '.$count.' uploads! :( </strong>');
+				}
+				else {
+					$this->form_validation->add_message('<strong style="color:green">No uploads. Can be deleted.</strong>');
+				}
+				
 				$this->db
 				->set('username', $user->username)
 				->set('email', $user->email)
@@ -107,13 +118,6 @@ class Migration_Transfer_Users extends Transfer_Migration {
 				->set('error', validation_errors())
 				->set('create', $user->RegDatum)
 				->insert('transfer_invalid_users');
-				
-				$error++;
-				
-				if($this->has_uploads($user->id))
-				{
-					$has_uploads++;
-				}
 			}
 			
 			//Reset form input
@@ -127,8 +131,14 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		->get('user')
 		->row()->count;
 		$count = $this->old_db->count_all_results('user');
-		$this->_output_info('Users', $count, array('Transfered' => $count_active-$error, 'Invalid (No uploads)' => $error-$has_uploads, 'Invalid (Has uploads)' => $has_uploads, 'Not activated/ Deleted' => $count_deleted));
-		$this->_output_info('Invalid Users', $error, array('Has uploads' => $has_uploads, 'Has no uploads' => $error-$has_uploads));
+		
+		$this->load->vars(
+			array('feedback' => (
+				$this->_output_info('Users', $count, array('Transfered' => $count_active-$error, 'Invalid (No uploads)' => $error-$has_uploads, 'Invalid (Has uploads)' => $has_uploads, 'Not activated/ Deleted' => $count_deleted))
+				.'<br />'.
+				$this->_output_info('Invalid Users', $error, array('Has uploads' => $has_uploads, 'Has no uploads' => $error-$has_uploads))
+			))
+		);
 	}
 
 	/**
@@ -159,6 +169,27 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		}
 		
 		return FALSE;
+	}
+	
+	
+	public function count_uploads($id)
+	{
+		$tables = array('tw_gameskins', 'tw_mapres', 'tw_maps', 'tw_mods', 'tw_demos', 'tw_skins');
+		
+		$count = 0;
+		
+		foreach($tables as $table){		
+			$query = $this->old_db
+				->select('id')
+				->where('user_id', $id)
+				->get($table);
+			if($query->num_rows() > 0)
+			{
+				$count += $query->num_rows();
+			}
+		}
+		
+		return $count;
 	}
 }
 

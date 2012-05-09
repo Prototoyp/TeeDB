@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_User_Confirms extends CI_Migration {
+class Migration_User_Confirms extends MY_Migration {
 	
 	/**
 	 * Constructor

@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Sessions extends CI_Migration {
+class Migration_Sessions extends MY_Migration {
 	
 	/**
 	 * Name of the table

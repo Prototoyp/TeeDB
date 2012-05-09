@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Example_Datas extends CI_Migration {
+class Migration_Example_Datas extends MY_Migration {
 	
 	/**
 	 * Constructor

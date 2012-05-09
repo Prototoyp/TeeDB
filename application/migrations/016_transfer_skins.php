@@ -62,70 +62,84 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 				unset($uploads[$skin->name]);
 				$files++;
 				
-				//Check
-				list($width, $height, $type, $attr) = getimagesize('database/skins/'.$skin->name.'.png');
-				
-				if($width != 256 or $height != 128)
+				if(!file_exists('database/skins/'.$skin->name.'.png'))
 				{
 					$this->db
 					->set('type', 'skin')
 					->set('name', $skin->name)
 					->set('username', $skin->username)
-					->set('error', 'Dimension of skins must be 1024x512. Given '.$width.'x'.$height.'.')
+					->set('error', 'No file found to given skinname in database.')
 					->insert('transfer_invalid');
 					
 					$error++; 
 				}
-				elseif(filesize('database/skins/'.$skin->name.'.png') > 100000)
-				{
-					$this->db
-					->set('type', 'skin')
-					->set('name', $skin->name)
-					->set('username', $skin->username)
-					->set('error', 'Filesize greater than allowed 100kB for skin uploads.')
-					->insert('transfer_invalid');
-					
-					$error++;
-				}
 				else
 				{
-					//User transfered?
-					$query = $this->db
-					->select('id')
-					->where('name', $skin->username)
-					->get(User::TABLE);
+				
+					//Check
+					list($width, $height, $type, $attr) = getimagesize('database/skins/'.$skin->name.'.png');
 					
-					if($query->num_rows())
-					{
-						$filename = $this->security->sanitize_filename($skin->name);
-						
-						//Add skin
-						$this->db
-						->set('name', $filename)
-						->set('user_id', $query->row()->id)
-						->set('update', 'NOW()', FALSE)
-						->set('create', $skin->date)
-						->insert(Skin::TABLE);
-						
-						//Add file
-						copy('database/skins/'.$skin->name.'.png' , 'uploads/skins/'.$filename.'.png');
-						if(!copy('database/skins/previews/'.$skin->name.'.png' , 'uploads/skins/previews/'.$filename.'.png'))
-						{
-							$this->skin_preview->create($filename);
-						}
-					}
-					else
+					if($width != 256 or $height != 128)
 					{
 						$this->db
 						->set('type', 'skin')
 						->set('name', $skin->name)
 						->set('username', $skin->username)
-						->set('error', 'User/Owner not transfered')
+						->set('error', 'Dimension of skins must be 1024x512. Given '.$width.'x'.$height.'.')
+						->insert('transfer_invalid');
+						
+						$error++; 
+					}
+					elseif(filesize('database/skins/'.$skin->name.'.png') > 100000)
+					{
+						$this->db
+						->set('type', 'skin')
+						->set('name', $skin->name)
+						->set('username', $skin->username)
+						->set('error', 'Filesize greater than allowed 100kB for skin uploads.')
 						->insert('transfer_invalid');
 						
 						$error++;
 					}
-					
+					else
+					{
+						//User transfered?
+						$query = $this->db
+						->select('id')
+						->where('name', $skin->username)
+						->get(User::TABLE);
+						
+						if($query->num_rows())
+						{
+							$filename = $this->security->sanitize_filename($skin->name);
+							
+							//Add skin
+							$this->db
+							->set('name', $filename)
+							->set('user_id', $query->row()->id)
+							->set('update', 'NOW()', FALSE)
+							->set('create', $skin->date)
+							->insert(Skin::TABLE);
+							
+							//Add file
+							copy('database/skins/'.$skin->name.'.png' , 'uploads/skins/'.$filename.'.png');
+							if(!copy('database/skins/previews/'.$skin->name.'.png' , 'uploads/skins/previews/'.$filename.'.png'))
+							{
+								$this->skin_preview->create($filename);
+							}
+						}
+						else
+						{
+							$this->db
+							->set('type', 'skin')
+							->set('name', $skin->name)
+							->set('username', $skin->username)
+							->set('error', 'User/Owner not transfered')
+							->insert('transfer_invalid');
+							
+							$error++;
+						}
+					}
 				}
 			}
 			else
@@ -153,8 +167,15 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	{
 		$this->db->empty_table(Skin::TABLE);
 		
-		delete_files('uploads/skins');
-		delete_files('uploads/skins/previews');
+		if( ! delete_files('uploads/skins'))
+		{
+			show_error('Coundn\'t delete skin files in uploads');
+		}
+		
+		if( ! delete_files('uploads/skins/previews'))
+		{
+			show_error('Coundn\'t delete skin previews files in uploads');
+		}
 		
 		$this->db->where('type', 'skin')->delete('transfer_invalid'); 
 	}

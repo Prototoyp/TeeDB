@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Comments extends CI_Migration {
+class Migration_Comments extends MY_Migration {
 	
 	/**
 	 * Constructor

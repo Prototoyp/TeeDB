@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_News extends CI_Migration {
+class Migration_News extends MY_Migration {
 	
 	/**
 	 * Constructor

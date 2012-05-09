@@ -1,6 +1,6 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class Transfer_Migration extends CI_Migration {
+class Transfer_Migration extends MY_Migration {
 	
 	protected $old_db = NULL;
 	
@@ -31,21 +31,24 @@ class Transfer_Migration extends CI_Migration {
 	 */
 	protected function _output_info($title, $count, $parts = array())
 	{
+		$output = '';
 		$chart_values = '';
 		$chart_labels = '';
 		
-		echo '<strong>'.$title.': </strong><br>';
-		echo 'Count: '.$count.'<br>';
+		$output .= '<strong>'.$title.': </strong><br>';
+		$output .= 'Count: '.$count.'<br>';
 		foreach ($parts as $part => $value) {
-			echo $part.': '.$value.' ('.round(($value*100)/$count).'%)<br>';
+			$output .= $part.': '.$value.' ('.round(($value*100)/$count).'%)<br>';
 			$chart_values .= round(($value*100)/$count).',';
 			$chart_labels .= $part.'|';
 		}
-		echo '<br>------------------<br>';
+		$output .= '<br>------------------<br>';
 		
 		$chart_values = substr($chart_values, 0, -1);
 		$chart_labels = substr($chart_labels, 0, -1);
-		echo '<img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:'.$chart_values.'&chtt=Usertransfer&chl='.$chart_labels.'" />';
+		$output .= '<img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:'.$chart_values.'&chtt=Usertransfer&chl='.$chart_labels.'" />';
+		
+		return $output;
 	}
 	
 }

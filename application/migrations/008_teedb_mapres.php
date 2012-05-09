@@ -7,7 +7,7 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_TeeDB_Mapres extends CI_Migration {
+class Migration_TeeDB_Mapres extends MY_Migration {
 	
 	/**
 	 * Constructor
