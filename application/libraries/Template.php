@@ -92,6 +92,12 @@ class Template {
 				case 'google_analytic_id':
 					$this->footer_data[$key] = $item;
 					break;
+				case $this->theme: 
+					if(!isset($item['error_delimiters']))
+					{
+						break;
+					}
+					$item = $item['error_delimiters'];
 				case 'error_delimiters':
 					if($this->CI->load->library('form_validation'))
 					{

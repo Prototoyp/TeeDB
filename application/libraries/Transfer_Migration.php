@@ -19,6 +19,16 @@ class Transfer_Migration extends MY_Migration {
 		{
 			show_error('Cant connect to transfer DB.');
 		}
+		
+		//Set error delimiters to nullstring
+		if($this->load->library('form_validation'))
+		{
+			$this->form_validation->set_error_delimiters('','');
+		}
+		if($this->load->library('upload'))
+		{
+			$this->upload->set_error_delimiters('','');
+		}
 	}
 	
 	/**
