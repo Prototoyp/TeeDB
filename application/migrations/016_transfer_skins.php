@@ -9,6 +9,8 @@
  */
 class Migration_Transfer_Skins extends Transfer_Migration {
 	
+	const TABLE = 'transfer_invalid_skins';
+	
 	/**
 	 * Constructor
 	 */
@@ -28,27 +30,27 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 		//Flush example data
 		$this->db->empty_table(Skin::TABLE);
 		
-		//Uploads
-		// $uploads = scandir('database/skins');
-		// $uploads = array_flip($uploads);
-		// unset($uploads['previews']);
-		// unset($uploads['.']);
-		// unset($uploads['..']);
+		//Build invalide data table
+		$this->dbforge->add_key('id', TRUE);
 		
+		$this->dbforge->add_field(array(
+			'id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+			'name' => array('type' => 'VARCHAR', 'constraint' => '255', 'null' => FALSE),
+			'create' => array('type' => 'DATETIME', 'null' => FALSE),
+			'user_id' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'null' => FALSE),
+			'error' => array('type' => 'TEXT', 'null' => FALSE)
+		));
+		$this->dbforge->create_table(self::TABLE, TRUE);
+		
+		//Uploads
 		$uploads = array();
-	    // $directory = opendir('database/skins'); 
-	    // while($item = readdir($directory)){ 
-	         // if(($item != ".") && ($item != "..") && ($item != "previews")){ 
-	              // $uploads[$item] = true; 
-	         // } 
-	    // }
 	    $uploads = get_filenames('database/skins');
 		$uploads = array_flip($uploads);
 		$countfiles = count($uploads);
 		
 		//Skins
 		$old_skins = $this->old_db
-		->select('name, username, s.date')
+		->select('name, username, s.date, user_id')
 		->from('skins AS s')
 		->join('user AS u', 's.user_id = u.id')
 		->get()->result();
@@ -65,11 +67,10 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 				if(!file_exists('database/skins/'.$skin->name.'.png'))
 				{
 					$this->db
-					->set('type', 'skin')
 					->set('name', $skin->name)
-					->set('username', $skin->username)
+					->set('user_id', $skin->user_id)
 					->set('error', 'No file found to given skinname in database.')
-					->insert('transfer_invalid');
+					->insert(self::TABLE);
 					
 					$error++; 
 				}
@@ -82,22 +83,20 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 					if($width != 256 or $height != 128)
 					{
 						$this->db
-						->set('type', 'skin')
 						->set('name', $skin->name)
-						->set('username', $skin->username)
+						->set('user_id', $skin->user_id)
 						->set('error', 'Dimension of skins must be 1024x512. Given '.$width.'x'.$height.'.')
-						->insert('transfer_invalid');
+						->insert(self::TABLE);
 						
 						$error++; 
 					}
 					elseif(filesize('database/skins/'.$skin->name.'.png') > 100000)
 					{
 						$this->db
-						->set('type', 'skin')
 						->set('name', $skin->name)
-						->set('username', $skin->username)
+						->set('user_id', $skin->user_id)
 						->set('error', 'Filesize greater than allowed 100kB for skin uploads.')
-						->insert('transfer_invalid');
+						->insert(self::TABLE);
 						
 						$error++;
 					}
@@ -131,11 +130,10 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 						else
 						{
 							$this->db
-							->set('type', 'skin')
 							->set('name', $skin->name)
-							->set('username', $skin->username)
+							->set('user_id', $skin->user_id)
 							->set('error', 'User/Owner not transfered')
-							->insert('transfer_invalid');
+							->insert(self::TABLE);
 							
 							$error++;
 						}
@@ -145,19 +143,25 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 			else
 			{
 				$this->db
-				->set('type', 'skin')
 				->set('name', $skin->name)
-				->set('username', $skin->username)
+				->set('user_id', $skin->user_id)
 				->set('error', 'Missing file!')
-				->insert('transfer_invalid');
+				->insert(self::TABLE);
 				
 				$error++;
 			}
 		}
 
 		$count = $this->old_db->count_all_results('skins');
-		$this->_output_info('Skins db', $count, array('Invalid' => $error, 'Transfered' => $count-$error));
-		$this->_output_info('Skins files', $countfiles, array('Has publisher' => $files, 'No publisher' => $countfiles-$files));
+		
+		//stats
+		$this->load->vars(
+			array('feedback' => (
+				$this->_output_info('Skins db', $count, array('Invalid' => $error, 'Transfered' => $count-$error))
+				.'<br />'.
+				$this->_output_info('Skins files', $countfiles, array('Has publisher' => $files, 'No publisher' => $countfiles-$files))
+			))
+		);
 	}
 
 	/**
@@ -177,7 +181,7 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 			show_error('Coundn\'t delete skin previews files in uploads');
 		}
 		
-		$this->db->where('type', 'skin')->delete('transfer_invalid'); 
+		$this->db->empty_table(self::TABLE); 
 	}
 }
 
