@@ -12,6 +12,7 @@ class Signup extends Public_Controller {
 		$this->load->library(array('form_validation', 'user/auth', 'email'));
 		$this->load->model(array('user','confirm'));
 		
+		$this->lang->load('user');
 		$this->config->load('user');
 	}
 

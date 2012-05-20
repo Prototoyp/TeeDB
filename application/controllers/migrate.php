@@ -15,6 +15,7 @@ class Migrate extends MY_Controller {
 		$this->load->helper('form');
 		
 		$this->load->config('migration');
+		$this->template->set_theme('default');
 	}
 	
 	function index()
@@ -31,7 +32,6 @@ class Migrate extends MY_Controller {
 			$data['versions'][$version] = basename($files[$version-1], '.php');
 		}
 		
-		$this->template->set_theme('default');
 		$this->template->set_subtitle('Migration');
 		$this->template->view('migrate', $data);
 	}

@@ -12,6 +12,7 @@ class Template {
 	protected $CI;	
 	
 	protected $theme		= 'default';
+	protected $admin_bar	= FALSE;
 	protected $layouts   	= array();
 	protected $layout_data 	= array();	
 	public $header_data		= array();
@@ -85,6 +86,7 @@ class Template {
 			switch($key)
 			{
 				case 'title':
+					$this->header_data['site_title'] = $item;
 				case 'author':
 				case 'description':
 					$this->header_data[$key] = $item;
@@ -93,11 +95,11 @@ class Template {
 					$this->footer_data[$key] = $item;
 					break;
 				case $this->theme: 
-					if(!isset($item['error_delimiters']))
-					{
-						break;
-					}
-					$item = $item['error_delimiters'];
+					$this->set_info_delimiters($item['info_delimiters']['open'], $item['info_delimiters']['close']);
+					$this->set_success_delimiters($item['success_delimiters']['open'], $item['success_delimiters']['close']);
+					$key = 'error_delimiters';
+					$item['open'] = $item['error_delimiters']['open'];
+					$item['close'] = $item['error_delimiters']['close'];
 				case 'error_delimiters':
 					if($this->CI->load->library('form_validation'))
 					{
@@ -134,6 +136,11 @@ class Template {
 	public function view($view, $data = NULL){
 		$this->CI->load->view('templates/'.$this->theme.'/header', $this->header_data);
 		
+		if($this->admin_bar)
+		{
+			$this->CI->load->view('templates/admin_nav', $this->get_admin_data());
+		}
+		
 		foreach($this->layouts as $layout)
 		{
 			if(isset($this->layout_data[$layout]))
@@ -155,6 +162,40 @@ class Template {
 		}
 		
 		$this->CI->load->view('templates/'.$this->theme.'/footer', $this->footer_data);
+	}
+	// --------------------------------------------------------------------	
+	
+	/**
+	 * Get admin nav data
+	 * 
+	 * Check which modules exist and if they support administration
+	 */
+	private function get_admin_data()
+	{
+		$modules = array();
+		$module_dirs = get_dir_file_info(APPPATH.'modules/');		
+		foreach($module_dirs as $module => $info)
+		{
+			if(is_dir(APPPATH.'modules/'.$module))
+			{
+				$modules[$module] = FALSE;
+				if(file_exists(APPPATH.'modules/'.$module.'/controllers/admin.php'))
+				{
+					$modules[$module] = TRUE;
+				}
+			}
+		}
+		return array('modules' => $modules);
+	}
+
+	// --------------------------------------------------------------------	
+	
+	/**
+	 * Show admin-nav on every site page
+	 */
+	public function show_admin_bar()
+	{
+		$this->admin_bar = TRUE;
 	}
 
 	// --------------------------------------------------------------------	

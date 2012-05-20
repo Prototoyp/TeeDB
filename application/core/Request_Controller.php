@@ -2,7 +2,7 @@
 
 class Request_Controller extends Public_Controller {
 	
-	private $csrf	= TRUE;
+	protected $csrf	= TRUE;
 		
 	/**
 	 * Constructor

@@ -21,12 +21,20 @@ $template['theme'] = 'teedb';
 |
 */
 
-$template['error_delimiters']['open'] = '<p class="error color border"><span class="icon color icon100"></span>';
-$template['error_delimiters']['close'] = '</p>';
-$template['success_delimiters']['open'] = '<p class="success color border"><span class="icon color icon101"></span>';
-$template['success_delimiters']['close'] = '</p>';
-$template['info_delimiters']['open'] = '<p class="info border"><span class="icon color icon112"></span>';
-$template['info_delimiters']['close'] = '</p>';
+
+$template['error_delimiters']['open'] = '<div class="alert alert-error">';
+$template['error_delimiters']['close'] = '</div>';
+$template['success_delimiters']['open'] = '<div class="alert alert-success">';
+$template['success_delimiters']['close'] = '</div>';
+$template['info_delimiters']['open'] = '<div class="alert alert-info">';
+$template['info_delimiters']['close'] = '</div>';
+
+$template['teedb']['error_delimiters']['open'] = '<p class="error color border"><span class="icon color icon100"></span>';
+$template['teedb']['error_delimiters']['close'] = '</p>';
+$template['teedb']['success_delimiters']['open'] = '<p class="success color border"><span class="icon color icon101"></span>';
+$template['teedb']['success_delimiters']['close'] = '</p>';
+$template['teedb']['info_delimiters']['open'] = '<p class="info border"><span class="icon color icon112"></span>';
+$template['teedb']['info_delimiters']['close'] = '</p>';
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +60,7 @@ $template['layouts'] = array('nav');
 
 $template['title'] = 'TeeDB';
 $template['author'] = 'Andreas Gehle';
-$template['description'] = '';
+$template['description'] = 'TeeDB is database for skins, mapres, tilesets, maps, mods, demos, gameskins all around the multiplayer online retro shooter teeworlds.';
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +71,7 @@ $template['description'] = '';
 |
 */
 
-$template['google_analytic_id'] = 'UAXXXXXXXX1';
+$template['google_analytic_id'] = 'UA-31822932-1';
 
 /*
  * Note: css, js must be define in the template cause of Ant Builder

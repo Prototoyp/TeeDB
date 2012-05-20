@@ -15,6 +15,8 @@ class User extends CI_Model {
 	const STATUS_ACTIVE = 1;
 	const STATUS_BANNED = 2;
 	
+	const STATUS_ADMIN = 100;
+	
 	/**
 	 * Constructor
 	 */
@@ -343,7 +345,22 @@ class User extends CI_Model {
 		return $query->row();
 	}
 	
-	public function is_admin($userid){return FALSE;}
+	public function is_admin($user_id)
+	{
+		$query = $this->db
+		->select('id')
+		->where('id', $user_id)
+		->where('status', self::STATUS_ADMIN)
+		->limit(1)
+		->get(self::TABLE);
+		
+		if ($query->num_rows())
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
 
 	// --------------------------------------------------------------------
 	// TODO: Continue model reworking ...

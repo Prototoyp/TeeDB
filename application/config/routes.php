@@ -68,6 +68,13 @@ $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
 $route['feed'] = "blog/feed";
+$route['news'] = "blog/news";
+$route['news/page/(:num)'] = "blog/news/index/$1";
+$route['news/(:any)'] = "blog/news/title/$1";
+
+$route['login'] = "user/login";
+$route['intern'] = "user/intern";
+$route['logout'] = "user/logout";
 
 $route['demos'] = "teedb/demos";
 $route['demos/(:any)'] = "teedb/demos/index/$1";

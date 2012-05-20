@@ -2,9 +2,6 @@
 <script>window.jQuery || document.write('<script src="<?php echo base_url('assets/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
 
 <!-- scripts concatenated and minified via ant build script-->
-<script src="<?php echo base_url('assets/js/libs/bootstrap/transition.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/libs/bootstrap/collapse.js'); ?>"></script>
-
 <script src="<?php echo base_url('assets/js/plugins.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/script.js'); ?>"></script>
 <!-- end scripts-->

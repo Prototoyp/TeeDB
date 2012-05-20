@@ -19,6 +19,7 @@ class Blog extends CI_Model{
 		
 		$this->load->database();
 		$this->load->model(array('user/user', 'blog/comment'));
+		$this->load->helper('url');
 	}
 
 	// --------------------------------------------------------------------
@@ -83,7 +84,7 @@ class Blog extends CI_Model{
 	public function get_latest_titles($limit=5)
 	{
 		$query = $this->db
-		->select('title, create')
+		->select('title, url_title, create')
 		->order_by('update DESC')
 		->limit($limit)
 		->get(self::TABLE);
@@ -118,6 +119,31 @@ class Blog extends CI_Model{
 		}
 		
 		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Add new article
+	 * 
+	 * @access public
+	 * @param string title
+	 * @param string content of the article
+	 * @param integer user_id
+	 * @return integer insert_id
+	 */
+	public function add_news($title, $content, $user_id)
+	{
+		$this->db
+		->set('title', $title)
+		->set('url_title', url_title($title))
+		->set('content', $content)
+		->set('user_id', $user_id)
+		->set('update', 'NOW()', FALSE)
+		->set('create', 'NOW()', FALSE)
+		->insert(self::TABLE);
+		
+		return $this->db->insert_id();
 	}
 
 	// --------------------------------------------------------------------

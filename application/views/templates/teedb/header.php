@@ -20,8 +20,17 @@
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url('assets/favicon.ico'); ?>">
 	<link rel="apple-touch-icon" type="image/x-icon" href="<?php echo base_url('assets/apple-touch-icon.png'); ?>">
 	
-	<link rel="stylesheet" href='<?php echo base_url('assets/css/style.css'); ?>'>
+	<?php if($this->load->is_loaded('auth') && $this->auth->is_admin()): ?>
+		<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css'); ?>">
+	    <style type="text/css">
+	      body {
+	        padding-top: 40px;
+	      }
+	    </style>
+    <?php endif; ?>	
 
+	<link rel="stylesheet" href='<?php echo base_url('assets/css/style.css'); ?>'>
+	
 	<script src="<?php echo base_url('assets/js/libs/modernizr-2.5-respond-1.1.0.min.js'); ?>"></script>
 </head>
 <body class="light">

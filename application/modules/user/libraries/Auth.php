@@ -11,7 +11,7 @@ class Auth {
 
 	protected $CI;
 	protected $index_redirect 	= '/';
-	protected $login_redirect 	= '/login';
+	protected $login_redirect 	= 'user/login';
 	
 	private static $salt		= 'm}WGbb_VyQ"|f#]LqNxk1(`VfFENY)1z';
 	private static $user_id 	= 0;
@@ -71,6 +71,22 @@ class Auth {
 	 * @access	public
 	 * @return	void
 	 */
+	public function set_redirect_from()
+	{
+		if($this->CI->uri->uri_string() != $this->login_redirect)
+		{
+			$this->CI->session->set_userdata('redirected_from', $this->CI->uri->uri_string());
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Redirects users after logging in
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	public function redirect()
 	{
 		if ($this->CI->session->userdata('redirected_from') == FALSE)
@@ -81,7 +97,6 @@ class Auth {
 		{
 			redirect($this->CI->session->userdata('redirected_from'));
 		}
-
 	}
 
 	// --------------------------------------------------------------------
@@ -89,16 +104,17 @@ class Auth {
 	/**
 	 * Restrict users from certain pages
 	 * 
-	 * use restrict(TRUE) if a user can't access a page when logged in
+	 * use restrict if a user can't access a page when logged in
 	 *
 	 * @access	public
-	 * @param	boolean	if the page is viewable when logged in
 	 * @return	void
 	 */
 	public function restrict()
 	{
-		//$this->CI->session->set_userdata('redirected_from', $this->CI->uri->uri_string()); 
-		redirect($this->CI->agent->referrer());
+		if($this->logged_in())
+		{
+			redirect($this->index_redirect);
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -170,7 +186,6 @@ class Auth {
 			self::$is_admin = $this->CI->user->is_admin(self::$user_id);
 			$this->CI->session->set_userdata('is_admin', self::$is_admin);
 			self::$user_name = $this->CI->input->post('username');
-			$this->restrict();
 			return TRUE;
 		}
 		
@@ -188,7 +203,7 @@ class Auth {
 	 */
 	public function logged_in()
 	{
-		return (self::$user_id > 0 OR self::$user_id = $this->CI->session->userdata('user_id'));
+		return (self::$user_id > 0 || self::$user_id = $this->CI->session->userdata('user_id'));
 	}
 
 	// --------------------------------------------------------------------
