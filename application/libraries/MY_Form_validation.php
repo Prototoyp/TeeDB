@@ -8,6 +8,15 @@
  * @author		Andreas Gehle
  */
 class MY_Form_validation extends CI_Form_validation {
+	
+	protected $check_input = FALSE;
+	
+ 	function __construct($rules=array())
+	{
+		parent::__construct($rules);
+		
+		$this->CI->lang->load('MY_form_validation');
+	}
  
     /**
      * Error Array
@@ -76,9 +85,7 @@ class MY_Form_validation extends CI_Form_validation {
 	 */
     public function valid_url($url)
     {
-		$this->CI->form_validation->set_message('valid_url', 'The %s is not a valide URL.');
-		
-        $pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+		$pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
         return (bool) preg_match($pattern, $url);
     }
     
@@ -93,7 +100,6 @@ class MY_Form_validation extends CI_Form_validation {
 	 */
     public function real_url($url)
     {
-		$this->CI->form_validation->set_message('real_url', 'The page with the specified %s URL does not respond');
 		return @fsockopen("$url", 80, $errno, $errstr, 30); exit();
     }
 
@@ -110,7 +116,6 @@ class MY_Form_validation extends CI_Form_validation {
 	public function unique($str, $params)
 	{
 		$this->CI->load->database();
-		$this->CI->form_validation->set_message('unique', 'The %s is already in use.');
 
 		list($table, $field) = explode(".", $params, 2);
 
@@ -139,7 +144,6 @@ class MY_Form_validation extends CI_Form_validation {
 	 */
 	public function exist($str, $params)
 	{
-		$this->CI->form_validation->set_message('exist', 'The %s doesnt belong to any account.');
 		return !$this->unique($str, $params);
 	}
 
@@ -163,7 +167,6 @@ class MY_Form_validation extends CI_Form_validation {
 		$max = 3;
 		
 		$this->CI->load->database();
-		$this->CI->form_validation->set_message('no_spam', 'Spam protection.');
 
 		list($table, $max) = explode(".", $params, 2);
 
@@ -199,12 +202,72 @@ class MY_Form_validation extends CI_Form_validation {
 	 * @access	public
 	 * @return	bool
 	 */	
-	public function not_logged_in()
+	public function logged_in()
 	{
 		$this->CI->load->library('user/auth');
 		
-		$this->CI->form_validation->set_message('not_logged_in', 'You are logged in. No multi accounts allowed.');
-		return !$this->CI->auth->logged_in();
+		return $this->CI->auth->logged_in();
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Logged in
+	 * 
+	 * Checks if a user is already loged in
+	 * 
+	 * @access	public
+	 * @return	bool
+	 */	
+	public function not_logged_in()
+	{
+		return !$this->logged_in();
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Tell the user to check the input again
+	 * when the input was changed
+	 * 
+	 * Changes can be done by:
+	 * - purifier_html
+	 * 
+	 * @access	public
+	 * @return	boolean
+	 */	
+	public function recheck_input()
+	{
+		return ! $this->check_input;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Clean up html
+	 * 
+	 * @access	public
+	 * @return	string Clean string or FALSE when mismatched
+	 */	
+	public function purifier_html($dirty_html)
+	{
+		require_once APPPATH . 'third_party/htmlpurifier-4.4.0-standalone/HTMLPurifier.standalone.php';
+
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Core.Encoding', 'utf-8');
+		//$config->set('Core.CollectErrors', TRUE);
+		$config->set('HTML.AllowedElements', '');
+		$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+		
+		$purifier = new HTMLPurifier($config);
+		$clean_html = $purifier->purify($dirty_html);
+		
+		if($clean_html !== $dirty_html)
+		{
+			$this->check_input = TRUE;
+		}
+		
+		return $clean_html;
 	}
 
 	// --------------------------------------------------------------------
