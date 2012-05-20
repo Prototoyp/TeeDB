@@ -39,7 +39,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://teedb.info/';
+$config['base_url']	= 'http://gsgstuffandfiles.netne.net/';
 
 /*
 |--------------------------------------------------------------------------
@@ -258,7 +258,7 @@ $config['cache_path'] = '';
 | http://codeigniter.com/user_guide/libraries/sessions.html
 |
 */
-$config['encryption_key'] = 'Nki437yAvAtug0897fgjSNBCf3aZbkz65r';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
