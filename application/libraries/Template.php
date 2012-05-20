@@ -94,28 +94,14 @@ class Template {
 				case 'google_analytic_id':
 					$this->footer_data[$key] = $item;
 					break;
-				case $this->theme: 
-					$this->set_info_delimiters($item['info_delimiters']['open'], $item['info_delimiters']['close']);
-					$this->set_success_delimiters($item['success_delimiters']['open'], $item['success_delimiters']['close']);
-					$key = 'error_delimiters';
-					$item['open'] = $item['error_delimiters']['open'];
-					$item['close'] = $item['error_delimiters']['close'];
-				case 'error_delimiters':
-					if($this->CI->load->library('form_validation'))
+				case $template['theme']: 
+					$this->set_delimiters($item);
+				
+				case 'default': 
+					if( ! isset($template[$template['theme']]))
 					{
-						$this->CI->form_validation->set_error_delimiters($item['open'], $item['close']);
+						$this->set_delimiters($item);
 					}
-					if($this->CI->load->library('upload'))
-					{
-						$this->CI->upload->set_error_delimiters($item['open'], $item['close']);
-					}
-					break;
-				case 'info_delimiters':
-					$this->set_info_delimiters($item['open'], $item['close']);
-					break;
-				case 'success_delimiters':
-					$this->set_success_delimiters($item['open'], $item['close']);
-					break;
 				default:
 					$this->$key = $item;
 					break;
@@ -236,6 +222,37 @@ class Template {
 	{
 		$this->clear_layout();
 		$this->theme = $theme;
+		
+		if(@include(APPPATH.'config/template'.EXT))
+		{		
+			if(isset($template[$this->theme]))
+			{
+				$this->set_delimiters($template[$this->theme]);
+			}
+			else
+			{
+				$this->set_delimiters($template['default']);
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------	
+	
+	/**
+	 * Set all delimiters
+	 */	
+	public function set_delimiters($config)
+	{				
+		if($this->CI->load->library('form_validation'))
+		{
+			$this->CI->form_validation->set_error_delimiters($config['error_delimiters']['open'], $config['error_delimiters']['close']);
+		}
+		if($this->CI->load->library('upload'))
+		{
+			$this->CI->upload->set_error_delimiters($config['error_delimiters']['open'], $config['error_delimiters']['close']);
+		}
+		$this->set_info_delimiters($config['info_delimiters']['open'], $config['info_delimiters']['close']);
+		$this->set_success_delimiters($config['success_delimiters']['open'], $config['success_delimiters']['close']);
 	}
 
 	// --------------------------------------------------------------------	

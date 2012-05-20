@@ -22,12 +22,12 @@ $template['theme'] = 'teedb';
 */
 
 
-$template['error_delimiters']['open'] = '<div class="alert alert-error">';
-$template['error_delimiters']['close'] = '</div>';
-$template['success_delimiters']['open'] = '<div class="alert alert-success">';
-$template['success_delimiters']['close'] = '</div>';
-$template['info_delimiters']['open'] = '<div class="alert alert-info">';
-$template['info_delimiters']['close'] = '</div>';
+$template['default']['error_delimiters']['open'] = '<div class="alert alert-error">';
+$template['default']['error_delimiters']['close'] = '</div>';
+$template['default']['success_delimiters']['open'] = '<div class="alert alert-success">';
+$template['default']['success_delimiters']['close'] = '</div>';
+$template['default']['info_delimiters']['open'] = '<div class="alert alert-info">';
+$template['default']['info_delimiters']['close'] = '</div>';
 
 $template['teedb']['error_delimiters']['open'] = '<p class="error color border"><span class="icon color icon100"></span>';
 $template['teedb']['error_delimiters']['close'] = '</p>';

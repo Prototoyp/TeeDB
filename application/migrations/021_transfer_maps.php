@@ -7,9 +7,9 @@
  * @category	Migrations
  * @author		Andreas Gehle
  */
-class Migration_Transfer_Skins extends Transfer_Migration {
+class Migration_Transfer_Maps extends Transfer_Migration {
 	
-	const TABLE = 'transfer_invalid_skins';
+	const TABLE = 'transfer_invalid_maps';
 	
 	/**
 	 * Constructor
@@ -18,8 +18,9 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	{
         parent::__construct();
 		
-		$this->load->library(array('teedb/Skin_preview'));
-		$this->load->model(array('user/user','teedb/skin'));
+		$this->load->library(array('image_lib'));
+		$this->load->model(array('user/user','teedb/map'));
+		$this->load->config('teedb/upload');
 	}
 	
 	/**
@@ -28,7 +29,7 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	function up() 
 	{
 		//Flush example data
-		$this->db->empty_table(Skin::TABLE);
+		$this->db->empty_table(Map::TABLE);
 		
 		//Build invalide data table
 		$this->dbforge->add_key('id', TRUE);
@@ -44,14 +45,14 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 		
 		//Uploads
 		$uploads = array();
-	    $uploads = get_filenames('database/skins');
+	    $uploads = get_filenames('database/maps');
 		$uploads = array_flip($uploads);
 		$countfiles = count($uploads);
 		
-		//Skins
+		//Mapresis
 		$old_skins = $this->old_db
 		->select('name, username, s.date, user_id')
-		->from('skins AS s')
+		->from('maps AS s')
 		->join('user AS u', 's.user_id = u.id')
 		->get()->result();
 		
@@ -59,17 +60,17 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 		$files = 0;
 		foreach($old_skins as $skin)
 		{
-			if(array_key_exists($skin->name.'.png', $uploads))
+			if(array_key_exists($skin->name.'.map', $uploads))
 			{
 				unset($uploads[$skin->name]);
 				$files++;
 				
-				if(!file_exists('database/skins/'.$skin->name.'.png'))
+				if(!file_exists('database/maps/'.$skin->name.'.map'))
 				{
 					$this->db
 					->set('name', $skin->name)
 					->set('user_id', $skin->user_id)
-					->set('error', 'No file found to given skinname in database.')
+					->set('error', 'No file found to given map in database.')
 					->insert(self::TABLE);
 					
 					$error++; 
@@ -78,24 +79,12 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 				{
 				
 					//Check
-					list($width, $height, $type, $attr) = getimagesize('database/skins/'.$skin->name.'.png');
-					
-					if($width != 256 or $height != 128)
+					if(filesize('database/maps/'.$skin->name.'.map') > 10000000)
 					{
 						$this->db
 						->set('name', $skin->name)
 						->set('user_id', $skin->user_id)
-						->set('error', 'Dimension of skins must be 1024x512. Given '.$width.'x'.$height.'.')
-						->insert(self::TABLE);
-						
-						$error++; 
-					}
-					elseif(filesize('database/skins/'.$skin->name.'.png') > 100000)
-					{
-						$this->db
-						->set('name', $skin->name)
-						->set('user_id', $skin->user_id)
-						->set('error', 'Filesize greater than allowed 100kB for skin uploads.')
+						->set('error', 'Filesize greater than allowed 10MB for map uploads.')
 						->insert(self::TABLE);
 						
 						$error++;
@@ -118,14 +107,10 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 							->set('user_id', $query->row()->id)
 							->set('update', 'NOW()', FALSE)
 							->set('create', $skin->date)
-							->insert(Skin::TABLE);
+							->insert(Map::TABLE);
 							
 							//Add file
-							copy('database/skins/'.$skin->name.'.png' , 'uploads/skins/'.$filename.'.png');
-							if(!copy('database/skins/previews/'.$skin->name.'.png' , 'uploads/skins/previews/'.$filename.'.png'))
-							{
-								$this->skin_preview->create($filename);
-							}
+							copy('database/maps/'.$skin->name.'.map' , 'uploads/maps/'.$filename.'.map');
 						}
 						else
 						{
@@ -152,14 +137,14 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 			}
 		}
 
-		$count = $this->old_db->count_all_results('skins');
+		$count = $this->old_db->count_all_results('maps');
 		
 		//stats
 		$this->load->vars(
 			array('feedback' => (
-				$this->_output_info('Skins db', $count, array('Invalid' => $error, 'Transfered' => $count-$error))
+				$this->_output_info('Maps db', $count, array('Invalid' => $error, 'Transfered' => $count-$error))
 				.'<br />'.
-				$this->_output_info('Skins files', $countfiles, array('Has publisher' => $files, 'No publisher' => $countfiles-$files))
+				$this->_output_info('Maps files', $countfiles, array('Has publisher' => $files, 'No publisher' => $countfiles-$files))
 			))
 		);
 	}
@@ -169,16 +154,16 @@ class Migration_Transfer_Skins extends Transfer_Migration {
 	 */
 	function down() 
 	{
-		$this->db->empty_table(Skin::TABLE);
+		$this->db->empty_table(Map::TABLE);
 		
-		if( ! delete_files('uploads/skins'))
+		if( ! delete_files('uploads/maps'))
 		{
-			show_error('Coundn\'t delete skin files in uploads');
+			show_error('Coundn\'t delete map files in uploads');
 		}
 		
-		if( ! delete_files('uploads/skins/previews'))
+		if( ! delete_files('uploads/maps/previews'))
 		{
-			show_error('Coundn\'t delete skin previews files in uploads');
+			show_error('Coundn\'t delete map previews files in uploads');
 		}
 		
 		$this->db->empty_table(self::TABLE); 
