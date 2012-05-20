@@ -3,7 +3,7 @@
 	<ul>
 		<?php if(isset($news_titles) && $news_titles): ?>
 			<?php foreach($news_titles as $news_title): ?>
-				<li><?php echo anchor('blog/news/title/'.url_title($news_title->title), $news_title->title); ?></li>
+				<li><?php echo anchor('news/'.url_title($news_title->title), $news_title->title); ?></li>
 			<?php endforeach; ?>
 		<?php else: ?>
 			<li>No latest news.</li>
@@ -32,7 +32,7 @@
 				<ul>
 					<li>
 						<span class="icon color icon145"></span>
-						Posted by <b><?php echo anchor('#user/'.url_title($news->name), $news->name, 'class="none"'); ?></b>
+						Posted by <b><?php echo anchor(uri_string().'#'.url_title($news->name), $news->name, 'class="none"'); ?></b>
 					</li>
 					<li>
 						<span class="icon color icon42"></span>
@@ -56,13 +56,12 @@
 			<section id="comments">
 				<h2>Comments</h2>
 	   			
-				<div id="lister">
-		    		<ul>
-		    			
-						<div id="info">
-							<?php echo validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
-						</div>
+				<div id="info">
+					<?php echo show_messages(); ?>
+				</div>
 						
+				<div id="lister">
+		    		<ul>						
 			    		<li style="width: 655px; height:190px; text-align: left;">		
 							<?php echo form_open(NULL, 'id="comment"', array('id' => $news->id)); ?>
 								<label for="comment">Your comment:</label><br />
@@ -80,7 +79,7 @@
 								<time style="padding:0;" datetime="<?php echo date('c', human_to_unix($entry->create)); ?>">
 									<?php echo datetime_to_human($entry->create); ?>
 								</time><br/>
-			    				<?php echo anchor('user/'.url_title($entry->name), $entry->name, 'class="none solid"'); ?> says:
+			    				<?php echo anchor(uri_string().'#'.url_title($entry->name), $entry->name, 'class="none solid"'); ?> says:
 			    			</li>
 			    			<li style="width: 496px; margin-left:15px; text-align: left;">			    					
 			    				<?php echo $entry->comment; ?>

@@ -117,7 +117,7 @@ $('form#upload').ajaxForm({
 				$('#list > ul').append(
 					'<li>'+
 						'<div style="width:110px; height:64px">'+
-							'<img src="'+json.data[i].preview+'" href="'+json.data[i].raw_name+' preview" width="64" height="64" />'+
+							'<img src="'+json.data[i].preview+'" alt="'+json.data[i].raw_name+' preview" width="64" height="64" />'+
 						'</div>'+
 						'<p>'+
 							json.data[i].raw_name +
@@ -158,8 +158,15 @@ $('form#comment').ajaxForm({
 			);
 		}
 		
+		//Update input
+		if(json.errors.toString().length > 0) {
+			if(json.data.length > 0) {
+				$('textarea[name="comment"]').val(json.data);
+			}
+		}
 		//Display new comment
-		if(json.data.length > 0) {
+		else
+		{
 			$('#info').append(
 				'<p class="success color border"><span class="icon color icon101"></span>'+
 				'Comment added.' +
