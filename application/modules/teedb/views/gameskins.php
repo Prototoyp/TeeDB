@@ -27,11 +27,11 @@
 					
 					<li style="height:180px; font-weight: bold;">
 						<div style="width:64px; height:64px">
-							<img src="<?php echo base_url(); ?>uploads/gameskins/previews/<?php echo $entry->name; ?>.png" alt="Gameskin <?php echo $entry->name; ?>" />
+							<img src="<?php echo base_url('uploads/gameskins/previews/'.$entry->name.'.png'); ?>" alt="Gameskin <?php echo $entry->name; ?>" />
 						</div>
 						<p><?php echo $entry->name; ?></p>
 						<p style="font-size: 10px">
-							from <?php echo anchor('teedb/gameskins#profile/name/'.url_title($entry->username), $entry->username, 'class="none solid"'); ?>
+							from <?php echo anchor(uri_string().'#'.url_title($entry->username), $entry->username, 'class="none solid"'); ?>
 						</p>
 						<br />
 						<div style="font-size: 10px">

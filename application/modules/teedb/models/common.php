@@ -33,19 +33,38 @@ class Common extends CI_Model {
 	{
 		$tables = array(Demo::TABLE, Gameskin::TABLE, Map::TABLE, Tileset::TABLE, Mod::TABLE, Skin::TABLE, User::TABLE);
 		
-		foreach($tables as $table){		
-			$this->db
-				->select('count(*) AS count1')
-				->from($table);
-			$stats[$table] = $this->db->get()->row();
-		}
-
-		foreach($stats as $table => $stat){		
-			$this->db->select($stat->count1.' AS `'.str_replace('teedb_', '', $table).'`', FALSE);
-		}
-		$query = $this->db->get();
+		// $query = $this->db
+		// ->select('table_name, table_rows')
+		// ->where_in('table_name', $tables)
+		// ->get('informations_schema.TABLES');
+// 		
+		// return $query->result();
 		
-		return $query->row();
+		// $inner_select = '';
+		// foreach($tables as $table)
+		// {
+			// if($inner_select != '')
+			// {
+				// $inner_select .= '
+				 // UNION ALL
+				 // ';
+			// }
+// 			
+			// $inner_select .= '(SELECT count(id) AS `'.str_replace('teedb_', '', $table).'` FROM `'.$this->db->dbprefix($table).'` GROUP_BY `id`)';
+		// }
+// 		
+		// $query = $this->db
+		// ->query($inner_select, FALSE);
+// 		
+		// return $query->result();
+		
+		$result = array();
+		foreach($tables as $table)
+		{
+			$table_without_prefix = str_replace('teedb_', '', $table);
+			$result[$table_without_prefix] = $this->db->count_all($table);
+		}
+		return $result;
 	}
 
 	// --------------------------------------------------------------------

@@ -25,8 +25,7 @@
 		<?php endif; ?>
 		
 		<div id="info">
-			<?php echo validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
-			<?php echo $this->upload->display_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
+			<?php echo show_messages(); ?>
 		</div>
 		
 		<?php echo form_open_multipart('upload/'.$type, array('id' => 'upload'), array('type' => $type)); ?>
@@ -70,7 +69,20 @@
 		<?php echo form_close(); ?>
 		
 		<div id="list">
-			<ul></ul>
+			<ul>
+				<?php if(isset($uploads)): ?>
+					<?php foreach($uploads as $file): ?>
+						<li>
+							<div style="width:110px; height:64px">
+								<img src="<?php echo $file['preview']; ?>" alt="<?php echo $file['raw_name']; ?> preview" width="64" height="64" />
+							</div>
+							<p>
+								<?php echo $file['raw_name']; ?>
+							</p>
+						</li>
+					<?php endforeach; ?>
+				<?php endif; ?>
+			</ul>
 			<br class="clear" />
 		</div>
 	</section>
