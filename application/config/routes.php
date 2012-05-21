@@ -67,15 +67,18 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
+//Blog routing
 $route['feed'] = "blog/feed";
 $route['news'] = "blog/news";
 $route['news/page/(:num)'] = "blog/news/index/$1";
 $route['news/(:any)'] = "blog/news/title/$1";
 
+//User routing
 $route['login'] = "user/login";
 $route['intern'] = "user/intern";
 $route['logout'] = "user/logout";
 
+//TeeDB routing for database types
 $route['demos'] = "teedb/demos";
 $route['demos/(:any)'] = "teedb/demos/index/$1";
 
@@ -94,6 +97,7 @@ $route['mods/(:any)'] = "teedb/mods/index/$1";
 $route['skins'] = "teedb/skins";
 $route['skins/(:any)'] = "teedb/skins/index/$1";
 
+//TeeDB routing part 2
 $route['upload'] = "teedb/upload";
 $route['upload/(:any)'] = "teedb/upload/$1";
 

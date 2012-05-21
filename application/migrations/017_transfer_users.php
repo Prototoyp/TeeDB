@@ -18,6 +18,8 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		
 		$this->load->library(array('form_validation', 'user/auth'));
 		$this->load->model('user/user');
+		
+		$this->load->config('user/form_validation');
 	}
 	
 	/**
