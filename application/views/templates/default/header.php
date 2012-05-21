@@ -22,7 +22,7 @@
 	
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css'); ?>">
 
-	<script src="<?php echo base_url('assets/js/libs/modernizr-2.5-respond-1.1.0.min.js'); ?>"></script>
+	<script src="<?php echo base_url('assets/js/vendor/modernizr-2.5.3.min.js'); ?>"></script>
 </head>
 <body>
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->

@@ -20,15 +20,15 @@
 	</p>
 </footer>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="<?php echo base_url('assets/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="<?php echo base_url('assets/js/vendor/jquery-1.7.2.min.js'); ?>"><\/script>')</script>
 
 <!-- scripts concatenated and minified via ant build script-->
 <script src="<?php echo base_url('assets/js/plugins.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/mylibs/jquery.form.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/mylibs/jquery.adslider.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/mylibs/jquery.nav.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/script.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/vendor/jquery.form.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/vendor/jquery.adslider.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/vendor/jquery.nav.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
 <!-- end scripts-->
 
 <script>
