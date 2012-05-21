@@ -12,77 +12,81 @@ $('nav > ul > li').mouseout(navTimer);
 
 
 //Bind tops and flops
-var vote = 0;
-var lock = 0;
+var last_action = 0;
+var lock = false;
 
-$('.top').click(function(){
-	if(!lock && vote != $(this)){
-		lock = 1;
-		sendRate($(this), 1);
-		vote = $(this);
-	}
-});
+//Disable form submit
+$('form.send_rate').submit(function() { return false; });
 
-$('.flop').click(function() {
-	if(!lock && vote != $(this)){
-		lock = 1;
-		sendRate($(this), 0);
-		vote = $(this);
+$('button[name="rate"]').click(function(){
+	var button = $(this);
+	if( ! lock && ! button.is(last_action)){
+		lock = true;
+		last_action = button;
+		sendRate(button.parents('form:eq(0)'), button.val());
 	}
 });
 
 //Ajax Rating
-function sendRate(obj, value){
-	var parent = obj.parents('li:eq(0)');
+function sendRate(form, value){
+	var parent = form.parents('li:eq(0)');
 	var like = parent.find('.like:eq(0)');
 	var dislike = parent.find('.dislike:eq(0)');
 	
-	obj.ajaxSubmit({
+	form.ajaxSubmit({
 		type: 'POST',
-		url: 'teedb/rates',
+		data: { rate: value},
     	dataType: 'json',
+		beforeSubmit: function() {
+			//Clean old info
+			$('#info').html('');
+		},
 		success: function(json){
-			if(json){
-				//Set new csrf
-				$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
-				
-				//Need login
-				if(!json.data.like || !json.data.dislike){
-					
-					$('#info').append(
-						'<p class="error color border"><span class="icon color icon100"></span>'+
-						'You have to login.' +
-						'</p>'
-					);
-					return;
-				}
-				
-				//Update chartbar
-				like.css('width', json.data.like);
-				dislike.css('width', json.data.dislike);
-				
-				var num;
-				
-				if(value != json.data.has_rated){
-					if(value){
-						num = parseInt(like.text());
-						like.text(num +1);
-						if(json.data.has_rated >= 0){
-							num = parseInt(dislike.text());
-							dislike.text(num -1);
-						}
-					}else{
+			//Display errors
+			for(var i in json.errors) {
+				$('#info').append(
+					'<p class="error color border"><span class="icon color icon100"></span>'+
+					json.errors[i] +
+					'</p>'
+				);
+			}
+
+			//Update chartbar
+			like.css('width', json.data.like);
+			dislike.css('width', json.data.dislike);
+
+			var num;
+
+			if(value != json.data.has_rated){
+				if(value == 1){
+					num = parseInt(like.text());
+					like.text(num +1);
+					if(json.data.has_rated >= 0){
 						num = parseInt(dislike.text());
-						dislike.text(num +1);
-						if(json.data.has_rated >= 0){
-							num = parseInt(like.text());
-							like.text(num -1);
-						}
+						dislike.text(num -1);
+					}
+				}else{
+					num = parseInt(dislike.text());
+					dislike.text(num +1);
+					if(json.data.has_rated >= 0){
+						num = parseInt(like.text());
+						like.text(num -1);
 					}
 				}
-				//Rest lock
-				lock = 0;
 			}
+			
+			//Set new csrf
+			$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);
+			
+			//Rest lock
+			lock = false;
+		},
+		error: function(e){
+			$('#info').html(
+				'<p class="error color border"><span class="icon color icon100"></span>'+
+				e.responseText +
+				'</p>'
+			);
 		}
 	});
 }
@@ -125,7 +129,7 @@ $('form#upload').ajaxForm({
 					'</li>'
 				);
 			}
-			//$('input[name="file[]"]').val('');
+			
 			$(this).clearForm();
 		}
 		//Set new csrf
@@ -186,7 +190,7 @@ $('form#comment').ajaxForm({
 				'<br class="clear" />'
 			);
 			
-			$('textarea[name="comment"]').val('');
+			$(this).clearForm();
 		}
 		//Set new csrf
 		$('input[name="'+json.csrf_token_name+'"]').val(json.csrf_hash);

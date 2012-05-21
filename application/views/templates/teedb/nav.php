@@ -16,7 +16,7 @@
 		
 		<div id="randomtee">
 			<?php if(isset($randomtee) && $randomtee): ?>
-				<?php echo anchor('#teedb/skin/'.$randomtee->name, $randomtee->name, 'class="none solid"'); ?><br />
+				<?php echo anchor(uri_string().'#'.$randomtee->name, $randomtee->name, 'class="none solid"'); ?><br />
 				<img src="uploads/skins/previews/<?php echo $randomtee->name.'.png'; ?>" alt="RandomTee">
 			<?php endif; ?>
 		</div>
@@ -86,9 +86,9 @@
 
 <div class="wrapper dark">
 	<section id="slider" class="transition center">
-		<div id="arrow_left"></div>
+		<div id="arrow_left" style="background: none"></div>
 		<div id="slider_content"><div class="box" id="s0" style="display:none;"><div class="slider4" style="background: url(assets/images/slider/Teewiki.jpg) no-repeat"><a target="_blank" href="http://teewiki.info"></a></div></div><div class="box" id="s1"><div class="slider1" style="background: url(assets/images/slider/Teeplanet.jpg) no-repeat"><a target="_blank" href="http://news.teesites.net"></a></div></div><div class="box" id="s2"><div class="slider2" style="background: url(assets/images/slider/Teeworlds.jpg) no-repeat"><a target="_blank" href="http://www.teeworlds.com"></a></div></div><div class="box" id="s3"><div class="slider3" style="background: url(assets/images/slider/Teewit.jpg) no-repeat"><a target="_blank" href="http://teewit.teesites.net"></a></div></div><div class="box" id="s4"><div class="slider4" style="background: url(assets/images/slider/Teewiki.jpg) no-repeat"><a target="_blank" href="http://teewiki.info"></a></div></div><div class="box" id="s5" style="display:none;"><div class="slider5" style="background: url(assets/images/slider/Teeplanet.jpg) no-repeat"><a target="_blank" href="http://news.teesites.net"></a></div></div></div>
-		<div id="arrow_right"></div>
+		<div id="arrow_right" style="background: none"></div>
 	</section>
 </div>
 

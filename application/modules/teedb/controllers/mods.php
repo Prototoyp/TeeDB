@@ -1,50 +1,43 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mods extends Public_Controller {
+class Mods extends Request_Controller {
 
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		parent::__construct();
 		
-		$this->load->library('pagination');
-		$this->load->model('mod');
-		$this->load->config('pagination');
+		$this->load->helper('pagination_type');	
+		$this->load->library('pagination');	
+		$this->load->model(array('teedb/mod', 'teedb/rate'));
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Show all mods
+	 * 
+	 * @param string Order of entries. ENUM(new,rate,dw,name,author)
+	 * @param string Sort by 'desc' or 'asc'
+	 * @param integer Offset for shown entries
+	 */
 	
 	function index($order='new', $direction='desc', $from=0)
 	{
-		//Check input $order
-		switch($order){
-			case 'new': $sort = 'modi.create'; break;
-			case 'rate': $sort = 'SUM(rate.value)'; break;
-			case 'dw': $sort = 'modi.downloads'; break;
-			case 'name': $sort = 'modi.name'; break;
-			case 'author': $sort = 'user.name'; break;
-			default: $order = 'new'; $sort = 'skin.create';
-		}
-		
-		//Check input $direction
-		switch($direction){
-			case 'desc': break;
-			case 'asc': break;
-			default: $direction = 'desc';
-		}
+		//Validate user input order and direction
+		list($order, $sort) = get_db_sort($order, 'modi');
+		$direction = validate_direction($direction);
 		
 		//Init pagination
 		$config = array();
-		$config['base_url'] = 'mods/'.$order.'/'.$direction;
+		$config['base_url'] = base_url('mods/'.$order.'/'.$direction);
 		$config['total_rows'] = $this->mod->count_mods();
 		$this->pagination->initialize($config);
 		
-		//Check input $form
-		if(!is_numeric($from) || $from<0 || $from > $config['total_rows'])
-			$from=0;
-		
-		//Set limit
-		$limit = $config['total_rows'] - $from; 
-		if($limit >= $this->config->item('per_page')){
-			$limit = $this->config->item('per_page');
-		}
+		//Validate user input  and get limitimit
+		list($from, $limit) = validate_limit($from, $config['total_rows'], $this->config->item('per_page'));
 		
 		//Set output
 		$data = array();
@@ -55,7 +48,54 @@ class Mods extends Public_Controller {
 		$this->template->set_subtitle('Mods');
 		$this->template->view('mods', $data);
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Rate mods by form submit
+	 */
+	function _post_index($order='new', $direction='desc', $from=0)
+	{
+		if($this->_set_rate())
+		{
+			$rate = ($this->input->post('rate'))? 'top' : 'flop';
+			$name = $this->mod->get_name($this->input->post('id'));
+			$this->template->add_success_msg('Modification '.$name.' rated successful as '.$rate.'.');
+		}
+		
+		$this->index($order, $direction, $from);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Rate mods by ajax form submit
+	 */	 
+	function _ajax_index()
+	{
+		$this->set_multi_ajax(TRUE);
+		$this->output->set_output($this->_set_rate());
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set rate for mods
+	 */
+	function _set_rate()
+	{		
+		if ($this->form_validation->run('rate_mod') === TRUE)
+		{
+			return $this->rate->set_rate(
+				Rate::TYPE_MOD,
+				$this->input->post('id'),
+				$this->input->post('rate')
+			);
+		}
+		
+		return FALSE;
+	}
 }
 
-/* End of file skins.php */
-/* Location: ./application/modules/teedb/controllers/skins.php */
+/* End of file mods.php */
+/* Location: ./application/modules/teedb/controllers/mods.php */

@@ -8,6 +8,78 @@ $config = array(
                                             'rules' => 'trim|required|is_natural_no_zero'
                                          )
                                     ),
+                 'rate_skin' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_skins.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
+                 'rate_map' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_maps.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
+                 'rate_mod' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_mods.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
+                 'rate_demo' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_demos.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
+                 'rate_mapres' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_mapres.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
+                 'rate_gameskin' => array(
+                                    array(
+                                            'field' => 'id',
+                                            'label' => 'ID',
+                                            'rules' => 'logged_in|trim|required|is_natural_no_zero|exist[teedb_gameskins.id]'
+                                         ),
+                                    array(
+                                            'field' => 'rate',
+                                            'label' => 'rate',
+                                            'rules' => 'trim|required|is_natural|less_than[2]'
+                                         )
+                                    ),
                  'mod' => array(
                                     array(
                                             'field' => 'modname',

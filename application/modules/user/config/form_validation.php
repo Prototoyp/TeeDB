@@ -5,7 +5,7 @@ $config = array(
                                     array(
                                             'field' => 'username',
                                             'label' => 'lang:field_username',
-                                            'rules' => 'not_logged_in|trim|required|alpha_numeric|min_length[3]|max_length[20]|unique[users.name]'
+                                            'rules' => 'not_logged_in|trim|required|allowed_name|min_length[3]|max_length[20]|unique[users.name]'
                                          ),
                                     array(
                                             'field' => 'password',

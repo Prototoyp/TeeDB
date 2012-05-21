@@ -18,7 +18,7 @@
 		<h2 style="margin-bottom: 10px;">Demos</h2>
 		
 		<div id="info">
-			<?php echo validation_errors('<p class="error color border"><span class="icon color icon100"></span>','</p>'); ?>
+			<?php echo show_messages(); ?>
 		</div>
 		
 		<div id="list">
@@ -33,11 +33,13 @@
 						<br />
 						<div style="font-size: 10px">
 							<span style="float:left; margin-top: 2px;">Like: </span>
-							<?php echo form_open('teedb/rates', array('class' => 'top'), array('type' => 'demo', 'id' => $entry->id, 'rate' => 1)); ?>
-								<span class="icon color icon204"></span>
-							<?php echo form_close(); ?>
-							<?php echo form_open('teedb/rates', array('class' => 'flop'), array('type' => 'demo', 'id' => $entry->id, 'rate' => 0)); ?>
-								<span class="icon color icon203"></span>
+							<?php echo form_open(NULL, 'class="send_rate"', array('id' => $entry->id)); ?>
+								<button name="rate" value="1" type="submit" class="icon">
+								    <span class="icon color icon204"></span>
+								</button>
+								<button name="rate" value="0" type="submit" class="icon">
+								    <span class="icon color icon203"></span>
+								</button>
 							<?php echo form_close(); ?>
 						</div>
 						<br class="clear" />

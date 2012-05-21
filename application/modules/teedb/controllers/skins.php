@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Demos extends Request_Controller {
+class Skins extends Request_Controller {
 
 	/**
 	 * Constructor
@@ -11,7 +11,7 @@ class Demos extends Request_Controller {
 		
 		$this->load->helper('pagination_type');	
 		$this->load->library('pagination');	
-		$this->load->model(array('teedb/demo', 'teedb/rate'));
+		$this->load->model(array('teedb/skin', 'teedb/rate'));
 		
 		$this->load->config('pagination');	
 	}
@@ -19,7 +19,7 @@ class Demos extends Request_Controller {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Show all demos
+	 * Show all skins
 	 * 
 	 * @param string Order of entries. ENUM(new,rate,dw,name,author)
 	 * @param string Sort by 'desc' or 'asc'
@@ -28,13 +28,13 @@ class Demos extends Request_Controller {
 	function index($order='new', $direction='desc', $from=0)
 	{
 		//Validate user input order and direction
-		list($order, $sort) = get_db_sort($order, 'demo');
+		list($order, $sort) = get_db_sort($order, 'skin');
 		$direction = validate_direction($direction);
 		
 		//Init pagination
 		$config = array();
-		$config['base_url'] = base_url('demos/'.$order.'/'.$direction);
-		$config['total_rows'] = $this->demo->count_demos();
+		$config['base_url'] = base_url('skins/'.$order.'/'.$direction);
+		$config['total_rows'] = $this->skin->count_skins();
 		$this->pagination->initialize($config);
 		
 		//Validate user input  and get limitimit
@@ -42,26 +42,26 @@ class Demos extends Request_Controller {
 		
 		//Set output
 		$data = array();
-		$data['demos'] = $this->demo->get_demos($limit, $from, $sort, $direction);
+		$data['skins'] = $this->skin->get_skins($limit, $from, $sort, $direction);
 		$data['direction'] = $direction;
 		$data['order'] = $order;
 		
-		$this->template->set_subtitle('Demos');
-		$this->template->view('demos', $data);
+		$this->template->set_subtitle('Skins');
+		$this->template->view('skins', $data);
 	}
 
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Rate demos by form submit
+	 * Rate skins by form submit
 	 */
 	function _post_index($order='new', $direction='desc', $from=0)
 	{
 		if($this->_set_rate())
 		{
 			$rate = ($this->input->post('rate'))? 'top' : 'flop';
-			$name = $this->demo->get_name($this->input->post('id'));
-			$this->template->add_success_msg('Demo '.$name.' rated successful as '.$rate.'.');
+			$name = $this->skin->get_name($this->input->post('id'));
+			$this->template->add_success_msg('Skin '.$name.' rated successful as '.$rate.'.');
 		}
 		
 		$this->index($order, $direction, $from);
@@ -70,7 +70,7 @@ class Demos extends Request_Controller {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Rate demos by ajax form submit
+	 * Rate skins by ajax form submit
 	 */	 
 	function _ajax_index()
 	{
@@ -81,14 +81,14 @@ class Demos extends Request_Controller {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Set rate for demos
+	 * Set rate for skins
 	 */
 	function _set_rate()
 	{		
-		if ($this->form_validation->run('rate_demo') === TRUE)
+		if ($this->form_validation->run('rate_skin') === TRUE)
 		{
 			return $this->rate->set_rate(
-				Rate::TYPE_DEMO,
+				Rate::TYPE_SKIN,
 				$this->input->post('id'),
 				$this->input->post('rate')
 			);
@@ -98,5 +98,5 @@ class Demos extends Request_Controller {
 	}
 }
 
-/* End of file demos.php */
-/* Location: ./application/modules/teedb/controllers/demos.php */
+/* End of file skins.php */
+/* Location: ./application/modules/teedb/controllers/skins.php */

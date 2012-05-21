@@ -39,6 +39,9 @@ function adslider(max){
    	next = max+1;
    	
    	//Build html
+	$('#arrow_left').attr('style', '');
+	$('#arrow_right').attr('style', '');
+	
    	$('div#slider_content').html('<div class="box" id="s0" style="display:none;"><div class="slider'+links.length+'" style="background: url('+path+images[links.length-1]+') no-repeat"><a target="_blank" href="http://'+links[links.length-1]+'"></a></div></div>');
    	for(i=1;i<=max;i++){
    		$('div#slider_content').append('<div class="box" id="s'+i+'"><div class="slider'+i+'" style="background: url('+path+images[i-1]+') no-repeat"><a target="_blank" href="http://'+links[i-1]+'"></a></div></div>');
