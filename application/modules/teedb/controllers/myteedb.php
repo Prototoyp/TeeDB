@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class MyTeeDB extends Request_Controller {
+class MyTeeDB extends User_Request_Controller {
 
 	/**
 	 * Constructor
@@ -15,12 +15,6 @@ class MyTeeDB extends Request_Controller {
 		
 		$this->load->config('teedb/upload');
 		$this->load->config('teedb/pagination');
-		
-		//User_Controller
-		if(!$this->auth->logged_in())
-		{
-			redirect('user/login');
-		}
 	}
 
 	// --------------------------------------------------------------------
