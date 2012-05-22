@@ -50,27 +50,29 @@ function sendRate(form, value){
 					'</p>'
 				);
 			}
-
+			
 			//Update chartbar
-			like.css('width', json.data.like);
-			dislike.css('width', json.data.dislike);
-
-			var num;
-
-			if(value != json.data.has_rated){
-				if(value == 1){
-					num = parseInt(like.text());
-					like.text(num +1);
-					if(json.data.has_rated >= 0){
-						num = parseInt(dislike.text());
-						dislike.text(num -1);
-					}
-				}else{
-					num = parseInt(dislike.text());
-					dislike.text(num +1);
-					if(json.data.has_rated >= 0){
+			if( ! $.isEmptyObject(json.data)){
+				like.css('width', json.data.like);
+				dislike.css('width', json.data.dislike);
+	
+				var num;
+	
+				if(value != json.data.has_rated){
+					if(value == 1){
 						num = parseInt(like.text());
-						like.text(num -1);
+						like.text(num +1);
+						if(json.data.has_rated >= 0){
+							num = parseInt(dislike.text());
+							dislike.text(num -1);
+						}
+					}else{
+						num = parseInt(dislike.text());
+						dislike.text(num +1);
+						if(json.data.has_rated >= 0){
+							num = parseInt(like.text());
+							like.text(num -1);
+						}
 					}
 				}
 			}

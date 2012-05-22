@@ -25,9 +25,9 @@
 
 <!-- scripts concatenated and minified via ant build script-->
 <script src="<?php echo base_url('assets/js/plugins.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/vendor/jquery.form.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/vendor/jquery.adslider.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/vendor/jquery.nav.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery.form.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery.adslider.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery.nav.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
 <!-- end scripts-->
 

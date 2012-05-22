@@ -3,5 +3,12 @@
 <project name="Project Build" default="build" basedir="../">
 	
     <!-- Use this file to define any custom build targets (for example, automatically deploying via FTP). -->
+	
+	<target name="ftpupload" description="uploads the publish folder to your web space via ftp">
+		<ftp server="${tool.ftp.host}" userid="${tool.ftp.user}" password="${tool.ftp.password}" timediffauto="false" remotedir="${tool.ftp.remotedir}" action="send" verbose="yes" passive="yes" depends="yes">
+	            <fileset dir="${dir.publish}">
+	            </fileset>
+	        </ftp>
+	</target>
 
 </project>
