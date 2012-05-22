@@ -27,6 +27,7 @@ Followed by the commands:
 The compressed site is now avaible under TeeDB/publish/.
 There go in the config folder under application and edit the config.php
 ( You also can create a config/production folder and save the changes there. )
+
 - Set the base_url to your site domain
 - Set a private entcrypt key
 - Toogle maintenance mode on/off like you want.
