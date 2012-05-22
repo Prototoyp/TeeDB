@@ -91,22 +91,5 @@ $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 $db['default']['failover'] = array();
 
-$db['transfer']['hostname'] = 'localhost';
-$db['transfer']['username'] = 'root';
-$db['transfer']['password'] = '';
-$db['transfer']['database'] = 'twdoodads';
-$db['transfer']['dbdriver'] = 'mysql';
-$db['transfer']['dbprefix'] = 'tw_';
-$db['transfer']['pconnect'] = FALSE;
-$db['transfer']['db_debug'] = TRUE;
-$db['transfer']['cache_on'] = FALSE;
-$db['transfer']['cachedir'] = '';
-$db['transfer']['char_set'] = 'utf8';
-$db['transfer']['dbcollat'] = 'utf8_general_ci';
-$db['transfer']['swap_pre'] = '';
-$db['transfer']['autoinit'] = TRUE;
-$db['transfer']['stricton'] = FALSE;
-$db['transfer']['failover'] = array();
-
 /* End of file database.php */
 /* Location: ./application/config/database.php */
