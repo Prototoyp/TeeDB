@@ -104,6 +104,9 @@ $route['upload/(:any)'] = "teedb/upload/$1";
 $route['myteedb'] = "teedb/myteedb";
 $route['myteedb/(:any)'] = "teedb/myteedb/$1";
 
+$route['api'] = "teedb/api";
+$route['api/(:any)'] = "teedb/api/$1";
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

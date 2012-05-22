@@ -6,6 +6,7 @@ class Reports extends Controller{
 
 	function Reports(){
 		parent::Controller();
+		show_404();
 	}
 	
 	public function submit(){			

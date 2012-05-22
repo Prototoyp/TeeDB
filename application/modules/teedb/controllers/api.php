@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class API extends CI_Controller{
+class API extends Public_Controller{
 
 	function __construct()
 	{
@@ -45,19 +45,19 @@ class API extends CI_Controller{
 		foreach($params as $para)
 		{
 			switch ($para) {
-				case 'skins': $data = $this->skin->get(); break;
-				case 'mapres': $data = $this->tileset->get(); break;
-				case 'gameskins': $data = $this->gameskin->get(); break;
-				case 'demos': $data = $this->demo->get(); break;
-				case 'maps': $data = $this->map->get(); break;
-				case 'mods': $data = $this->mod->get(); break;
+				case 'skins': $data['skins']  = $this->skin->get_skins(); break;
+				case 'mapres': $data['mapres'] = $this->tileset->get_mapres(); break;
+				case 'gameskins': $data['gameskins'] = $this->gameskin->get_gameskins(); break;
+				case 'demos': $data['demos'] = $this->demo->get_demos(); break;
+				case 'maps': $data['maps'] = $this->map->get_maps(); break;
+				case 'mods': $data['mods'] = $this->mod->get_mods(); break;
 				default: 
-					$data['skins'] = $this->skin->get();
-					$data['mapres'] = $this->tileset->get();
-					$data['gameskins'] = $this->gameskin->get();
-					$data['demos'] = $this->demo->get();
-					$data['maps'] = $this->map->get();
-					$data['mods'] = $this->mod->get();
+					$data['skins'] = $this->skin->get_skins();
+					$data['mapres'] = $this->tileset->get_mapres();
+					$data['gameskins'] = $this->gameskin->get_gameskins();
+					$data['demos'] = $this->demo->get_demos();
+					$data['maps'] = $this->map->get_maps();
+					$data['mods'] = $this->mod->get_mods();
 			}
 		}
 		

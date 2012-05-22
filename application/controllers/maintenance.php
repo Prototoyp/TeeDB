@@ -17,12 +17,7 @@ class Maintenance extends MY_Controller {
 	
 	public function index()
 	{
-		$data['google_analytic_id'] = '';
-		if (@include(APPPATH.'config/template'.EXT))
-		{
-			$data['google_analytic_id'] = $template['google_analytic_id'];
-		}
-		$this->load->view('maintenance', $data);
+		$this->template->maintenance();
 	}
 }
 

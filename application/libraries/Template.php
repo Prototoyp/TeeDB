@@ -124,7 +124,7 @@ class Template {
 		
 		if($this->admin_bar)
 		{
-			$this->CI->load->view('templates/admin_nav', $this->get_admin_data());
+			$this->CI->load->view('templates/admin/nav', $this->get_admin_data());
 		}
 		
 		foreach($this->layouts as $layout)
@@ -149,6 +149,21 @@ class Template {
 		
 		$this->CI->load->view('templates/'.$this->theme.'/footer', $this->footer_data);
 	}
+
+	// --------------------------------------------------------------------	
+	
+	/**
+	 * Load template config
+	 * 
+	 * Load template specific config items from config/template.php
+	 */
+	public function maintenance()
+	{
+		$this->CI->load->vars($this->header_data);
+		$this->CI->load->vars($this->footer_data);
+		$this->CI->load->view('templates/maintenance');
+	}
+
 	// --------------------------------------------------------------------	
 	
 	/**

@@ -37,6 +37,8 @@ class UpComing extends MY_Controller {
 		$this->load->helper('form');
 		$this->load->library(array('form_validation', 'auth'));
 		$this->load->model('user/user');
+		
+		show_404();
 	}
 	
 	public function index()
