@@ -99,7 +99,7 @@ class Migration_Transfer_Mapres extends Transfer_Migration {
 						
 						if($query->num_rows())
 						{
-							$filename = $this->security->sanitize_filename($skin->name);
+							$filename = str_replace(' ', '_', $this->security->sanitize_filename($skin->name));
 							
 							//Add skin
 							$this->db
@@ -126,6 +126,20 @@ class Migration_Transfer_Mapres extends Transfer_Migration {
 								->set('name', $skin->name)
 								->set('user_id', $skin->user_id)
 								->set('error', 'Transfered, but coundn\'t generate preview file.')
+								->insert(self::TABLE);
+								
+								$error++;
+							}
+							
+							$this->image_lib->clear();
+							$this->image_lib->initialize($configResize);
+							if(!$this->image_lib->resize())
+							{
+								//Add errors
+								$this->db
+								->set('name', $skin->name)
+								->set('user_id', $skin->user_id)
+								->set('error', 'Transfered, but coundn\'t generate preview again file.')
 								->insert(self::TABLE);
 								
 								$error++;
@@ -173,6 +187,8 @@ class Migration_Transfer_Mapres extends Transfer_Migration {
 	 */
 	function down() 
 	{
+		$this->dbforge->drop_table(self::TABLE);
+		
 		$this->db->empty_table(Tileset::TABLE);
 		
 		if( ! delete_files('uploads/mapres'))

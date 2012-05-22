@@ -29,9 +29,9 @@
 						<div style="width:64px; height:64px">
 							<img src="<?php echo base_url('uploads/gameskins/previews/'.$entry->name.'.png'); ?>" alt="Gameskin <?php echo $entry->name; ?>" />
 						</div>
-						<p><?php echo $entry->name; ?></p>
+						<p><?php echo string_limiter($entry->name, 12); ?></p>
 						<p style="font-size: 10px">
-							from <?php echo anchor(uri_string().'#'.url_title($entry->username), $entry->username, 'class="none solid"'); ?>
+							from <?php echo anchor(uri_string().'#'.url_title($entry->username),  string_limiter($entry->username,11), 'class="none solid"'); ?>
 						</p>
 						<br />
 						<div style="font-size: 10px">

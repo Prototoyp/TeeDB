@@ -263,9 +263,27 @@ class Upload extends Request_Controller {
 			}
 			else
 			{
-				//Extend upload data
-				$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'mapres')).'/'.$data['file_name']);
-				$this->tileset->setMapres($data['raw_name']);
+				//Resize again to fit width too
+				$this->image_lib->clear();
+				$this->image_lib->initialize($configResize);
+				if(!$this->image_lib->resize())
+				{
+					//Add errors
+					foreach($this->image_lib->error_msg as $error)
+					{
+						$this->form_validation->add_message($error.' ('.$data['file_name'].')');
+					}
+					//Trackback upload
+					@unlink($data['full_path']);
+					//Delete from data array
+					unset($upload_data[$key]);
+				}
+				else
+				{
+					//Extend upload data
+					$upload_data[$key]['preview'] = base_url(($this->config->item('preview_path', 'mapres')).'/'.$data['file_name']);
+					$this->tileset->setMapres($data['raw_name']);
+				}
 			}
 			$this->image_lib->clear();
 		}

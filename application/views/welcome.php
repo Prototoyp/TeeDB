@@ -37,15 +37,13 @@
 					</li>
 					<li>
 						<span class="icon color icon42"></span>
-						<?php 
-							if($news->count_comment > 1){
-								echo anchor('blog/news/title/'.url_title($news->title), $news->count_comment.' Comments', 'class="none"'); 
-							}elseif($news->count_comment == 1){
-								echo anchor('blog/news/title/'.url_title($news->title), '1 Comment', 'class="none"');
-							}else{
-								echo anchor('blog/news/title/'.url_title($news->title), 'No Comments', 'class="none"');
-							}					
-						?>
+						<?php if($news->count_comment > 1): ?>
+							<?php echo anchor('blog/news/title/'.url_title($news->title), $news->count_comment.' Comments', 'class="none"'); ?> 
+						<?php elseif($news->count_comment == 1): ?>
+							<?php echo anchor('blog/news/title/'.url_title($news->title), '1 Comment', 'class="none"'); ?>
+						<?php else: ?>
+							<?php echo anchor('blog/news/title/'.url_title($news->title), 'No Comments', 'class="none"'); ?>
+						<?php endif; ?>
 					</li>						
 				</ul>
 			</div>
@@ -89,20 +87,13 @@
 		
 		<?php if(isset($stats) && $stats): ?>
 			<h4>General:</h4>
-			<?php 
-				if($stats['users'] <= 0)
-				{
-					echo 'No user signup, yet.';
-				}
-				elseif($stats['users'] == 1)
-				{
-					echo 'One user signup.';
-				}
-				else
-				{
-					echo $stats['users'].' users signup.';
-				}
-			?>
+			<?php if($stats['users'] <= 0): ?>
+				<?php echo 'No user signup, yet.'; ?>
+			<?php elseif($stats['users'] == 1): ?>
+				<?php echo 'One user signup.'; ?>
+			<?php else: ?>
+				<?php echo $stats['users'].' users signup.'; ?>
+			<?php endif; ?>
 			
 			<h4>Database:</h4>
 			<div class="left" style="text-align: right">

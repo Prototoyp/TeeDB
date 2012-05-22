@@ -9,9 +9,11 @@ class Maps extends Request_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->helper('pagination_type');	
+		$this->load->helper(array('pagination_type','string'));	
 		$this->load->library('pagination');	
 		$this->load->model(array('teedb/map', 'teedb/rate'));
+		
+		$this->load->config('pagination');	
 	}
 
 	// --------------------------------------------------------------------
@@ -33,10 +35,11 @@ class Maps extends Request_Controller {
 		$config = array();
 		$config['base_url'] = base_url('maps/'.$order.'/'.$direction);
 		$config['total_rows'] = $this->map->count_maps();
+		$config['per_page'] = 12;
 		$this->pagination->initialize($config);
 		
 		//Validate user input  and get limitimit
-		list($from, $limit) = validate_limit($from, $config['total_rows'], $this->config->item('per_page'));
+		list($from, $limit) = validate_limit($from, $config['total_rows'], $config['per_page']);
 		
 		//Set output
 		$data = array();

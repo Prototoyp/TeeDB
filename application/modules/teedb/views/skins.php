@@ -27,9 +27,10 @@
 					
 					<li>
 						<img src="<?php echo base_url('uploads/skins/previews/'.$entry->name.'.png'); ?>" alt="Skin <?php echo $entry->name; ?>" />
-						<p><?php echo $entry->name; ?></p>
+						
+						<p><?php echo string_limiter($entry->name, 12); ?></p>
 						<p style="font-size: 10px">
-							from <?php echo anchor(uri_string().'#'.url_title($entry->username), $entry->username, 'class="none solid"'); ?>
+							from <?php echo anchor(uri_string().'#'.url_title($entry->username),  string_limiter($entry->username,11), 'class="none solid"'); ?>
 						</p>
 						<br />
 						<div style="font-size: 10px">

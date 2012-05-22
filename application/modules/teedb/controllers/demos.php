@@ -9,7 +9,7 @@ class Demos extends Request_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->helper('pagination_type');	
+		$this->load->helper(array('pagination_type','string'));	
 		$this->load->library('pagination');	
 		$this->load->model(array('teedb/demo', 'teedb/rate'));
 		

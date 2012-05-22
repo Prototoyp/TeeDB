@@ -18,8 +18,6 @@ class Migration_Transfer_Users extends Transfer_Migration {
 		
 		$this->load->library(array('form_validation', 'user/auth'));
 		$this->load->model('user/user');
-		
-		$this->load->config('user/form_validation');
 	}
 	
 	/**
@@ -79,6 +77,8 @@ class Migration_Transfer_Users extends Transfer_Migration {
 			$_POST['password'] = 'validpassword';
 			$_POST['passconf'] = 'validpassword';
 			$_POST['email'] = $user->email;
+			
+			
 			
 			if($this->form_validation->run('signup') === TRUE)
 			{

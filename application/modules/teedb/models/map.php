@@ -63,7 +63,7 @@ class Map extends CI_Model {
 	public function get_maps($limit, $offset='0', $order='update', $direction='DESC')
 	{
 		$query = $this->db
-		->select('map.id, map.name, map.downloads, user.name AS username, map.create')
+		->select('map.id, map.name, map.downloads, map.name AS username, map.create')
 		->select('SUM(rate.value) AS rate_sum, COUNT(rate.user_id) AS rate_count')
 		->from(self::TABLE.' as map')
 		->join(User::TABLE.' as user', 'map.user_id = user.id')

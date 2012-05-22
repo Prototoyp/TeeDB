@@ -84,7 +84,7 @@ $config = array(
                                     array(
                                             'field' => 'modname',
                                             'label' => 'modname',
-                                            'rules' => 'required|alpha_numeric|min_length[3]|max_length[20]|unique[teedb_mods.name]'
+                                            'rules' => 'required|alpha_dash|min_length[3]|max_length[20]|unique[teedb_mods.name]'
                                          ),
                                     array(
                                             'field' => 'link',
@@ -96,7 +96,7 @@ $config = array(
                                     array(
                                             'field' => 'modname',
                                             'label' => 'modname',
-                                            'rules' => 'required|alpha_numeric|min_length[3]|max_length[20]|unique[teedb_mods.name]'
+                                            'rules' => 'required|alpha_dash|min_length[3]|max_length[20]|unique[teedb_mods.name]'
                                          )
                                     ),
                  'mod_link' => array(
@@ -115,7 +115,7 @@ $config = array(
                                     array(
                                             'field' => 'skinname',
                                             'label' => 'skinname',
-                                            'rules' => 'trim|required|alpha_numeric|min_length[3]|max_length[32]|unique[teedb_skins.name]'
+                                            'rules' => 'trim|required|alpha_dash|min_length[3]|max_length[32]|unique[teedb_skins.name]'
                                          )
                                     ),
                  'my_gameskin' => array(
@@ -127,7 +127,7 @@ $config = array(
                                     array(
                                             'field' => 'gameskinname',
                                             'label' => 'gameskinname',
-                                            'rules' => 'trim|required|alpha_numeric|min_length[3]|max_length[32]|unique[teedb_gameskins.name]'
+                                            'rules' => 'trim|required|alpha_dash|min_length[3]|max_length[32]|unique[teedb_gameskins.name]'
                                          )
                                     ),
                  'my_mapres' => array(
@@ -139,7 +139,7 @@ $config = array(
                                     array(
                                             'field' => 'mapresname',
                                             'label' => 'mapresname',
-                                            'rules' => 'trim|required|alpha_numeric|min_length[3]|max_length[32]|unique[teedb_mapres.name]'
+                                            'rules' => 'trim|required|alpha_dash|min_length[3]|max_length[32]|unique[teedb_mapres.name]'
                                          )
                                     ),
                  'my_demos' => array(
@@ -151,7 +151,7 @@ $config = array(
                                     array(
                                             'field' => 'demoname',
                                             'label' => 'demoname',
-                                            'rules' => 'trim|required|alpha_numeric|min_length[3]|max_length[32]|unique[teedb_demos.name]'
+                                            'rules' => 'trim|required|alpha_dash|min_length[3]|max_length[32]|unique[teedb_demos.name]'
                                          )
                                     ),
                  'my_maps' => array(
@@ -163,7 +163,7 @@ $config = array(
                                     array(
                                             'field' => 'mapname',
                                             'label' => 'mapname',
-                                            'rules' => 'trim|required|alpha_numeric|min_length[3]|max_length[32]|unique[teedb_maps.name]'
+                                            'rules' => 'trim|required|alpha_dash|min_length[3]|max_length[32]|unique[teedb_maps.name]'
                                          )
                                     )
             );

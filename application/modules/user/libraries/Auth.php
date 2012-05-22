@@ -164,8 +164,6 @@ class Auth {
 						$this->CI->db
 						->where('user_id', $user->id)
 						->delete('transfer_user');
-						
-						return TRUE;
 					}
 					else
 					{

@@ -99,7 +99,7 @@ class Migration_Transfer_Demos extends Transfer_Migration {
 						
 						if($query->num_rows())
 						{
-							$filename = $this->security->sanitize_filename($skin->name);
+							$filename = str_replace(' ', '_', $this->security->sanitize_filename($skin->name));
 							
 							//Add skin
 							$this->db
@@ -154,6 +154,8 @@ class Migration_Transfer_Demos extends Transfer_Migration {
 	 */
 	function down() 
 	{
+		$this->dbforge->drop_table(self::TABLE);
+		
 		$this->db->empty_table(Demo::TABLE);
 		
 		if( ! delete_files('uploads/demos'))
