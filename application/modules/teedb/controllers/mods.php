@@ -9,9 +9,11 @@ class Mods extends Request_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->helper(array('pagination_type','string'));	
+		$this->load->helper(array('pagination_type','string', 'rating'));
 		$this->load->library('pagination');	
 		$this->load->model(array('teedb/mod', 'teedb/rate'));
+		
+		$this->load->config('pagination');
 	}
 
 	// --------------------------------------------------------------------

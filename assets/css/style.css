@@ -193,7 +193,7 @@ a.solid{
 }
 
 ul.float{
-	padding: 0;
+	padding: 1px;
 }
 
 ul.float li{
@@ -448,14 +448,58 @@ time div{
 	padding: 2px 5px;
 }
 
+section#content ul.list{
+    background-color: #835A26;
+    border: 5px solid #835A26;
+    border-radius: 6px;
+    -moz-border-radius: 6px; 
+    -webkit-border-radius: 6px;
+    padding: 0;
+    margin: 0 0 9px 25px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    list-style: none;
+}
+
+ul.list::after{
+    clear: both;
+}
+
+ul.list::before, ul.list::after {
+    display: table;
+    content: "";
+}
+
+section#content ul.list li{
+    float: left;
+    text-align: center;
+    color: #A16E36;
+    margin: 3px;
+    background-color: #543F24;
+    border: 5px solid #543F24;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    padding: 5px;
+    font-weight: bold;
+}
+
 section#content ul{
 	background-color: #835A26;
 	border: 5px solid #835A26;
 	border-radius: 6px;
 	-moz-border-radius: 6px; 
 	-webkit-border-radius: 6px;
-	height: 22px;	
 	padding: 0;
+}
+
+section#content ul::after{
+    clear: both;
+}
+
+section#content ul::before, section#content ul::after {
+    display: table;
+    content: "";
 }
 
 section#content li{
@@ -464,6 +508,26 @@ section#content li{
 	padding: 3px 0 3px 22px;
 	float: left;
 	display: inline;
+}
+
+figcaption p{
+    padding: 0; 
+    margin:0;
+}
+
+figcaption span{
+   font-size: 10px
+}
+
+.pagination{
+    background-color: #835A26;
+    border: 5px solid #835A26;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    text-align: center;
+    margin-top:15px;
+    padding: 3px;
 }
 
 div.details{
@@ -655,8 +719,40 @@ section#content section.skin ul{
     text-align: center;
     font-size: 10px;
     font-weight: bold;
-    margin: 1px 0;
+    margin: 1px 0 10px 0;
     padding-left: 2px;
+}
+
+.rate_form{
+    font-size: 10px; 
+    margin-top:10px;
+}
+
+.rate_form span{
+    float: left;
+    margin-top:2px;
+}
+
+.large_button{
+    text-align: center;
+    margin-top:40px;
+}
+.rate_form::after{ clear: both }
+
+.rate_form::before, .rate_form::after {
+    display: table;
+    content: "";
+}
+
+.modification{
+    margin: 20px 0;
+}
+
+.modification::after{ clear: both }
+
+.modification::before, .modification::after {
+    display: table;
+    content: "";
 }
 
 .like, .dislike{
@@ -712,6 +808,10 @@ section#content section.skin ul{
 footer#main p{
 	text-align: center;
 	font-weight: bold;
+}
+
+#info{
+    margin: 10px 0;
 }
 
 #infobox{

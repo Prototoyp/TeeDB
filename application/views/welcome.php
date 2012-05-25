@@ -3,7 +3,7 @@
 	<ul>
 		<?php if(isset($news_titles) && $news_titles): ?>
 			<?php foreach($news_titles as $news_title): ?>
-				<li><?php echo anchor('blog/news/title/'.url_title($news_title->title), $news_title->title); ?></li>
+				<li><?php echo anchor('news/'.$news_title->url_title, $news_title->title); ?></li>
 			<?php endforeach; ?>
 		<?php else: ?>
 			<li>No latest news.</li>
@@ -19,7 +19,7 @@
 	    <?php if(isset($news) && $news): ?>
 	    	
 			<header style="margin-bottom: 10px;">
-				<h2><?php echo anchor('blog/news/title/'.url_title($news->title), $news->title, 'class="none" style="color: #A16E36;"'); ?></h2>
+				<h2><?php echo anchor('news/'.$news->url_title, $news->title, 'class="none" style="color: #A16E36;"'); ?></h2>
 				<time datetime="<?php echo date('c', human_to_unix($news->create)); ?>">
 					<?php echo relative_time($news->create); ?>
 				</time>
@@ -38,12 +38,13 @@
 					<li>
 						<span class="icon color icon42"></span>
 						<?php if($news->count_comment > 1): ?>
-							<?php echo anchor('blog/news/title/'.url_title($news->title), $news->count_comment.' Comments', 'class="none"'); ?> 
+							<?php $com_text = $news->count_comment.' Comments'; ?> 
 						<?php elseif($news->count_comment == 1): ?>
-							<?php echo anchor('blog/news/title/'.url_title($news->title), '1 Comment', 'class="none"'); ?>
+							<?php $com_text = '1 Comments'; ?>
 						<?php else: ?>
-							<?php echo anchor('blog/news/title/'.url_title($news->title), 'No Comments', 'class="none"'); ?>
+							<?php $com_text = 'No Comments'; ?>
 						<?php endif; ?>
+						<?php echo anchor('news/'.$news->url_title, $com_text, 'class="none"'); ?>
 					</li>						
 				</ul>
 			</div>

@@ -9,7 +9,7 @@ class Skins extends Request_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->helper(array('pagination_type','string'));
+		$this->load->helper(array('pagination_type','string', 'rating'));
 		$this->load->library('pagination');	
 		$this->load->model(array('teedb/skin', 'teedb/rate'));
 		

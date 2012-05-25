@@ -97,13 +97,13 @@ class Rate extends CI_Model {
 		->select('SUM(value) as sum, COUNT(*) AS count')
 		->where('type_id', $id)
 		->where('type', $type)
-		->limit(1)
 		->get(self::TABLE);
 		
 		if($query->num_rows())
 		{
 			$rate = $query->row();
 			
+			//Calculate % of ratings
 			if($rate->count == 0)
 			{
 				$data['like'] = 50;
@@ -111,8 +111,20 @@ class Rate extends CI_Model {
 			}
 			else
 			{
-				$proc = round($rate->sum/$rate->count)*90;
-				$data['like'] = ($proc >= 10)? $proc : 10;
+				$proc = round($rate->sum/$rate->count*100);
+				//min and max width
+				if($proc < 10)
+				{
+					$data['like'] = 10;
+				}
+				elseif($proc > 90)
+				{
+					$data['like'] = 90;
+				}
+				else
+				{
+					$data['like'] = $proc;
+				}
 				$data['dislike'] = 100 - $data['like'];
 			}
 			return $data;
