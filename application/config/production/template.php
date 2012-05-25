@@ -71,7 +71,7 @@ $template['description'] = 'TeeDB is database for skins, mapres, tilesets, maps,
 |
 */
 
-$template['google_analytic_id'] = 'UA-XXXXXXXX-X';
+$template['google_analytic_id'] = 'UA-31822932-1';
 
 /*
  * Note: css, js must be define in the template cause of Ant Builder
