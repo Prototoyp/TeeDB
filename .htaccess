@@ -329,7 +329,7 @@ FileETag None
 <IfModule mod_rewrite.c>
   Options +FollowSymlinks
   RewriteEngine On
-  RewriteBase /TeeDB
+  #RewriteBase /
 </IfModule>
 
 # ----------------------------------------------------------------------
@@ -454,9 +454,42 @@ Options -MultiViews
 # You can add custom pages to handle 500 or 403 pretty easily, if you like.
 # If you are hosting your site in subdirectory, adjust this accordingly
 #    e.g. ErrorDocument 404 /subdir/404.html
-ErrorDocument 404 /404.html
-
-
+#ErrorDocument 400 /error_general.html #Bad Request
+#ErrorDocument 401 /error_general.html #Unauthorized
+#ErrorDocument 402 /error_general.html #Payment Required
+ErrorDocument 403 /error_403.html
+ErrorDocument 404 /error_404.html
+#ErrorDocument 405 /error_general.html #Method Not Allowed
+#ErrorDocument 406 /error_general.html #Not Acceptable
+#ErrorDocument 407 /error_general.html #Proxy Authentication Required
+#ErrorDocument 408 /error_general.html #Request Time-out
+#ErrorDocument 409 /error_general.html #Conflict
+#ErrorDocument 410 /error_general.html #Gone
+#ErrorDocument 411 /error_general.html #Length Required
+#ErrorDocument 412 /error_general.html #Precondition Failed
+#ErrorDocument 413 /error_general.html #Request Entity Too Large
+#ErrorDocument 414 /error_general.html #Request-URL Too Long
+#ErrorDocument 415 /error_general.html #Unsupported Media Type
+#ErrorDocument 416 /error_general.html #Requested range not satisfiable
+#ErrorDocument 417 /error_general.html #Expectation Failed
+#ErrorDocument 418 /error_general.html #I'm a teapot
+#ErrorDocument 421 /error_general.html #There are too many connections from your internet address
+#ErrorDocument 422 /error_general.html #Unprocessable Entity
+#ErrorDocument 423 /error_general.html #Locked
+#ErrorDocument 424 /error_general.html #Failed Dependency
+#ErrorDocument 425 /error_general.html #Unordered Collection
+#ErrorDocument 426 /error_general.html #Upgrade Required
+#
+#ErrorDocument 500 /error_general.html #Internal Server Error
+#ErrorDocument 501 /error_general.html #Not Implemented
+#ErrorDocument 502 /error_general.html #Bad Gateway
+#ErrorDocument 503 /error_general.html #Service Unavailable
+#ErrorDocument 504 /error_general.html #Gateway Time-out
+#ErrorDocument 505 /error_general.html #HTTP Version not supported
+#ErrorDocument 506 /error_general.html #Variant Also Negotiates
+#ErrorDocument 507 /error_general.html #Insufficient Storage
+#ErrorDocument 509 /error_general.html #Bandwidth Limit Exceeded
+#ErrorDocument 510 /error_general.html #Not Extended
 
 # ----------------------------------------------------------------------
 # UTF-8 encoding
