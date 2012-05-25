@@ -24,11 +24,11 @@
 <script>window.jQuery || document.write('<script src="<?php echo base_url('assets/js/vendor/jquery-1.7.2.min.js'); ?>"><\/script>')</script>
 
 <!-- scripts concatenated and minified via ant build script-->
-<script src="<?php echo base_url('assets/js/plugins.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/jquery.form.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/jquery.adslider.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/jquery.nav.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+<script src="assets/js/plugins.js"></script>
+<script src="assets/js/jquery.form.js"></script>
+<script src="assets/js/jquery.adslider.js"></script>
+<script src="assets/js/jquery.nav.js"></script>
+<script src="assets/js/main.js"></script>
 <!-- end scripts-->
 
 <script>
